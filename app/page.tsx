@@ -92,7 +92,7 @@ export default function Home() {
   return (
     <div style={{ background: "var(--bg)", color: "var(--text)", fontFamily: "'Hanken Grotesk',sans-serif", minHeight: "100vh", overflowX: "hidden", transition: "background .4s ease, color .4s ease" }}>
       {/* ============================== HERO ============================== */}
-      <section style={{ position: "relative", minHeight: 680, height: "90vh", maxHeight: 980, overflow: "hidden", padding: "22px clamp(20px,3vw,40px) 30px" }}>
+      <section className="hero" style={{ position: "relative", minHeight: 680, height: "90vh", maxHeight: 980, overflow: "hidden", padding: "22px clamp(20px,3vw,40px) 30px" }}>
         {/* full-bleed hero reel (YouTube background) over the poster image */}
         <div style={{ position: "absolute", inset: 14, borderRadius: 18, overflow: "hidden", backgroundColor: "#04060a", backgroundImage: `url(${HERO_IMG})`, backgroundSize: "cover", backgroundPosition: "center" }}>
           <iframe
@@ -111,12 +111,12 @@ export default function Home() {
           <span style={{ width: 1, background: "rgba(255,255,255,0.07)" }} />
         </div>
         {/* crosshair marks */}
-        <div style={{ position: "absolute", left: 14, right: 14, top: "57%", zIndex: 2, pointerEvents: "none", display: "flex", justifyContent: "space-around", color: "rgba(255,255,255,0.4)", fontSize: 17, fontWeight: 300 }}>
+        <div className="hero-crosshairs" style={{ position: "absolute", left: 14, right: 14, top: "57%", zIndex: 2, pointerEvents: "none", display: "flex", justifyContent: "space-around", color: "rgba(255,255,255,0.4)", fontSize: 17, fontWeight: 300 }}>
           <span>+</span><span>+</span><span>+</span>
         </div>
 
         {/* top bar */}
-        <div style={{ position: "relative", zIndex: 5, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 18 }}>
+        <div className="hero-topbar" style={{ position: "relative", zIndex: 5, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 18 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
             <button onClick={() => setMenuOpen(true)} aria-label="Open menu" className="nbtn" style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 18px 8px 9px", borderRadius: 30, border: "1px solid rgba(255,255,255,0.16)", background: "rgba(14,15,18,0.55)", WebkitBackdropFilter: "blur(8px)", backdropFilter: "blur(8px)", color: "#fff", cursor: "pointer", fontSize: 15, fontWeight: 600, fontFamily: "'Hanken Grotesk',sans-serif" }}>
               <span style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 30, height: 26, borderRadius: 8, background: "rgba(255,255,255,0.14)" }}>
@@ -130,11 +130,11 @@ export default function Home() {
             </div>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            <a href="#sec-contact" className="nbtn" style={{ display: "inline-flex", alignItems: "center", gap: 10, padding: "7px 7px 7px 20px", borderRadius: 30, border: "1px solid rgba(255,255,255,0.16)", background: "rgba(14,15,18,0.6)", WebkitBackdropFilter: "blur(8px)", backdropFilter: "blur(8px)", color: "#fff", textDecoration: "none", fontSize: 15, fontWeight: 600 }}>
+            <a href="#sec-contact" className="nbtn hero-startproject" style={{ display: "inline-flex", alignItems: "center", gap: 10, padding: "7px 7px 7px 20px", borderRadius: 30, border: "1px solid rgba(255,255,255,0.16)", background: "rgba(14,15,18,0.6)", WebkitBackdropFilter: "blur(8px)", backdropFilter: "blur(8px)", color: "#fff", textDecoration: "none", fontSize: 15, fontWeight: 600 }}>
               Start Project
               <span style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 30, height: 30, borderRadius: "50%", background: "#fff", color: "#0a0a0a" }}><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h13M13 6l6 6-6 6" /></svg></span>
             </a>
-            <button onClick={() => { if (!document.fullscreenElement) document.documentElement.requestFullscreen?.(); else document.exitFullscreen?.(); }} aria-label="Toggle fullscreen" className="soc" style={{ ...socStyle, width: 44, height: 44, borderRadius: 12 }}>
+            <button onClick={() => { if (!document.fullscreenElement) document.documentElement.requestFullscreen?.(); else document.exitFullscreen?.(); }} aria-label="Toggle fullscreen" className="soc hero-fullscreen" style={{ ...socStyle, width: 44, height: 44, borderRadius: 12 }}>
               <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 3H5a2 2 0 0 0-2 2v4M15 3h4a2 2 0 0 1 2 2v4M21 15v4a2 2 0 0 1-2 2h-4M3 15v4a2 2 0 0 0 2 2h4" /></svg>
             </button>
           </div>
@@ -147,7 +147,7 @@ export default function Home() {
         </div>
 
         {/* bottom-left block */}
-        <div style={{ position: "absolute", left: "clamp(20px,3vw,40px)", right: "clamp(20px,3vw,40px)", bottom: 38, zIndex: 5 }}>
+        <div className="hero-content" style={{ position: "absolute", left: "clamp(20px,3vw,40px)", right: "clamp(20px,3vw,40px)", bottom: 38, zIndex: 5 }}>
           <div style={{ maxWidth: 330 }}>
             <div style={{ fontSize: 14, fontWeight: 600, letterSpacing: "0.005em", color: "rgba(255,255,255,0.85)", marginBottom: 14 }}>Award Winning Studio</div>
             <p style={{ margin: "0 0 18px", fontSize: 14, lineHeight: 1.55, color: "rgba(255,255,255,0.72)" }}>A film &amp; image studio crafting high-end cinematic stories and immersive experiences.</p>
@@ -160,7 +160,7 @@ export default function Home() {
         </div>
 
         {/* socials (bottom center) */}
-        <div style={{ position: "absolute", left: "50%", bottom: 50, transform: "translateX(-50%)", zIndex: 5, display: "flex", gap: 12 }}>
+        <div className="hero-socials" style={{ position: "absolute", left: "50%", bottom: 50, transform: "translateX(-50%)", zIndex: 5, display: "flex", gap: 12 }}>
           <a aria-label="Instagram" href="https://www.instagram.com/triptychstudios.co/" target="_blank" rel="noopener noreferrer" className="soc" style={socStyle}>
             <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2.5" y="2.5" width="19" height="19" rx="5.2" /><circle cx="12" cy="12" r="4.2" /><circle cx="17.4" cy="6.6" r="1.25" fill="currentColor" stroke="none" /></svg>
           </a>
@@ -170,7 +170,7 @@ export default function Home() {
         </div>
 
         {/* award card */}
-        <div className="ncard" style={{ position: "absolute", right: "clamp(20px,3vw,40px)", bottom: 38, zIndex: 5, width: "min(420px,38vw)", minWidth: 300, background: "rgba(8,9,12,0.4)", WebkitBackdropFilter: "blur(8px)", backdropFilter: "blur(8px)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 16, padding: "26px 28px 22px" }}>
+        <div className="ncard hero-card" style={{ position: "absolute", right: "clamp(20px,3vw,40px)", bottom: 38, zIndex: 5, width: "min(420px,38vw)", minWidth: 300, background: "rgba(8,9,12,0.4)", WebkitBackdropFilter: "blur(8px)", backdropFilter: "blur(8px)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 16, padding: "26px 28px 22px" }}>
           <div className="nstar" style={{ display: "flex", justifyContent: "center", gap: 6, marginBottom: 14, color: "#fff" }}>
             <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
           </div>
@@ -210,8 +210,8 @@ export default function Home() {
 
       {/* ============================== WORKS ============================== */}
       <main>
-        <section id="sec-work" style={{ position: "relative", padding: "80px clamp(20px,3vw,40px) 0" }}>
-          <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 24, marginBottom: 46 }}>
+        <section id="sec-work" className="works-section" style={{ position: "relative", padding: "80px clamp(20px,3vw,40px) 0" }}>
+          <div className="works-head" style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 24, marginBottom: 46 }}>
             <h2 style={{ margin: 0, fontSize: "clamp(40px,6vw,84px)", fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 0.9 }}>Works<sup style={{ fontSize: "0.24em", fontWeight: 600, verticalAlign: "super", marginLeft: 5, color: "var(--faint)" }}>{WORKS.length}</sup></h2>
             <div style={{ display: "flex", alignItems: "center", gap: 13, paddingTop: 14 }}>
               <button onClick={() => setView("grid")} style={{ border: "none", background: "transparent", cursor: "pointer", fontFamily: "'Hanken Grotesk',sans-serif", fontSize: 14, fontWeight: 600, color: view === "grid" ? "var(--text)" : "var(--faint)", transition: "color .25s ease" }}>Grid</button>
@@ -246,7 +246,7 @@ export default function Home() {
           )}
 
           {!isList && (
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(4, minmax(0,1fr))", gap: "40px 20px" }}>
+            <div className="works-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4, minmax(0,1fr))", gap: "40px 20px" }}>
               {WORKS.map((w) => (
                 <a key={w.title} className="wtile" href={workHref(w)} target={w.youtubeId ? "_blank" : undefined} rel={w.youtubeId ? "noopener noreferrer" : undefined} style={{ display: "block", textDecoration: "none", color: "inherit" }}>
                   <div style={{ display: "flex", gap: 16, alignItems: "flex-start", marginBottom: 16 }}>
@@ -265,13 +265,13 @@ export default function Home() {
           )}
 
           {/* hover preview */}
-          <div style={{ position: "fixed", top: hoverY, left: "50%", transform: "translate(-50%,-50%)", zIndex: 40, width: "clamp(360px,32vw,520px)", aspectRatio: "16/9", borderRadius: 12, overflow: "hidden", pointerEvents: "none", opacity: isList && hoverActive ? 1 : 0, transition: "opacity .3s ease, top .3s cubic-bezier(.2,.7,.2,1)", boxShadow: "0 24px 70px rgba(0,0,0,0.65)", backgroundColor: "#111", backgroundImage: previewImg, backgroundSize: "cover", backgroundPosition: "center" }} />
+          <div className="hover-preview" style={{ position: "fixed", top: hoverY, left: "50%", transform: "translate(-50%,-50%)", zIndex: 40, width: "clamp(360px,32vw,520px)", aspectRatio: "16/9", borderRadius: 12, overflow: "hidden", pointerEvents: "none", opacity: isList && hoverActive ? 1 : 0, transition: "opacity .3s ease, top .3s cubic-bezier(.2,.7,.2,1)", boxShadow: "0 24px 70px rgba(0,0,0,0.65)", backgroundColor: "#111", backgroundImage: previewImg, backgroundSize: "cover", backgroundPosition: "center" }} />
         </section>
       </main>
 
       {/* ============================== FOOTER ============================== */}
-      <footer id="sec-contact" style={{ marginTop: 90, padding: "0 clamp(20px,3vw,40px) 50px" }}>
-        <div style={{ borderTop: "1px solid var(--line)", paddingTop: 50, display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 40, flexWrap: "wrap" }}>
+      <footer id="sec-contact" className="site-footer" style={{ marginTop: 90, padding: "0 clamp(20px,3vw,40px) 50px" }}>
+        <div className="footer-top" style={{ borderTop: "1px solid var(--line)", paddingTop: 50, display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 40, flexWrap: "wrap" }}>
           <h2 style={{ margin: 0, fontSize: "clamp(44px,9vw,150px)", fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 0.82 }}>TRIPTYCH<sup style={{ fontSize: "0.2em", fontWeight: 700, verticalAlign: "top", marginLeft: "0.1em", color: "var(--muted)" }}>®</sup></h2>
           <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 20, paddingBottom: 8 }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -279,7 +279,7 @@ export default function Home() {
             <span style={{ fontFamily: "'Space Mono',monospace", fontSize: 10, letterSpacing: ".2em", color: "var(--faint)" }}>FOUNDED BY LAWRENCE MAHONE</span>
           </div>
         </div>
-        <div style={{ marginTop: 40, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 18, flexWrap: "wrap", borderTop: "1px dashed var(--line)", paddingTop: 22, fontFamily: "'Space Mono',monospace", fontSize: 11, letterSpacing: ".1em", color: "var(--faint)" }}>
+        <div className="footer-bottom" style={{ marginTop: 40, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 18, flexWrap: "wrap", borderTop: "1px dashed var(--line)", paddingTop: 22, fontFamily: "'Space Mono',monospace", fontSize: 11, letterSpacing: ".1em", color: "var(--faint)" }}>
           <span>© 2026 TRIPTYCH STUDIOS. ALL RIGHTS RESERVED.</span>
           <span>IMAGINATION IN MOTION</span>
         </div>
