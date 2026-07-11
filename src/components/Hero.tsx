@@ -31,7 +31,7 @@ export default function Hero() {
   }, []);
 
   const display =
-    "text-[clamp(2.75rem,13vw,11rem)] font-medium leading-[0.85] tracking-[-0.045em] text-foreground";
+    "text-[clamp(2.5rem,11.5vw,9rem)] font-normal leading-[0.9] tracking-[-0.03em] text-foreground";
 
   return (
     <section
@@ -39,15 +39,15 @@ export default function Hero() {
       ref={root}
       className="px-5 pb-6 pt-10 sm:px-8 sm:pt-14"
     >
-      <div className="flex flex-col gap-x-8 gap-y-3 md:flex-row md:items-baseline md:justify-between">
+      <div className="flex flex-col gap-x-8 gap-y-3 md:flex-row md:items-baseline">
         <h1 data-hero-line className={display}>
           {site.name}
         </h1>
 
-        {/* Index label in the gap */}
+        {/* Index label tucked between the words (reference placement) */}
         <div
           data-hero-label
-          className="border-l-2 border-accent pl-3 font-mono text-[11px] leading-relaxed md:self-end md:pb-[0.9em]"
+          className="border-l-2 border-accent pl-3 font-mono text-[11px] leading-relaxed md:self-end md:pb-[0.7em]"
         >
           <div className="text-muted">{site.sectionNumber}</div>
           <div className="text-foreground">[{site.sectionLabel}]</div>

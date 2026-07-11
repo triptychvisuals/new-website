@@ -15,9 +15,11 @@
   --color-muted: var(--muted);
   --color-hairline: var(--hairline);
   --color-accent: var(--accent);
-  /* EDIT: system font stack (no web font) */
-  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    Helvetica, Arial, sans-serif;
+  /* EDIT: Helvetica-family stack to match the Visual Frame (Framer) reference —
+     Helvetica Neue on macOS, Arial/Liberation Sans (Helvetica clones) elsewhere.
+     No web font download; license-clean. */
+  --font-sans: "Helvetica Neue", Helvetica, Arial, "Liberation Sans", "Arimo",
+    system-ui, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
     "Liberation Mono", monospace;
 }

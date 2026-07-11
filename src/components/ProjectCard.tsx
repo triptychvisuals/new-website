@@ -56,7 +56,7 @@ export default function ProjectCard({
 
       {/* Meta */}
       <div className="mt-3 flex items-baseline justify-between gap-3">
-        <h3 className="text-[15px] font-medium leading-tight text-foreground">
+        <h3 className="text-[15px] font-normal leading-tight text-foreground">
           {project.title}
         </h3>
         <span className="shrink-0 font-mono text-xs text-muted">[{n}]</span>
