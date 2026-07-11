@@ -6,7 +6,7 @@ import Gallery from "@/components/Gallery";
 export default function Home() {
   return (
     <main className="relative min-h-screen">
-      <Header featured />
+      <Header />
       <Hero />
       <Gallery />
     </main>
