@@ -1,58 +1,36 @@
-# Triptych Studios — Next.js
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-Cinematic studio homepage, rebuilt 1:1 from the design export as a pure Next.js
-app (App Router + TypeScript). No HTML files — the whole site is React/TSX with
-inline styles and one global stylesheet. Zero UI dependencies. Ready for Vercel.
+## Getting Started
 
-## Run locally
+First, run the development server:
 
 ```bash
-npm install
-npm run dev      # http://localhost:3000
-npm run build    # optimized production build
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
 ```
 
-## Structure
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-```
-app/
-  layout.tsx     root layout + page metadata
-  page.tsx       the homepage (single client component)
-  globals.css    fonts, theme CSS variables (dark + light), hover styles
-public/
-  assets/
-    triptych-logo.png   logo mark
-    hero.jpg            hero poster (extracted from the export)
-    avatar-1..3.jpg     "120+ projects" avatars
-```
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-## What's on the page
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-- **Hero** — full-bleed looping rain video (`https://www.w3schools.com/howto/rain.mp4`)
-  over the `hero.jpg` poster, live Chicago clock, social icons, centered logo tab
-  with a drop-down menu, "120+ projects" block, and an auto-rotating accolades card.
-- **Works** — 15 projects with a **List ⇄ Grid** toggle. List rows show a floating
-  hover preview; grid tiles zoom on hover.
-- **Side drawer + theme** — a left nav drawer and a dark/light theme system
-  (`html.theme-light`, persisted in `localStorage` as `tv-theme`) are wired in,
-  matching the export. Dark is the default.
-- **Footer** — giant TRIPTYCH® wordmark, logo, and studio credit.
+## Learn More
 
-## Customize
+To learn more about Next.js, take a look at the following resources:
 
-- **Hero video** — swap the `HERO_VIDEO` URL in `app/page.tsx` (e.g. point it at a
-  local `/public/hero.mp4`). The `hero.jpg` poster shows until the video plays.
-- **Work items** — edit the `WORKS` array in `app/page.tsx`. Thumbnails currently
-  load from `picsum.photos` via the `photo()` helper; point it at your own assets
-  before launch.
-- **Accolades** — edit the `ACCOLADES` array (auto-rotates every 3.5s).
-- **Menu** — edit `MENU`. `Studio` and `Store` are placeholders (`#`) until those
-  pages/routes exist.
-- **Clock timezone** — `fmtTime()` uses `America/Chicago`.
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-## Notes
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-- `page.tsx` is a Client Component (`"use client"`) for the live clock, list/grid
-  toggle, accolades carousel, hover preview, and drop-down menu.
-- Placeholder Works imagery loads from `picsum.photos` over https; swap for owned
-  assets before launch.
+## Deploy on Vercel
+
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.

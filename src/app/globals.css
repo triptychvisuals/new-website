@@ -1,0 +1,53 @@
+@import "tailwindcss";
+
+:root {
+  /* EDIT: editorial palette — white page, near-black ink (Visual Frame style) */
+  --background: #ffffff;
+  --foreground: #0a0a0a;
+  --muted: #9a9a9a; /* EDIT: metadata / mono labels */
+  --hairline: #e6e6e6; /* EDIT: thin dividers */
+  --accent: #e5361f; /* EDIT: red accent — rule marks, red stat block */
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-hairline: var(--hairline);
+  --color-accent: var(--accent);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  font-family: var(--font-sans), system-ui, sans-serif;
+  /* Editorial type wants crisp rendering + no accidental horizontal scroll */
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--foreground);
+  color: var(--background);
+}
+
+/* --- Lenis smooth-scroll recommended styles --- */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
