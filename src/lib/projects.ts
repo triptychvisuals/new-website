@@ -68,6 +68,7 @@ const titles = [
 const REELS: Record<number, string> = {
   0: "/reels/reel-a.gif",
   1: "/reels/reel-b.gif",
+  2: "/reels/reel-c.gif",
 };
 
 export const projects: Project[] = titles.map((title, i) => ({
