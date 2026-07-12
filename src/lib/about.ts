@@ -58,7 +58,7 @@ export const intro = {
 };
 
 export const founded = {
-  lead: "Triptych Studio", // EDIT: gray part of the sentence
+  lead: "Triptych Studios", // EDIT: gray part of the sentence
   tail: "was founded.", // EDIT: black part
 };
 
@@ -146,7 +146,7 @@ export const testimonials: { quote: string; author: string; role: string }[] = [
 ];
 
 export const cta = {
-  lead: "At Triptych Studio", // EDIT
+  lead: "At Triptych Studios", // EDIT
   body:
     "You share your vision, message, or concept — and our team shapes the creative direction, visual rhythm, and cinematic composition to produce a powerful visual narrative.", // EDIT
 };

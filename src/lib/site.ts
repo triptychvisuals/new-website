@@ -5,7 +5,7 @@
 
 export const site = {
   name: "Triptych", // EDIT: first word of the hero + wordmark
-  suffix: "Studio", // EDIT: second word of the hero headline
+  suffix: "Studios", // EDIT: second word of the hero headline
   registered: true, // EDIT: show the ® mark next to the wordmark
   email: "hello@triptychvisuals.com", // EDIT: contact email (also confirm law@…)
   sectionNumber: "001", // EDIT: hero index label

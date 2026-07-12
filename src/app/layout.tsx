@@ -6,7 +6,7 @@ import Footer from "@/components/Footer";
 export const metadata: Metadata = {
   title: "Triptych — Selected Works", // EDIT
   description:
-    "Triptych Studio — cinematic storytelling, film, and motion for brands.", // EDIT
+    "Triptych Studios — cinematic storytelling, film, and motion for brands.", // EDIT
 };
 
 export default function RootLayout({

@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { site } from "@/lib/site";
-import BracketBox from "@/components/BracketBox";
 
 /**
  * Shared editorial top bar, matching the reference placement:
@@ -63,26 +62,18 @@ export default function Header() {
           ))}
         </nav>
 
-        <div className="hidden items-center gap-6 font-mono text-xs text-foreground lg:flex">
+        <div className="hidden items-center font-mono text-xs text-foreground lg:flex">
           <span className="tabular-nums text-foreground/80" suppressHydrationWarning>
             {time || "--:--:-- --"}
           </span>
-          <a
-            href={`mailto:${site.email}`}
-            className="transition-colors hover:text-foreground/60"
-          >
-            {site.email}
-          </a>
         </div>
 
-        {/* Framer-style bracketed Contact button */}
-        <Link href="/about#contact" aria-label="Contact">
-          <BracketBox className="flex items-center gap-3 px-3.5 py-2 transition-colors hover:bg-foreground/[0.04]">
-            <span className="font-mono text-[11px] uppercase tracking-[0.15em] text-foreground">
-              Contact
-            </span>
-            <span className="h-1.5 w-1.5 rounded-full bg-foreground" />
-          </BracketBox>
+        {/* Solid dark Contact button */}
+        <Link
+          href="/about#contact"
+          className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-zinc-800"
+        >
+          Contact
         </Link>
       </div>
     </header>
