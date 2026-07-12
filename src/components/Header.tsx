@@ -5,27 +5,33 @@ import { useState } from "react";
 import { site } from "@/lib/site";
 
 /**
- * Shared top bar: logo left, uppercase text menu right
- *   PROJECTS · JOURNAL · ABOUT · CONTACT ↗
+ * Centered-logo header: [nav] [nav]  ◬logo◬  [nav] [nav]
+ * Bracketed links split left/right around a centered logo.
  * Collapses to a hamburger overlay on mobile.
  */
-function hasArrow(label: string) {
-  return label.toLowerCase() === "store";
-}
+const INTER = { fontFamily: "var(--font-inter), Helvetica, Arial, sans-serif" };
+const linkCls =
+  "text-sm text-foreground transition-opacity hover:opacity-60 whitespace-nowrap";
 
-function Logo({ onClick }: { onClick?: () => void }) {
+function Logo({
+  onClick,
+  className = "",
+}: {
+  onClick?: () => void;
+  className?: string;
+}) {
   return (
     <Link
       href="/"
       onClick={onClick}
       aria-label="Triptych — home"
-      className="inline-flex shrink-0 items-start gap-0.5"
+      className={`inline-flex items-start gap-0.5 ${className}`}
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src="/triptych-logo.png"
         alt="Triptych"
-        className="h-4 w-auto [filter:brightness(0)] sm:h-5"
+        className="h-6 w-auto [filter:brightness(0)]"
       />
       <sup className="text-[0.5rem] leading-none text-foreground">®</sup>
     </Link>
@@ -36,39 +42,48 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const close = () => setMenuOpen(false);
 
+  const mid = Math.ceil(site.nav.length / 2);
+  const left = site.nav.slice(0, mid);
+  const right = site.nav.slice(mid);
+
   return (
     <>
       <header
-        className="relative z-20 flex items-center justify-between gap-6 px-5 pt-5 sm:px-8"
-        style={{ fontFamily: "var(--font-inter), Helvetica, Arial, sans-serif" }}
+        className="relative z-20 grid grid-cols-[1fr_auto_1fr] items-center px-5 pt-5 sm:px-8"
+        style={INTER}
       >
-        <Logo />
-
-        {/* Desktop menu */}
-        <nav className="hidden items-center gap-7 md:flex">
-          {site.nav.map((item) => (
-            <Link
-              key={item.label}
-              href={item.href}
-              className="inline-flex items-center gap-1 text-[13px] font-medium uppercase tracking-tight text-black transition-opacity hover:opacity-60"
-            >
-              {item.label}
-              {hasArrow(item.label) && <span aria-hidden>↗</span>}
+        {/* Left nav */}
+        <nav className="hidden items-center gap-6 md:flex">
+          {left.map((item) => (
+            <Link key={item.label} href={item.href} className={linkCls}>
+              [{item.label}]
             </Link>
           ))}
         </nav>
 
-        {/* Mobile hamburger */}
-        <button
-          type="button"
-          onClick={() => setMenuOpen(true)}
-          aria-label="Open menu"
-          aria-expanded={menuOpen}
-          className="flex flex-col items-end justify-center gap-[6px] py-2 md:hidden"
-        >
-          <span className="block h-[1.5px] w-7 bg-foreground" />
-          <span className="block h-[1.5px] w-7 bg-foreground" />
-        </button>
+        {/* Center logo */}
+        <Logo className="justify-self-center" />
+
+        {/* Right nav (desktop) / hamburger (mobile) */}
+        <div className="flex items-center justify-end">
+          <nav className="hidden items-center gap-6 md:flex">
+            {right.map((item) => (
+              <Link key={item.label} href={item.href} className={linkCls}>
+                [{item.label}]
+              </Link>
+            ))}
+          </nav>
+          <button
+            type="button"
+            onClick={() => setMenuOpen(true)}
+            aria-label="Open menu"
+            aria-expanded={menuOpen}
+            className="flex flex-col items-end justify-center gap-[6px] py-2 md:hidden"
+          >
+            <span className="block h-[1.5px] w-7 bg-foreground" />
+            <span className="block h-[1.5px] w-7 bg-foreground" />
+          </button>
+        </div>
       </header>
 
       {/* Mobile menu overlay */}
@@ -76,7 +91,7 @@ export default function Header() {
         <div
           className="fixed inset-0 z-50 flex flex-col bg-background md:hidden"
           data-lenis-prevent
-          style={{ fontFamily: "var(--font-inter), Helvetica, Arial, sans-serif" }}
+          style={INTER}
         >
           <div className="flex items-center justify-between px-5 pt-5">
             <Logo onClick={close} />
@@ -96,14 +111,9 @@ export default function Header() {
                 key={item.label}
                 href={item.href}
                 onClick={close}
-                className="inline-flex items-center gap-2 text-4xl font-normal uppercase tracking-tight text-foreground"
+                className="text-4xl font-normal tracking-tight text-foreground"
               >
-                {item.label}
-                {hasArrow(item.label) && (
-                  <span aria-hidden className="text-2xl">
-                    ↗
-                  </span>
-                )}
+                [{item.label}]
               </Link>
             ))}
           </nav>
