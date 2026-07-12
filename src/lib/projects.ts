@@ -34,6 +34,21 @@ export const projects: Project[] = [
   { title: "Neon Divide", client: "PULSE COLLECTIVE" }, // EDIT
   { title: "Slow Tide", client: "COAST STUDIO" }, // EDIT
   { title: "Afterglow", client: "EMBER FILMS" }, // EDIT
+  { title: "Paper Moon", client: "LANTERN FILMS" }, // EDIT
+  { title: "Cold Open", client: "FRAME NINE" }, // EDIT
+  { title: "Dust & Gold", client: "MERIDIAN STUDIO" }, // EDIT
+  { title: "The Long Exposure", client: "APERTURE CO" }, // EDIT
+  { title: "Static Bloom", client: "NORTHLIGHT" }, // EDIT
+  { title: "Undertow", client: "TIDAL PICTURES" }, // EDIT
+  { title: "Signal Fire", client: "BEACON MEDIA" }, // EDIT
+  { title: "Glass Horizon", client: "PRISM STUDIO" }, // EDIT
+  { title: "Night Shift", client: "OFF-HOURS" }, // EDIT
+  { title: "Half Light", client: "GLOAMING FILMS" }, // EDIT
+  { title: "The Understudy", client: "SECOND ACT" }, // EDIT
+  { title: "Wildcard", client: "DECK 52" }, // EDIT
+  { title: "Foreign Tongue", client: "BABEL MOTION" }, // EDIT
+  { title: "Paper Trail", client: "LEDGER FILMS" }, // EDIT
+  { title: "Terminal Velocity", client: "FREEFALL" }, // EDIT
 ];
 
 // Deterministic film-still-ish gradient per card, so the placeholder grid feels

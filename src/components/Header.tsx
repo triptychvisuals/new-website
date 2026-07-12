@@ -5,11 +5,24 @@ import { useState } from "react";
 import { site } from "@/lib/site";
 
 /**
- * Centered-logo header: nav · nav  ◬logo◬  nav · nav
- * Nav links cluster close to the centered logo. Hamburger overlay on mobile.
+ * Centered-logo header: NAV · NAV  ◬logo◬  NAV · NAV
+ * Uppercase links clustered close to the centered logo. Hamburger on mobile.
  */
+function hasArrow(label: string) {
+  return label.toLowerCase() === "store";
+}
+
 const linkCls =
-  "text-sm text-foreground transition-opacity hover:opacity-60 whitespace-nowrap";
+  "inline-flex items-center gap-1 text-[13px] font-medium uppercase tracking-tight text-black transition-opacity hover:opacity-60 whitespace-nowrap";
+
+function NavLink({ item }: { item: { label: string; href: string } }) {
+  return (
+    <Link href={item.href} className={linkCls}>
+      {item.label}
+      {hasArrow(item.label) && <span aria-hidden>↗</span>}
+    </Link>
+  );
+}
 
 function Logo({
   onClick,
@@ -51,17 +64,13 @@ export default function Header() {
         <nav className="hidden items-center md:flex">
           <span className="flex items-center gap-6">
             {left.map((item) => (
-              <Link key={item.label} href={item.href} className={linkCls}>
-                {item.label}
-              </Link>
+              <NavLink key={item.label} item={item} />
             ))}
           </span>
           <Logo className="mx-8" />
           <span className="flex items-center gap-6">
             {right.map((item) => (
-              <Link key={item.label} href={item.href} className={linkCls}>
-                {item.label}
-              </Link>
+              <NavLink key={item.label} item={item} />
             ))}
           </span>
         </nav>
@@ -106,9 +115,14 @@ export default function Header() {
                 key={item.label}
                 href={item.href}
                 onClick={close}
-                className="text-4xl font-normal tracking-tight text-foreground"
+                className="inline-flex items-center gap-2 text-4xl font-normal uppercase tracking-tight text-foreground"
               >
                 {item.label}
+                {hasArrow(item.label) && (
+                  <span aria-hidden className="text-2xl">
+                    ↗
+                  </span>
+                )}
               </Link>
             ))}
           </nav>
