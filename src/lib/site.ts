@@ -12,7 +12,7 @@ export const site = {
   sectionLabel: "SELECTED WORKS", // EDIT: hero bracket label
   nav: [
     { label: "About", href: "/about" }, // EDIT
-    { label: "Award", href: "/about#awards" }, // EDIT
+    { label: "Press", href: "/about#awards" }, // EDIT: repoint to a real Press section when built
     { label: "Contact", href: "/about#contact" }, // EDIT
   ],
 };
