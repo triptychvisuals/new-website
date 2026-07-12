@@ -1,18 +1,18 @@
 // -------------------------------------------------------------------------
-// EDIT: Projects + clients. Titles are placeholders; clients are real.
-// Cards autoplay an animated reel (public/reels/*.svg) over a gradient base.
+// EDIT: Projects. Each card shows title (top) + category (bottom) and
+// autoplays a reel. `clients` (below) feeds the About page.
 // -------------------------------------------------------------------------
 
 export type Project = {
   title: string;
-  client: string;
-  /** EDIT: real still image, e.g. "/work/echoes.jpg" */
+  category: string;
+  /** EDIT: real still image, e.g. "/work/x.jpg" */
   src?: string;
-  /** EDIT: real reel — drop a .gif/.mp4/.webm in /public and point here */
+  /** EDIT: real reel — a file in /public/reels */
   video?: string;
 };
 
-// EDIT: labels + artists Triptych works with
+// EDIT: labels + artists Triptych works with (used on the About page)
 export const clients = [
   "Universal Music Group",
   "Interscope Records",
@@ -30,7 +30,7 @@ export const clients = [
   "Lil Durk",
 ];
 
-// EDIT: project / video titles
+// EDIT: placeholder titles for the not-yet-filled cards
 const titles = [
   "Echoes of the City",
   "Shadow of Tomorrow",
@@ -64,17 +64,21 @@ const titles = [
   "Terminal Velocity",
 ];
 
-// EDIT: real reels for specific cards (card index -> file in /public/reels)
-const REELS: Record<number, string> = {
-  0: "/reels/reel-a.gif",
-  1: "/reels/reel-b.gif",
-  2: "/reels/reel-c.gif",
+// EDIT: real projects wired to specific cards — { title, category, video }
+const OVERRIDES: Record<number, Partial<Project>> = {
+  0: { title: "Timmy Story", category: "Music Video", video: "/reels/reel-a.gif" },
+  1: { title: "Hands Up", category: "Music Video", video: "/reels/reel-b.gif" },
+  2: {
+    title: "Good Morning America",
+    category: "Music Video",
+    video: "/reels/reel-c.gif",
+  },
 };
 
 export const projects: Project[] = titles.map((title, i) => ({
-  title,
-  client: clients[i % clients.length],
-  video: REELS[i],
+  title: OVERRIDES[i]?.title ?? title,
+  category: OVERRIDES[i]?.category ?? "Music Video", // EDIT: default category
+  video: OVERRIDES[i]?.video,
 }));
 
 // Deterministic gradient base per card (poster behind the reel).
@@ -92,8 +96,7 @@ export function placeholderGradient(index: number): string {
   return `linear-gradient(135deg, ${a} 0%, ${b} 100%)`;
 }
 
-// Animated reel loops (local, autoplay via SVG animation — no network needed).
-// EDIT: replace with real GIF/MP4 reels when available.
+// Animated reel loops (local, autoplay). EDIT: replace with real footage.
 const MEDIA = [
   "/reels/reel-01.svg",
   "/reels/reel-02.svg",

@@ -43,7 +43,7 @@ export default function ProjectCard({
         <span className="shrink-0 font-mono text-xs text-muted">[{n}]</span>
       </div>
       <p className="mt-1 font-mono text-[11px] uppercase tracking-wider text-muted">
-        {project.client}
+        {project.category}
       </p>
     </a>
   );
