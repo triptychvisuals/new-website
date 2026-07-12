@@ -1,0 +1,36 @@
+# CodeQL static analysis — scans the JS/TS for injection, XSS, and other
+# security-relevant code patterns on every push/PR and weekly.
+# https://docs.github.com/code-security/code-scanning
+name: "CodeQL"
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+  schedule:
+    # Weekly, off-peak (Mondays 07:17 UTC) to avoid the top-of-hour rush.
+    - cron: "17 7 * * 1"
+
+jobs:
+  analyze:
+    name: Analyze (javascript-typescript)
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: javascript-typescript
+          queries: security-and-quality
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:javascript-typescript"

@@ -1,0 +1,7 @@
+# Security disclosure policy for triptychstudios.co (RFC 9116)
+# If you find a security issue, please report it to the contact below.
+
+Contact: mailto:law@triptychvisuals.com
+Expires: 2027-07-12T00:00:00.000Z
+Preferred-Languages: en
+Canonical: https://triptychstudios.co/.well-known/security.txt

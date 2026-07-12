@@ -58,6 +58,8 @@ const securityHeaders = [
   { key: "X-XSS-Protection", value: "0" },
   // Isolate the browsing context (opener + cross-origin embeds).
   { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
+  // Stop other origins from loading our assets (anti-hotlinking / resource theft).
+  { key: "Cross-Origin-Resource-Policy", value: "same-origin" },
 ];
 
 const nextConfig: NextConfig = {
