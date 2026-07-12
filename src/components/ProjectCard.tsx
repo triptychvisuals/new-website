@@ -18,7 +18,7 @@ export default function ProjectCard({
   return (
     <a data-card href="#" className="group block">
       {/* Media */}
-      <div className="relative aspect-video w-full overflow-hidden rounded-lg bg-neutral-200">
+      <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg bg-neutral-200">
         {project.video ? (
           // EDIT: muted looping hover preview
           <video
