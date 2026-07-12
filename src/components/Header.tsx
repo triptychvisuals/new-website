@@ -5,11 +5,9 @@ import { useState } from "react";
 import { site } from "@/lib/site";
 
 /**
- * Centered-logo header: [nav] [nav]  ◬logo◬  [nav] [nav]
- * Bracketed links split left/right around a centered logo.
- * Collapses to a hamburger overlay on mobile.
+ * Centered-logo header: nav · nav  ◬logo◬  nav · nav
+ * Nav links cluster close to the centered logo. Hamburger overlay on mobile.
  */
-const INTER = { fontFamily: "var(--font-inter), Helvetica, Arial, sans-serif" };
 const linkCls =
   "text-sm text-foreground transition-opacity hover:opacity-60 whitespace-nowrap";
 
@@ -48,37 +46,35 @@ export default function Header() {
 
   return (
     <>
-      <header
-        className="relative z-20 grid grid-cols-[1fr_auto_1fr] items-center px-5 pt-5 sm:px-8"
-        style={INTER}
-      >
-        {/* Left nav */}
-        <nav className="hidden items-center gap-6 md:flex">
-          {left.map((item) => (
-            <Link key={item.label} href={item.href} className={linkCls}>
-              [{item.label}]
-            </Link>
-          ))}
-        </nav>
-
-        {/* Center logo */}
-        <Logo className="justify-self-center" />
-
-        {/* Right nav (desktop) / hamburger (mobile) */}
-        <div className="flex items-center justify-end">
-          <nav className="hidden items-center gap-6 md:flex">
-            {right.map((item) => (
+      <header className="relative z-20 flex items-center justify-center px-5 pt-5 sm:px-8">
+        {/* Desktop: nav clustered around the centered logo */}
+        <nav className="hidden items-center md:flex">
+          <span className="flex items-center gap-6">
+            {left.map((item) => (
               <Link key={item.label} href={item.href} className={linkCls}>
-                [{item.label}]
+                {item.label}
               </Link>
             ))}
-          </nav>
+          </span>
+          <Logo className="mx-8" />
+          <span className="flex items-center gap-6">
+            {right.map((item) => (
+              <Link key={item.label} href={item.href} className={linkCls}>
+                {item.label}
+              </Link>
+            ))}
+          </span>
+        </nav>
+
+        {/* Mobile: logo + hamburger */}
+        <div className="flex w-full items-center justify-between md:hidden">
+          <Logo />
           <button
             type="button"
             onClick={() => setMenuOpen(true)}
             aria-label="Open menu"
             aria-expanded={menuOpen}
-            className="flex flex-col items-end justify-center gap-[6px] py-2 md:hidden"
+            className="flex flex-col items-end justify-center gap-[6px] py-2"
           >
             <span className="block h-[1.5px] w-7 bg-foreground" />
             <span className="block h-[1.5px] w-7 bg-foreground" />
@@ -91,7 +87,6 @@ export default function Header() {
         <div
           className="fixed inset-0 z-50 flex flex-col bg-background md:hidden"
           data-lenis-prevent
-          style={INTER}
         >
           <div className="flex items-center justify-between px-5 pt-5">
             <Logo onClick={close} />
@@ -113,7 +108,7 @@ export default function Header() {
                 onClick={close}
                 className="text-4xl font-normal tracking-tight text-foreground"
               >
-                [{item.label}]
+                {item.label}
               </Link>
             ))}
           </nav>

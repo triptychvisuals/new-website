@@ -1,7 +1,7 @@
 // About — "Who are we" (002).
 import type { Metadata } from "next";
 import Header from "@/components/Header";
-import AboutHero from "@/components/about/AboutHero";
+import Hero from "@/components/Hero";
 import AboutIntro from "@/components/about/AboutIntro";
 import AboutFounded from "@/components/about/AboutFounded";
 import AboutAwards from "@/components/about/AboutAwards";
@@ -18,7 +18,7 @@ export default function AboutPage() {
   return (
     <main className="relative min-h-screen">
       <Header />
-      <AboutHero />
+      <Hero />
       <AboutIntro />
       <AboutFounded />
       <AboutAwards />
