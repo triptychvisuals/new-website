@@ -41,6 +41,15 @@ body {
   overflow-x: hidden;
 }
 
+/* Smooth fade when toggling light / dark */
+*,
+*::before,
+*::after {
+  transition-property: background-color, border-color, color, fill, stroke;
+  transition-duration: 0.4s;
+  transition-timing-function: ease;
+}
+
 ::selection {
   background: var(--foreground);
   color: var(--background);

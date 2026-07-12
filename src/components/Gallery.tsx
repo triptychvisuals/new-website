@@ -1,36 +1,27 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { gsap, ScrollTrigger } from "@/lib/gsap";
+import { gsap } from "@/lib/gsap";
 import { projects, placeholderGradient, projectMedia } from "@/lib/projects";
 import ProjectCard from "./ProjectCard";
 
 /**
- * Selected-works grid. Cards fade + rise in a stagger as each row scrolls into
- * view (ScrollTrigger.batch), driven by the shared Lenis scroll.
+ * Selected-works grid. Cards fade + rise in a stagger on mount (they always
+ * end visible — no scroll dependency).
  */
 export default function Gallery() {
   const root = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      const cards = gsap.utils.toArray<HTMLElement>("[data-card]");
-      gsap.set(cards, { autoAlpha: 0, y: 28 });
-      ScrollTrigger.batch(cards, {
-        start: "top 92%",
-        onEnter: (batch) =>
-          gsap.to(batch, {
-            autoAlpha: 1,
-            y: 0,
-            duration: 0.8,
-            ease: "power3.out",
-            stagger: 0.08,
-            overwrite: true,
-          }),
+      gsap.from("[data-card]", {
+        autoAlpha: 0,
+        y: 22,
+        duration: 0.6,
+        ease: "power2.out",
+        stagger: { each: 0.03, from: "start" },
       });
-      ScrollTrigger.refresh();
     }, root);
-
     return () => ctx.revert();
   }, []);
 
@@ -44,7 +35,7 @@ export default function Gallery() {
             project={project}
             index={i}
             gradient={placeholderGradient(i)}
-            video={project.video ?? projectMedia(i)}
+            media={projectMedia(i)}
           />
         ))}
       </div>

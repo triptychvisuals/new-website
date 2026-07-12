@@ -3,41 +3,15 @@
 // reference; swap in real clients, services, history, awards and testimonials.
 // -------------------------------------------------------------------------
 
-export const recentClients: string[] = [
-  "UrbanFrame Studio",
-  "Horizon Pictures",
-  "Nova Films",
-  "Atlas Motion",
-  "North District Films",
-  "Silverline Productions",
-  "Lumina Studios",
-  "Apex Narrative",
-  "MotionDrive",
-  "Velocity Motors",
-  "MetroGrid",
-  "Clab",
-  "IronPeak Industries",
-  "NovaTech",
-  "SilverPeak",
-  "CoreMotion",
-  "BrightAxis",
-  "Drift Narrative",
-  "Horizon Collective",
-  "TrueNorth Films",
-  "Golden Frame Studio",
-  "Atlas Story Lab",
-  "NorthPeak Films",
-  "Origin Studio",
-  "Vista Motion",
-]; // EDIT
+export { clients as recentClients } from "./projects"; // EDIT: real clients
 
 export const services: string[] = [
-  "Commercial Film Production",
-  "Brand Video Production",
-  "Corporate Video Production",
-  "Short Film Production",
-  "Documentary Production",
-  "Music Video Production",
+  "Commercial Film",
+  "Brand Video",
+  "Corporate Video",
+  "Short Film",
+  "Documentary",
+  "Music Video",
 ]; // EDIT
 
 export const socials: { label: string; href: string }[] = [

@@ -1,13 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { site } from "@/lib/site";
 import ThemeToggle from "@/components/ThemeToggle";
 
 /**
- * Centered-logo header: NAV · NAV  ◬logo◬  NAV · NAV
- * Social icons + dark-mode toggle pinned top-right. Hamburger on mobile.
+ * Header:
+ *   [switch] imagination in motion ....  NAV ◬logo NAV  ....  TIME  icons
+ * Nav clustered around the centered logo; hamburger on mobile.
  */
 function hasArrow(label: string) {
   return label.toLowerCase() === "store";
@@ -16,7 +17,24 @@ function hasArrow(label: string) {
 const linkCls =
   "inline-flex items-center gap-1 text-[13px] font-medium uppercase tracking-tight text-foreground transition-opacity hover:opacity-60 whitespace-nowrap";
 
-/* EDIT: social links + icons */
+function useClock() {
+  const [time, setTime] = useState("");
+  useEffect(() => {
+    const pad = (n: number) => String(n).padStart(2, "0");
+    const fmt = () => {
+      const d = new Date();
+      const ampm = d.getHours() >= 12 ? "PM" : "AM";
+      const h = d.getHours() % 12 || 12;
+      return `${pad(h)}:${pad(d.getMinutes())}:${pad(d.getSeconds())} ${ampm}`;
+    };
+    setTime(fmt());
+    const id = setInterval(() => setTime(fmt()), 1000);
+    return () => clearInterval(id);
+  }, []);
+  return time;
+}
+
+/* Social icons */
 function IgIcon() {
   return (
     <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
@@ -45,17 +63,11 @@ const socials = [
   { label: "YouTube", href: "#", Icon: YtIcon },
   { label: "LinkedIn", href: "#", Icon: LiIcon },
 ];
-
 function SocialRow() {
   return (
     <div className="flex items-center gap-3 text-foreground">
       {socials.map((s) => (
-        <a
-          key={s.label}
-          href={s.href}
-          aria-label={s.label}
-          className="transition-opacity hover:opacity-60"
-        >
+        <a key={s.label} href={s.href} aria-label={s.label} className="transition-opacity hover:opacity-60">
           <s.Icon />
         </a>
       ))}
@@ -72,26 +84,11 @@ function NavLink({ item }: { item: { label: string; href: string } }) {
   );
 }
 
-function Logo({
-  onClick,
-  className = "",
-}: {
-  onClick?: () => void;
-  className?: string;
-}) {
+function Logo({ onClick, className = "" }: { onClick?: () => void; className?: string }) {
   return (
-    <Link
-      href="/"
-      onClick={onClick}
-      aria-label="Triptych — home"
-      className={`inline-flex items-start gap-0.5 ${className}`}
-    >
+    <Link href="/" onClick={onClick} aria-label="Triptych — home" className={`inline-flex items-start gap-0.5 ${className}`}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src="/triptych-logo.png"
-        alt="Triptych"
-        className="h-6 w-auto [filter:brightness(0)] dark:[filter:none]"
-      />
+      <img src="/triptych-logo.png" alt="Triptych" className="h-6 w-auto [filter:brightness(0)] dark:[filter:none]" />
       <sup className="text-[0.5rem] leading-none text-foreground">®</sup>
     </Link>
   );
@@ -100,6 +97,7 @@ function Logo({
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const close = () => setMenuOpen(false);
+  const time = useClock();
 
   const mid = Math.ceil(site.nav.length / 2);
   const left = site.nav.slice(0, mid);
@@ -107,9 +105,17 @@ export default function Header() {
 
   return (
     <>
-      <header className="relative z-20 flex items-center justify-center px-5 pt-5 sm:px-8">
-        {/* Desktop: nav clustered around the centered logo */}
-        <nav className="hidden items-center md:flex">
+      <header className="relative z-20 flex items-center justify-between px-5 pt-5 sm:px-8">
+        {/* Left: light-switch toggle + tagline */}
+        <div className="hidden items-center gap-3 md:flex">
+          <ThemeToggle />
+          <span className="hidden text-[11px] tracking-wide text-foreground/55 lg:inline">
+            imagination in motion
+          </span>
+        </div>
+
+        {/* Center: nav clustered around the logo (page-centered) */}
+        <nav className="absolute left-1/2 hidden -translate-x-1/2 items-center md:flex">
           <span className="flex items-center gap-6">
             {left.map((item) => (
               <NavLink key={item.label} item={item} />
@@ -123,13 +129,14 @@ export default function Header() {
           </span>
         </nav>
 
-        {/* Top-left: dark-mode toggle */}
-        <div className="absolute left-5 top-4 hidden items-center sm:left-8 md:flex">
-          <ThemeToggle />
-        </div>
-
-        {/* Top-right: social icons */}
-        <div className="absolute right-5 top-5 hidden h-6 items-center gap-4 sm:right-8 md:flex">
+        {/* Right: clock + social icons */}
+        <div className="hidden items-center gap-5 md:flex">
+          <span
+            className="hidden font-mono text-xs tabular-nums text-foreground/70 lg:inline"
+            suppressHydrationWarning
+          >
+            {time || "--:--:-- --"}
+          </span>
           <SocialRow />
         </div>
 
@@ -154,22 +161,13 @@ export default function Header() {
 
       {/* Mobile menu overlay */}
       {menuOpen && (
-        <div
-          className="fixed inset-0 z-50 flex flex-col bg-background md:hidden"
-          data-lenis-prevent
-        >
+        <div className="fixed inset-0 z-50 flex flex-col bg-background md:hidden" data-lenis-prevent>
           <div className="flex items-center justify-between px-5 pt-5">
             <Logo onClick={close} />
-            <button
-              type="button"
-              onClick={close}
-              aria-label="Close menu"
-              className="text-2xl leading-none text-foreground"
-            >
+            <button type="button" onClick={close} aria-label="Close menu" className="text-2xl leading-none text-foreground">
               ✕
             </button>
           </div>
-
           <nav className="flex flex-1 flex-col justify-center gap-4 px-5">
             {site.nav.map((item) => (
               <Link
@@ -179,15 +177,10 @@ export default function Header() {
                 className="inline-flex items-center gap-2 text-4xl font-normal uppercase tracking-tight text-foreground"
               >
                 {item.label}
-                {hasArrow(item.label) && (
-                  <span aria-hidden className="text-2xl">
-                    ↗
-                  </span>
-                )}
+                {hasArrow(item.label) && <span aria-hidden className="text-2xl">↗</span>}
               </Link>
             ))}
           </nav>
-
           <div className="px-5 pb-10">
             <SocialRow />
           </div>

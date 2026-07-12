@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 360" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <filter id="f" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="46"/></filter>
+    <style>
+      .blob{transform-box:fill-box;transform-origin:center}
+      .a{animation:a 9s ease-in-out infinite alternate}
+      .b{animation:b 12s ease-in-out infinite alternate}
+      .c{animation:c 15s ease-in-out infinite alternate}
+      @keyframes a{from{transform:translate(-50px,-40px) scale(1)}to{transform:translate(90px,70px) scale(1.4)}}
+      @keyframes b{from{transform:translate(70px,20px) scale(1.25)}to{transform:translate(-80px,-50px) scale(1)}}
+      @keyframes c{from{transform:translate(0,50px) scale(1.1)}to{transform:translate(50px,-60px) scale(1.35)}}
+    </style>
+  </defs>
+  <rect width="480" height="360" fill="#0f0c15"/>
+  <g filter="url(#f)">
+    <circle class="blob a" cx="150" cy="140" r="120" fill="#5a4a7a"/>
+    <circle class="blob b" cx="330" cy="230" r="130" fill="#241f2e"/>
+    <circle class="blob c" cx="240" cy="185" r="95" fill="#3f3358"/>
+  </g>
+</svg>

@@ -1,5 +1,4 @@
 import Reveal from "@/components/Reveal";
-import { site } from "@/lib/site";
 import {
   recentClients,
   services,
@@ -47,14 +46,6 @@ export default function AboutIntro() {
           <div className="mt-14">
             <p className={grayLabel}>Contact</p>
             <ul className="mt-6 space-y-1.5 text-sm text-foreground/60">
-              <li>
-                <a
-                  href={`mailto:${site.email}`}
-                  className="transition-colors hover:text-foreground"
-                >
-                  {site.email}
-                </a>
-              </li>
               {socials.map((s) => (
                 <li key={s.label}>
                   <a

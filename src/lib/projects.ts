@@ -1,12 +1,6 @@
 // -------------------------------------------------------------------------
-// EDIT: Real Triptych projects go here.
-//
-// This is the single source of truth for the gallery. Replace the placeholder
-// entries below with real work — title + client are all you strictly need.
-// When assets are ready, point `src` at a still (/public/work/x.jpg) or a
-// muted looping preview (/public/work/x.mp4); until then a generated gradient
-// stands in so the grid still reads. Order here == order on the page; the
-// bracketed [n] index is derived automatically.
+// EDIT: Projects + clients. Titles are placeholders; clients are real.
+// Cards autoplay an animated reel (public/reels/*.svg) over a gradient base.
 // -------------------------------------------------------------------------
 
 export type Project = {
@@ -14,52 +8,75 @@ export type Project = {
   client: string;
   /** EDIT: real still image, e.g. "/work/echoes.jpg" */
   src?: string;
-  /** EDIT: muted looping hover preview, e.g. "/work/echoes.mp4" */
+  /** EDIT: real reel — drop a .gif/.mp4/.webm in /public and point here */
   video?: string;
 };
 
-export const projects: Project[] = [
-  { title: "Echoes of the City", client: "URBANFRAME STUDIO" }, // EDIT
-  { title: "Shadow of Tomorrow", client: "HORIZON PICTURES" }, // EDIT
-  { title: "Silent Horizon", client: "NOVA FILMS" }, // EDIT
-  { title: "Beyond the Last Frame", client: "ATLAS MOTION" }, // EDIT
-  { title: "The Midnight Route", client: "NORTH DISTRICT FILMS" }, // EDIT
-  { title: "Broken Skyline", client: "SILVERLINE PRODUCTIONS" }, // EDIT
-  { title: "Fragments of Light", client: "LUMINA STUDIOS" }, // EDIT
-  { title: "The Final Signal", client: "APEX NARRATIVE" }, // EDIT
-  { title: "Drive the Future", client: "MOTIONDRIVE" }, // EDIT
-  { title: "Pure Motion", client: "VELOCITY MOTORS" }, // EDIT
-  { title: "Urban Energy", client: "METROGRID" }, // EDIT
-  { title: "The Midnight Route V2", client: "CLAB" }, // EDIT
-  { title: "Neon Divide", client: "PULSE COLLECTIVE" }, // EDIT
-  { title: "Slow Tide", client: "COAST STUDIO" }, // EDIT
-  { title: "Afterglow", client: "EMBER FILMS" }, // EDIT
-  { title: "Paper Moon", client: "LANTERN FILMS" }, // EDIT
-  { title: "Cold Open", client: "FRAME NINE" }, // EDIT
-  { title: "Dust & Gold", client: "MERIDIAN STUDIO" }, // EDIT
-  { title: "The Long Exposure", client: "APERTURE CO" }, // EDIT
-  { title: "Static Bloom", client: "NORTHLIGHT" }, // EDIT
-  { title: "Undertow", client: "TIDAL PICTURES" }, // EDIT
-  { title: "Signal Fire", client: "BEACON MEDIA" }, // EDIT
-  { title: "Glass Horizon", client: "PRISM STUDIO" }, // EDIT
-  { title: "Night Shift", client: "OFF-HOURS" }, // EDIT
-  { title: "Half Light", client: "GLOAMING FILMS" }, // EDIT
-  { title: "The Understudy", client: "SECOND ACT" }, // EDIT
-  { title: "Wildcard", client: "DECK 52" }, // EDIT
-  { title: "Foreign Tongue", client: "BABEL MOTION" }, // EDIT
-  { title: "Paper Trail", client: "LEDGER FILMS" }, // EDIT
-  { title: "Terminal Velocity", client: "FREEFALL" }, // EDIT
+// EDIT: labels + artists Triptych works with
+export const clients = [
+  "Universal Music Group",
+  "Interscope Records",
+  "Warner Music Group",
+  "RCA",
+  "Atlantic Records",
+  "Capitol Records",
+  "Republic Records",
+  "G Herbo",
+  "Lil Zay Osama",
+  "Queen Key",
+  "Lil Peep",
+  "Polo G",
+  "Nardo Wick",
+  "Lil Durk",
 ];
 
-// Deterministic film-still-ish gradient per card, so the placeholder grid feels
-// alive instead of flat gray. EDIT: delete once every project has real media.
+// EDIT: project / video titles
+const titles = [
+  "Echoes of the City",
+  "Shadow of Tomorrow",
+  "Silent Horizon",
+  "Beyond the Last Frame",
+  "The Midnight Route",
+  "Broken Skyline",
+  "Fragments of Light",
+  "The Final Signal",
+  "Drive the Future",
+  "Pure Motion",
+  "Urban Energy",
+  "The Midnight Route V2",
+  "Neon Divide",
+  "Slow Tide",
+  "Afterglow",
+  "Paper Moon",
+  "Cold Open",
+  "Dust & Gold",
+  "The Long Exposure",
+  "Static Bloom",
+  "Undertow",
+  "Signal Fire",
+  "Glass Horizon",
+  "Night Shift",
+  "Half Light",
+  "The Understudy",
+  "Wildcard",
+  "Foreign Tongue",
+  "Paper Trail",
+  "Terminal Velocity",
+];
+
+export const projects: Project[] = titles.map((title, i) => ({
+  title,
+  client: clients[i % clients.length],
+}));
+
+// Deterministic gradient base per card (poster behind the reel).
 const GRADIENTS = [
-  ["#3a2e26", "#7a5c3e"], // warm amber
-  ["#1c1c22", "#40404d"], // slate
-  ["#2a1618", "#7c2b2f"], // deep red (cinema)
-  ["#12211f", "#2f5d54"], // teal
-  ["#241f2e", "#5a4a7a"], // dusk violet
-  ["#0f1720", "#334155"], // cool blue
+  ["#3a2e26", "#7a5c3e"],
+  ["#1c1c22", "#40404d"],
+  ["#2a1618", "#7c2b2f"],
+  ["#12211f", "#2f5d54"],
+  ["#241f2e", "#5a4a7a"],
+  ["#0f1720", "#334155"],
 ];
 
 export function placeholderGradient(index: number): string {
@@ -67,24 +84,17 @@ export function placeholderGradient(index: number): string {
   return `linear-gradient(135deg, ${a} 0%, ${b} 100%)`;
 }
 
-// -------------------------------------------------------------------------
-// EDIT: Preview reels. Hotlinked HD sample clips on a stable public CDN,
-// standing in until real footage is added. Swap these URLs for your reels
-// (or drop files in /public/work and point here). Cards play them on hover.
-// Note: these load in the browser on the live site — they can't be previewed
-// from the build sandbox (no outbound network).
-// -------------------------------------------------------------------------
+// Animated reel loops (local, autoplay via SVG animation — no network needed).
+// EDIT: replace with real GIF/MP4 reels when available.
 const MEDIA = [
-  "https://storage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
-  "https://storage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
-  "https://storage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-  "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-  "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
-  "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
-  "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
-  "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
-  "https://storage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4",
-  "https://storage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4",
+  "/reels/reel-01.svg",
+  "/reels/reel-02.svg",
+  "/reels/reel-03.svg",
+  "/reels/reel-04.svg",
+  "/reels/reel-05.svg",
+  "/reels/reel-06.svg",
+  "/reels/reel-07.svg",
+  "/reels/reel-08.svg",
 ];
 
 export function projectMedia(index: number): string {
