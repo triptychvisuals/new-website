@@ -66,3 +66,27 @@ export function placeholderGradient(index: number): string {
   const [a, b] = GRADIENTS[index % GRADIENTS.length];
   return `linear-gradient(135deg, ${a} 0%, ${b} 100%)`;
 }
+
+// -------------------------------------------------------------------------
+// EDIT: Preview reels. Hotlinked HD sample clips on a stable public CDN,
+// standing in until real footage is added. Swap these URLs for your reels
+// (or drop files in /public/work and point here). Cards play them on hover.
+// Note: these load in the browser on the live site — they can't be previewed
+// from the build sandbox (no outbound network).
+// -------------------------------------------------------------------------
+const MEDIA = [
+  "https://storage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
+  "https://storage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
+  "https://storage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+  "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+  "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+  "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
+  "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
+  "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
+  "https://storage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4",
+  "https://storage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4",
+];
+
+export function projectMedia(index: number): string {
+  return MEDIA[index % MEDIA.length];
+}

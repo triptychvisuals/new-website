@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
-import { projects, placeholderGradient } from "@/lib/projects";
+import { projects, placeholderGradient, projectMedia } from "@/lib/projects";
 import ProjectCard from "./ProjectCard";
 
 /**
@@ -44,6 +44,7 @@ export default function Gallery() {
             project={project}
             index={i}
             gradient={placeholderGradient(i)}
+            video={project.video ?? projectMedia(i)}
           />
         ))}
       </div>

@@ -142,7 +142,7 @@ export default function Footer() {
           <img
             src="/triptych-logo.png"
             alt="Triptych"
-            className="h-9 w-auto [filter:brightness(0)]"
+            className="h-9 w-auto [filter:brightness(0)] dark:[filter:none]"
           />
         </div>
       </div>

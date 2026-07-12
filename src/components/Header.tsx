@@ -3,17 +3,65 @@
 import Link from "next/link";
 import { useState } from "react";
 import { site } from "@/lib/site";
+import ThemeToggle from "@/components/ThemeToggle";
 
 /**
  * Centered-logo header: NAV · NAV  ◬logo◬  NAV · NAV
- * Uppercase links clustered close to the centered logo. Hamburger on mobile.
+ * Social icons + dark-mode toggle pinned top-right. Hamburger on mobile.
  */
 function hasArrow(label: string) {
   return label.toLowerCase() === "store";
 }
 
 const linkCls =
-  "inline-flex items-center gap-1 text-[13px] font-medium uppercase tracking-tight text-black transition-opacity hover:opacity-60 whitespace-nowrap";
+  "inline-flex items-center gap-1 text-[13px] font-medium uppercase tracking-tight text-foreground transition-opacity hover:opacity-60 whitespace-nowrap";
+
+/* EDIT: social links + icons */
+function IgIcon() {
+  return (
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+      <rect x="2.6" y="2.6" width="18.8" height="18.8" rx="5" />
+      <circle cx="12" cy="12" r="4.2" />
+      <circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+function YtIcon() {
+  return (
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M23 7.5a3 3 0 0 0-2.1-2.1C19 5 12 5 12 5s-7 0-8.9.4A3 3 0 0 0 1 7.5 31 31 0 0 0 .6 12 31 31 0 0 0 1 16.5a3 3 0 0 0 2.1 2.1C5 19 12 19 12 19s7 0 8.9-.4a3 3 0 0 0 2.1-2.1A31 31 0 0 0 23.4 12 31 31 0 0 0 23 7.5zM9.8 15.5v-7l6 3.5z" />
+    </svg>
+  );
+}
+function LiIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9 9h3.8v1.65h.05c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.78 2.65 4.78 6.1V21h-4v-5.4c0-1.3 0-2.95-1.8-2.95s-2.08 1.4-2.08 2.86V21H9z" />
+    </svg>
+  );
+}
+const socials = [
+  { label: "Instagram", href: "#", Icon: IgIcon },
+  { label: "YouTube", href: "#", Icon: YtIcon },
+  { label: "LinkedIn", href: "#", Icon: LiIcon },
+];
+
+function SocialRow() {
+  return (
+    <div className="flex items-center gap-3 text-foreground">
+      {socials.map((s) => (
+        <a
+          key={s.label}
+          href={s.href}
+          aria-label={s.label}
+          className="transition-opacity hover:opacity-60"
+        >
+          <s.Icon />
+        </a>
+      ))}
+    </div>
+  );
+}
 
 function NavLink({ item }: { item: { label: string; href: string } }) {
   return (
@@ -42,7 +90,7 @@ function Logo({
       <img
         src="/triptych-logo.png"
         alt="Triptych"
-        className="h-6 w-auto [filter:brightness(0)]"
+        className="h-6 w-auto [filter:brightness(0)] dark:[filter:none]"
       />
       <sup className="text-[0.5rem] leading-none text-foreground">®</sup>
     </Link>
@@ -75,19 +123,32 @@ export default function Header() {
           </span>
         </nav>
 
-        {/* Mobile: logo + hamburger */}
+        {/* Top-left: dark-mode toggle */}
+        <div className="absolute left-5 top-4 hidden items-center sm:left-8 md:flex">
+          <ThemeToggle />
+        </div>
+
+        {/* Top-right: social icons */}
+        <div className="absolute right-5 top-5 hidden h-6 items-center gap-4 sm:right-8 md:flex">
+          <SocialRow />
+        </div>
+
+        {/* Mobile: logo + toggle + hamburger */}
         <div className="flex w-full items-center justify-between md:hidden">
           <Logo />
-          <button
-            type="button"
-            onClick={() => setMenuOpen(true)}
-            aria-label="Open menu"
-            aria-expanded={menuOpen}
-            className="flex flex-col items-end justify-center gap-[6px] py-2"
-          >
-            <span className="block h-[1.5px] w-7 bg-foreground" />
-            <span className="block h-[1.5px] w-7 bg-foreground" />
-          </button>
+          <div className="flex items-center gap-4">
+            <ThemeToggle />
+            <button
+              type="button"
+              onClick={() => setMenuOpen(true)}
+              aria-label="Open menu"
+              aria-expanded={menuOpen}
+              className="flex flex-col items-end justify-center gap-[6px] py-2"
+            >
+              <span className="block h-[1.5px] w-7 bg-foreground" />
+              <span className="block h-[1.5px] w-7 bg-foreground" />
+            </button>
+          </div>
         </div>
       </header>
 
@@ -126,6 +187,10 @@ export default function Header() {
               </Link>
             ))}
           </nav>
+
+          <div className="px-5 pb-10">
+            <SocialRow />
+          </div>
         </div>
       )}
     </>

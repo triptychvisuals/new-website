@@ -1,57 +1,67 @@
+"use client";
+
+import { useEffect, useRef } from "react";
 import type { Project } from "@/lib/projects";
 
 /**
- * One gallery cell: media (still/video/gradient) with a hover zoom + PLAY
- * affordance, then title · [n] · CLIENT metadata underneath.
+ * Gallery cell: an HD reel that autoplays while on-screen (paused off-screen
+ * for performance), over a gradient/still base, then title · [n] · CLIENT.
  */
 export default function ProjectCard({
   project,
   index,
   gradient,
+  video,
 }: {
   project: Project;
   index: number;
   gradient: string;
+  video?: string;
 }) {
   const n = index + 1;
+  const vref = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const v = vref.current;
+    if (!v) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) v.play().catch(() => {});
+        else v.pause();
+      },
+      { rootMargin: "200px" }
+    );
+    io.observe(v);
+    return () => io.disconnect();
+  }, []);
 
   return (
     <a data-card href="#" className="group block">
-      {/* Media */}
-      <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg bg-neutral-200">
-        {project.video ? (
-          // EDIT: muted looping hover preview
+      <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg bg-neutral-200 dark:bg-neutral-800">
+        {/* Base still / gradient */}
+        {project.src ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={project.src}
+            alt={project.title}
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+        ) : (
+          <div className="absolute inset-0" style={{ background: gradient }} />
+        )}
+
+        {/* HD reel — autoplays while visible */}
+        {video && (
           <video
-            className="absolute inset-0 h-full w-full object-cover transition-transform duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.04]"
-            src={project.video}
-            poster={project.src}
+            ref={vref}
+            src={video}
             muted
             loop
             playsInline
             preload="none"
-          />
-        ) : project.src ? (
-          // EDIT: real still image
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            className="absolute inset-0 h-full w-full object-cover transition-transform duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.04]"
-            src={project.src}
-            alt={project.title}
-          />
-        ) : (
-          // Placeholder gradient until real media is dropped in
-          <div
-            className="absolute inset-0 transition-transform duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.04]"
-            style={{ background: gradient }}
+            className="absolute inset-0 h-full w-full object-cover"
           />
         )}
-
-        {/* PLAY affordance */}
-        <div className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-          <span className="font-mono text-xs tracking-[0.35em] text-white [text-shadow:0_1px_10px_rgba(0,0,0,0.6)]">
-            PLAY
-          </span>
-        </div>
       </div>
 
       {/* Meta */}
