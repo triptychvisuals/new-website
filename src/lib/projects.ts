@@ -64,9 +64,16 @@ const titles = [
   "Terminal Velocity",
 ];
 
+// EDIT: real reels for specific cards (card index -> file in /public/reels)
+const REELS: Record<number, string> = {
+  0: "/reels/reel-a.gif",
+  1: "/reels/reel-b.gif",
+};
+
 export const projects: Project[] = titles.map((title, i) => ({
   title,
   client: clients[i % clients.length],
+  video: REELS[i],
 }));
 
 // Deterministic gradient base per card (poster behind the reel).
