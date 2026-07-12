@@ -5,9 +5,9 @@ import { socials, phone } from "@/lib/about";
 /* EDIT: footer link groups */
 const navigation = [
   { label: "Home", href: "/" },
-  { label: "Work", href: "/#work" },
+  { label: "Projects", href: "/projects" },
+  { label: "Journal", href: "#" },
   { label: "About", href: "/about" },
-  { label: "Press", href: "/about#awards" },
   { label: "Contact", href: "/about#contact" },
 ];
 const legal = [
