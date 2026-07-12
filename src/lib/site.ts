@@ -11,8 +11,9 @@ export const site = {
   sectionNumber: "001", // EDIT: hero index label
   sectionLabel: "SELECTED WORKS", // EDIT: hero bracket label
   nav: [
+    { label: "Projects", href: "/#work" }, // EDIT: works grid on the home page
+    { label: "Journal", href: "#" }, // EDIT: no Journal page yet — placeholder
     { label: "About", href: "/about" }, // EDIT
-    { label: "Press", href: "/about#awards" }, // EDIT: repoint to a real Press section when built
-    { label: "Contact", href: "/about#contact" }, // EDIT
+    { label: "Contact", href: "/about#contact" }, // EDIT: shows the ↗
   ],
 };
