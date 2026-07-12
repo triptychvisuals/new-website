@@ -14,6 +14,6 @@ export const site = {
     { label: "Projects", href: "/#work" }, // EDIT: works grid on the home page
     { label: "Journal", href: "#" }, // EDIT: no Journal page yet — placeholder
     { label: "About", href: "/about" }, // EDIT
-    { label: "Contact", href: "/about#contact" }, // EDIT: shows the ↗
+    { label: "Store", href: "#" }, // EDIT: link to your store; shows the ↗
   ],
 };

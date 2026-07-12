@@ -9,8 +9,8 @@ import { site } from "@/lib/site";
  *   PROJECTS · JOURNAL · ABOUT · CONTACT ↗
  * Collapses to a hamburger overlay on mobile.
  */
-function isContact(label: string) {
-  return label.toLowerCase() === "contact";
+function hasArrow(label: string) {
+  return label.toLowerCase() === "store";
 }
 
 function Logo({ onClick }: { onClick?: () => void }) {
@@ -50,10 +50,10 @@ export default function Header() {
             <Link
               key={item.label}
               href={item.href}
-              className="inline-flex items-center gap-1 text-[13px] font-medium uppercase tracking-[0.08em] text-foreground/80 transition-colors hover:text-foreground"
+              className="inline-flex items-center gap-1 text-[13px] font-medium uppercase tracking-tight text-black transition-opacity hover:opacity-60"
             >
               {item.label}
-              {isContact(item.label) && <span aria-hidden>↗</span>}
+              {hasArrow(item.label) && <span aria-hidden>↗</span>}
             </Link>
           ))}
         </nav>
@@ -99,7 +99,7 @@ export default function Header() {
                 className="inline-flex items-center gap-2 text-4xl font-normal uppercase tracking-tight text-foreground"
               >
                 {item.label}
-                {isContact(item.label) && (
+                {hasArrow(item.label) && (
                   <span aria-hidden className="text-2xl">
                     ↗
                   </span>
