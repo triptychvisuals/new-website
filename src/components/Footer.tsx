@@ -27,23 +27,9 @@ const colLink =
  */
 export default function Footer() {
   return (
-    <footer className="px-5 pt-16 sm:px-8">
-      {/* Oversized wordmark + tagline */}
-      <div>
-        <h2 className="text-[clamp(3rem,17vw,15rem)] font-bold uppercase leading-[0.8] tracking-[-0.03em] text-foreground">
-          {site.name}
-        </h2>
-        <div className="mt-2 flex justify-end border-t border-foreground/80 pt-2">
-          <p className="font-mono text-[11px] uppercase tracking-[0.1em] text-foreground">
-            {/* EDIT: tagline */}
-            We leave{" "}
-            <span className="text-accent">the story better</span> than the brief
-          </p>
-        </div>
-      </div>
-
+    <footer className="border-t border-hairline px-5 pt-12 sm:px-8">
       {/* Newsletter + link columns */}
-      <div className="mt-16 grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1fr]">
+      <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1fr]">
         {/* Newsletter */}
         <div>
           <div className="flex items-start gap-4">
@@ -124,7 +110,7 @@ export default function Footer() {
       </div>
 
       {/* Studio + contact strip */}
-      <div className="mt-16 grid grid-cols-1 gap-10 border-t border-hairline py-10 md:grid-cols-3">
+      <div className="mt-12 grid grid-cols-1 gap-10 border-t border-hairline py-8 md:grid-cols-3">
         <div>
           <p className="text-xl leading-snug text-foreground">
             <span className="text-accent">{site.name}</span> is a creative studio

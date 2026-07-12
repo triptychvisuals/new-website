@@ -35,9 +35,9 @@ export default function Gallery() {
   }, []);
 
   return (
-    <section id="work" ref={root} className="px-5 pb-32 pt-10 sm:px-8 sm:pt-16">
-      {/* 1 (phone) · 2 (tablet) · 4 · 5 (widest) */}
-      <div className="grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
+    <section id="work" ref={root} className="px-5 pb-16 pt-6 sm:px-8 sm:pt-8">
+      {/* 1 (phone) · 2 (tablet) · 4 · 5 (widest) — even gaps */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
         {projects.map((project, i) => (
           <ProjectCard
             key={project.title}

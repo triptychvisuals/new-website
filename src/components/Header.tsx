@@ -38,7 +38,10 @@ export default function Header() {
 
   return (
     <>
-      <header className="relative z-20 flex items-center justify-between gap-6 px-5 pt-5 sm:px-8">
+      <header
+        className="relative z-20 flex items-center justify-between gap-6 px-5 pt-5 sm:px-8"
+        style={{ fontFamily: "var(--font-inter), Helvetica, Arial, sans-serif" }}
+      >
         <Logo />
 
         {/* Desktop menu */}
@@ -73,6 +76,7 @@ export default function Header() {
         <div
           className="fixed inset-0 z-50 flex flex-col bg-background md:hidden"
           data-lenis-prevent
+          style={{ fontFamily: "var(--font-inter), Helvetica, Arial, sans-serif" }}
         >
           <div className="flex items-center justify-between px-5 pt-5">
             <Logo onClick={close} />

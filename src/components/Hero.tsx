@@ -37,7 +37,7 @@ export default function Hero() {
     <section
       id="top"
       ref={root}
-      className="px-5 pb-6 pt-10 sm:px-8 sm:pt-14"
+      className="px-5 pb-4 pt-8 sm:px-8 sm:pt-10"
     >
       <div className="flex flex-col gap-x-8 gap-y-3 md:flex-row md:items-baseline">
         <h1 data-hero-line className={display}>

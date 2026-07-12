@@ -31,6 +31,9 @@ export const projects: Project[] = [
   { title: "Pure Motion", client: "VELOCITY MOTORS" }, // EDIT
   { title: "Urban Energy", client: "METROGRID" }, // EDIT
   { title: "The Midnight Route V2", client: "CLAB" }, // EDIT
+  { title: "Neon Divide", client: "PULSE COLLECTIVE" }, // EDIT
+  { title: "Slow Tide", client: "COAST STUDIO" }, // EDIT
+  { title: "Afterglow", client: "EMBER FILMS" }, // EDIT
 ];
 
 // Deterministic film-still-ish gradient per card, so the placeholder grid feels
