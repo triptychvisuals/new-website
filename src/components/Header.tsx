@@ -113,7 +113,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="relative z-20 flex items-center justify-between px-5 pt-5 sm:px-8">
+      <header className="sticky top-0 z-40 flex items-center justify-between bg-background/80 px-5 py-4 backdrop-blur-md sm:px-8">
         {/* Left: light-switch toggle + tagline */}
         <div className="hidden items-center gap-3 md:flex">
           <ThemeToggle />
@@ -148,9 +148,15 @@ export default function Header() {
           <SocialRow />
         </div>
 
-        {/* Mobile: logo + toggle + hamburger */}
-        <div className="flex w-full items-center justify-between md:hidden">
+        {/* Mobile: logo + centered clock + toggle + hamburger */}
+        <div className="relative flex w-full items-center justify-between md:hidden">
           <Logo />
+          <span
+            className="absolute left-1/2 -translate-x-1/2 font-mono text-xs tabular-nums text-foreground/70"
+            suppressHydrationWarning
+          >
+            {time || "--:--:-- --"}
+          </span>
           <div className="flex items-center gap-4">
             <ThemeToggle />
             <button
