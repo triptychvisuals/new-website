@@ -1,14 +1,14 @@
-// Home — studio landing (hero + project carousel).
+// Home — "Selected Works" gallery.
 import Header from "@/components/Header";
-import HomeHero from "@/components/home/HomeHero";
-import ProjectCarousel from "@/components/home/ProjectCarousel";
+import Hero from "@/components/Hero";
+import Gallery from "@/components/Gallery";
 
 export default function Home() {
   return (
     <main className="relative min-h-screen">
       <Header />
-      <HomeHero />
-      <ProjectCarousel />
+      <Hero />
+      <Gallery />
     </main>
   );
 }

@@ -1,16 +1,35 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { site } from "@/lib/site";
 
 /**
  * Shared editorial top bar:
- *   [logo®] ................ nav · [Contact]   (desktop)
- *   [logo®] ................. [hamburger]      (mobile → overlay)
+ *   [logo®] ................ nav · live clock · [Contact]   (desktop)
+ *   [logo®] ................................... [hamburger] (mobile → overlay)
  *
- * The "Contact" nav link renders as the button; the footer keeps the full nav.
+ * The "Contact" nav link is dropped from the header (there's a Contact button);
+ * the footer keeps the full nav.
  */
+function useClock() {
+  const [time, setTime] = useState("");
+
+  useEffect(() => {
+    const pad = (n: number) => String(n).padStart(2, "0");
+    const format = () => {
+      const d = new Date();
+      const ampm = d.getHours() >= 12 ? "PM" : "AM";
+      const h = d.getHours() % 12 || 12;
+      return `${pad(h)}:${pad(d.getMinutes())}:${pad(d.getSeconds())} ${ampm}`;
+    };
+    setTime(format());
+    const id = setInterval(() => setTime(format()), 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  return time;
+}
 
 // Header nav omits "Contact" — the button covers it.
 const navLinks = site.nav.filter((i) => i.label.toLowerCase() !== "contact");
@@ -35,6 +54,7 @@ function Logo({ onClick }: { onClick?: () => void }) {
 }
 
 export default function Header() {
+  const time = useClock();
   const [menuOpen, setMenuOpen] = useState(false);
   const close = () => setMenuOpen(false);
 
@@ -43,8 +63,8 @@ export default function Header() {
       <header className="relative z-20 flex items-center justify-between gap-6 px-5 pt-5 sm:px-8">
         <Logo />
 
-        {/* Desktop: nav · Contact */}
-        <div className="hidden items-center gap-8 md:flex">
+        {/* Desktop: nav · clock · Contact */}
+        <div className="hidden items-center gap-6 md:flex lg:gap-8">
           <nav className="flex items-center gap-6">
             {navLinks.map((item) => (
               <Link
@@ -56,6 +76,12 @@ export default function Header() {
               </Link>
             ))}
           </nav>
+
+          <div className="hidden items-center font-mono text-xs text-foreground lg:flex">
+            <span className="tabular-nums text-foreground/80" suppressHydrationWarning>
+              {time || "--:--:-- --"}
+            </span>
+          </div>
 
           <Link
             href="/about#contact"
@@ -109,7 +135,13 @@ export default function Header() {
             ))}
           </nav>
 
-          <div className="flex justify-end px-5 pb-10">
+          <div className="flex items-center justify-between px-5 pb-10">
+            <span
+              className="font-mono text-xs tabular-nums text-foreground/70"
+              suppressHydrationWarning
+            >
+              {time}
+            </span>
             <Link
               href="/about#contact"
               onClick={close}
