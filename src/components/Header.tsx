@@ -96,7 +96,7 @@ function Logo({ onClick, className = "" }: { onClick?: () => void; className?: s
   return (
     <Link href="/" onClick={onClick} aria-label="Triptych — home" className={`inline-flex items-start gap-0.5 ${className}`}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src="/triptych-logo.png" alt="Triptych" className="h-6 w-auto [filter:brightness(0)] dark:[filter:none]" />
+      <img src="/triptych-logo.png" alt="Triptych" className="h-5 w-auto [filter:brightness(0)] dark:[filter:none]" />
       <sup className="text-[0.5rem] leading-none text-foreground">®</sup>
     </Link>
   );

@@ -20,7 +20,7 @@ export default function ProjectCard({
 
   return (
     <a data-card href="#" className="group block">
-      <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg bg-neutral-200 dark:bg-neutral-800">
+      <div className="relative aspect-[16/9] w-full overflow-hidden rounded-xl bg-neutral-200 dark:bg-neutral-800">
         {/* Gradient base (poster) */}
         <div className="absolute inset-0" style={{ background: gradient }} />
 
