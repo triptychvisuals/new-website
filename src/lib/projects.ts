@@ -10,6 +10,12 @@ export type Project = {
   src?: string;
   /** EDIT: real reel — a file in /public/reels */
   video?: string;
+  /**
+   * EDIT: focal point for the object-cover crop, e.g. "50% 30%".
+   * Only needed when a clip isn't natively 16:9 and the default center
+   * crop cuts the subject. Higher second value = show more of the bottom.
+   */
+  objectPosition?: string;
 };
 
 // EDIT: labels + artists Triptych works with (used on the About page)
@@ -72,6 +78,9 @@ const OVERRIDES: Record<number, Partial<Project>> = {
     title: "Good Morning America",
     category: "Music Video",
     video: "/reels/reel-c.gif",
+    // 4:3 source in a 16:9 cell — bias the crop down so the seated subject's
+    // face + hands stay in frame instead of empty text headroom up top.
+    objectPosition: "50% 60%",
   },
 };
 
@@ -79,6 +88,7 @@ export const projects: Project[] = titles.map((title, i) => ({
   title: OVERRIDES[i]?.title ?? title,
   category: OVERRIDES[i]?.category ?? "Music Video", // EDIT: default category
   video: OVERRIDES[i]?.video,
+  objectPosition: OVERRIDES[i]?.objectPosition,
 }));
 
 // Deterministic gradient base per card (poster behind the reel).

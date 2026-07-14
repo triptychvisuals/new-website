@@ -30,6 +30,7 @@ export default function ProjectCard({
           <img
             src={reel}
             alt={project.title}
+            style={project.objectPosition ? { objectPosition: project.objectPosition } : undefined}
             className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
           />
         )}
