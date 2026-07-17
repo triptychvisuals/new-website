@@ -22,7 +22,7 @@ export default function AboutIntro() {
   return (
     <section id="about-intro" className="px-5 pt-10 sm:px-8 sm:pt-16">
       {/* Two columns side by side on mobile; tight side-by-side from sm up */}
-      <div className="grid grid-cols-2 gap-x-6 sm:flex sm:flex-row sm:gap-x-16">
+      <div className="grid grid-cols-2 gap-x-6 sm:flex sm:flex-row sm:items-start sm:gap-x-16">
         <ScrollFill>
           <p className={label} data-fill>
             Recent Clients
@@ -59,6 +59,24 @@ export default function AboutIntro() {
             ))}
           </ul>
         </ScrollFill>
+
+        {/* Reel in the open space to the right: hidden on phones, 1:1 at the
+            tablet breakpoint, 16:9 filling the space on desktop. */}
+        <div className="hidden sm:block sm:flex-1">
+          <div className="aspect-square overflow-hidden rounded-2xl bg-black lg:aspect-video">
+            {/* EDIT: swap for the reel you want here */}
+            <video
+              className="h-full w-full object-cover"
+              src="/hero/hero.mp4"
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              aria-label="Triptych reel"
+            />
+          </div>
+        </div>
       </div>
     </section>
   );
