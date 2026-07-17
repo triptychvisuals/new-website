@@ -37,18 +37,27 @@ export default function HeroStudio() {
   return (
     <section className="bg-[#f4f2ec] px-2 pb-2 pt-2 dark:bg-[#0a0a0a] sm:px-3 sm:pb-3">
       <div className="relative isolate flex min-h-[88vh] flex-col overflow-hidden rounded-[26px] bg-[#0e0e10] text-white">
-        {/* Background: soft marble glow + film grain.
-            EDIT: for the exact photographic look, drop /public/hero-bg.jpg and
-            uncomment the <img> layer below. */}
+        {/* Background: looping hero video, a legibility overlay, and film grain.
+            EDIT: replace /public/hero/hero.mp4 (and optionally add a poster). */}
+        <video
+          className="pointer-events-none absolute inset-0 -z-10 h-full w-full object-cover"
+          src="/hero/hero.mp4"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          aria-hidden
+        />
+        {/* Darken top + bottom so the white text / card stay readable */}
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0 -z-10"
           style={{
             background:
-              "radial-gradient(56% 44% at 60% 15%, rgba(232,232,236,0.17), rgba(232,232,236,0.04) 42%, transparent 68%), #0e0e10",
+              "linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.24) 35%, rgba(0,0,0,0.28) 62%, rgba(0,0,0,0.62) 100%)",
           }}
         />
-        {/* <img src="/hero-bg.jpg" alt="" aria-hidden className="absolute inset-0 -z-10 h-full w-full object-cover opacity-70" /> */}
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0 -z-10 opacity-[0.12] mix-blend-soft-light"
