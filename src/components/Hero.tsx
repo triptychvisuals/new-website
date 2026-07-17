@@ -59,7 +59,7 @@ export default function Hero() {
           {/* Index label tucked between the words */}
           <div
             data-hero-label
-            className="border-l-2 border-accent pl-3 font-mono text-[11px] leading-relaxed md:self-end md:pb-[0.7em]"
+            className="border-l-2 border-accent pl-3 text-[11px] leading-relaxed md:self-end md:pb-[0.7em]"
           >
             <div className="text-muted">{site.sectionNumber}</div>
             <div className="text-foreground">[{site.sectionLabel}]</div>
@@ -79,7 +79,7 @@ export default function Hero() {
                 i === 0 ? "border-t" : ""
               }`}
             >
-              <span className="font-mono text-[11px] uppercase tracking-[0.15em] text-muted">
+              <span className="text-[11px] uppercase tracking-[0.15em] text-muted">
                 {s.label}
               </span>
               <span className="text-sm font-medium uppercase tracking-wide text-foreground">

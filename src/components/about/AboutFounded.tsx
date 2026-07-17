@@ -4,11 +4,11 @@ import { founded, timeline, aboutGradient } from "@/lib/about";
 /** Featured still, two-tone "…was founded." statement, then the timeline. */
 export default function AboutFounded() {
   return (
-    <section className="px-5 pt-24 sm:px-8 sm:pt-32">
+    <section className="px-5 pt-16 sm:px-8 sm:pt-20">
       {/* Featured still (top-right) — EDIT: swap gradient for a real image */}
       <div className="flex justify-end">
         <div
-          className="aspect-video w-full max-w-md overflow-hidden"
+          className="aspect-video w-full max-w-md overflow-hidden rounded-2xl"
           style={{ background: aboutGradient(0) }}
           aria-hidden
         />
@@ -27,17 +27,17 @@ export default function AboutFounded() {
         {timeline.map((item, i) => (
           <Reveal key={item.year} delay={i * 0.05}>
             <div
-              className="aspect-[4/3] w-full overflow-hidden"
+              className="aspect-[4/3] w-full overflow-hidden rounded-2xl"
               style={{ background: aboutGradient(i + 1) }}
               aria-hidden
             />
             <p className="mt-5 text-2xl font-medium tracking-tight text-foreground">
               {item.year}
             </p>
-            <p className="mt-3 font-mono text-[11px] uppercase tracking-[0.15em] text-foreground">
+            <p className="mt-3 text-sm font-medium tracking-tight text-foreground">
               {item.title}
             </p>
-            <p className="mt-3 font-mono text-[12px] uppercase leading-relaxed tracking-wide text-foreground/60">
+            <p className="mt-3 text-[13px] leading-relaxed text-foreground/60">
               {item.body}
             </p>
           </Reveal>

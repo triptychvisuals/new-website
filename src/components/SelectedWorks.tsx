@@ -18,8 +18,8 @@ export default function SelectedWorks() {
 
         {/* Index marker (hidden on small screens so the words never overflow) */}
         <div className="mb-[1.2vw] hidden flex-col self-end border-l border-foreground/30 pl-2 leading-tight lg:flex">
-          <span className="font-mono text-[11px] text-muted sm:text-xs">001</span>
-          <span className="font-mono text-[11px] font-semibold tracking-wide text-foreground sm:text-xs">
+          <span className="text-[11px] text-muted sm:text-xs">001</span>
+          <span className="text-[11px] font-semibold tracking-wide text-foreground sm:text-xs">
             [SELECTED WORKS]
           </span>
         </div>
