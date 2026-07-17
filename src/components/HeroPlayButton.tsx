@@ -40,8 +40,8 @@ export default function HeroPlayButton() {
 
   return (
     <>
-      {/* EDIT: loop the track by adding `loop` below */}
-      <audio ref={audioRef} src={TRACK_SRC} preload="none" />
+      {/* EDIT: remove `loop` to play the track once through */}
+      <audio ref={audioRef} src={TRACK_SRC} preload="none" loop />
       <button
         type="button"
         onClick={toggle}
