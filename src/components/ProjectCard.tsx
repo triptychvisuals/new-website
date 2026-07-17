@@ -64,7 +64,7 @@ export default function ProjectCard({
         <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 p-4">
           {/* Bottom-left: title + type */}
           <div className="min-w-0">
-            <h3 className="text-[15px] font-semibold leading-tight text-white">
+            <h3 className="text-[15px] font-normal leading-tight tracking-[-0.03em] text-white">
               {project.title}
             </h3>
             <p className="mt-0.5 text-[12px] leading-tight text-white/70">

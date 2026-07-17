@@ -93,6 +93,15 @@ const OVERRIDES: Record<number, Partial<Project>> = {
 // EDIT: placeholder years shown top-right of each card (swap for the real ones)
 const YEARS = ["2026", "2025", "2024", "2023", "2022", "2021"];
 
+// EDIT: placeholder logos (generic marks) so the logo slot is visible — replace
+// with real per-project logos (drop files in /public/logos and set them here).
+const PLACEHOLDER_LOGOS = [
+  "/logos/mark-1.svg",
+  "/logos/mark-2.svg",
+  "/logos/mark-3.svg",
+  "/logos/mark-4.svg",
+];
+
 export const projects: Project[] = titles.map((title, i) => ({
   title: OVERRIDES[i]?.title ?? title,
   category: OVERRIDES[i]?.category ?? "Music Video", // EDIT: default category
@@ -100,6 +109,7 @@ export const projects: Project[] = titles.map((title, i) => ({
   objectPosition: OVERRIDES[i]?.objectPosition,
   artist: OVERRIDES[i]?.artist, // EDIT: set an artist to show instead of category
   year: OVERRIDES[i]?.year ?? YEARS[i % YEARS.length],
+  logo: OVERRIDES[i]?.logo ?? PLACEHOLDER_LOGOS[i % PLACEHOLDER_LOGOS.length],
 }));
 
 // Deterministic gradient base per card (poster behind the reel).
