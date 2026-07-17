@@ -20,6 +20,8 @@ export type Project = {
   artist?: string;
   /** EDIT: year shown at the top-right of the card, e.g. "2020". */
   year?: string;
+  /** EDIT: small logo shown under the year, e.g. "/logos/label.svg". */
+  logo?: string;
 };
 
 // EDIT: labels + artists Triptych works with (used on the About page)

@@ -89,42 +89,48 @@ export default function HeroStudio() {
           <Plus />
         </div>
 
-        {/* Bottom: tagline (left) · copyright (center) · team card (right) */}
-        <div className="relative flex flex-col gap-8 p-6 sm:p-8 lg:flex-row lg:items-end lg:justify-between lg:p-10">
-          {/* Partners — logo marquee, bottom-left */}
-          <div className="flex flex-col gap-3">
+        {/* Bottom band.
+            Desktop: partners (left) · copyright (center) · card (right).
+            Mobile: partners centered on top, then copyright (left) + card (right). */}
+        <div className="relative grid grid-cols-2 items-end gap-x-3 gap-y-6 p-6 sm:p-8 lg:flex lg:flex-row lg:items-end lg:justify-between lg:gap-8 lg:p-10">
+          {/* Partners — logo marquee (centered on mobile) */}
+          <div className="col-span-2 flex flex-col items-center gap-2 lg:col-auto lg:items-start lg:gap-3">
             <p className="text-[11px] uppercase tracking-[0.2em] text-white/40">
               Partners
             </p>
             <PartnerMarquee />
           </div>
 
-          {/* EDIT: copyright line */}
-          <p className="order-last text-sm text-white/45 lg:absolute lg:bottom-10 lg:left-1/2 lg:order-none lg:-translate-x-1/2">
-            © 2026 triptych® Studio
+          {/* EDIT: copyright line — bottom-left on mobile, centered on desktop */}
+          <p className="self-end text-xs text-white/45 sm:text-sm lg:absolute lg:bottom-10 lg:left-1/2 lg:-translate-x-1/2">
+            © 2026 Triptych Studio
           </p>
 
-          {/* Watch-reel card — semi-transparent glass */}
-          <div className="flex items-stretch gap-2">
-            <div className="w-[92px] shrink-0 rounded-2xl border border-white/15 bg-white/10 p-1.5 backdrop-blur-md">
+          {/* Watch-reel card — semi-transparent glass (compact + bottom-right on mobile) */}
+          <div className="flex items-stretch gap-2 justify-self-end lg:justify-self-auto">
+            <div className="hidden w-[92px] shrink-0 rounded-2xl border border-white/15 bg-white/10 p-1.5 backdrop-blur-md lg:block">
               <div className="h-full w-full overflow-hidden rounded-xl">
                 <AvatarPlaceholder />
               </div>
             </div>
-            <div className="flex flex-col rounded-2xl border border-white/15 bg-white/10 px-5 py-4 text-white backdrop-blur-md">
-              <p className="text-[13px] font-medium leading-tight">Team Lead</p>
-              <p className="text-[13px] leading-tight text-white/50">
+            <div className="flex flex-col rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-white backdrop-blur-md lg:px-5 lg:py-4">
+              <p className="text-[12px] font-medium leading-tight lg:text-[13px]">
+                Team Lead
+              </p>
+              <p className="text-[12px] leading-tight text-white/50 lg:text-[13px]">
                 at triptych®
               </p>
               {/* EDIT: real team-member name */}
-              <p className="mt-2 text-lg font-semibold leading-tight">
+              <p className="mt-1.5 text-sm font-semibold leading-tight lg:mt-2 lg:text-lg">
                 Lauren Thompson
               </p>
-              <p className="mt-3 text-[13px] text-white/70">Watch video reel</p>
+              <p className="mt-2 text-[12px] text-white/70 lg:mt-3 lg:text-[13px]">
+                Watch video reel
+              </p>
               {/* EDIT: point to your showreel (YouTube / Vimeo / file) */}
               <a
                 href="#reel"
-                className="mt-2 inline-flex items-center gap-6 self-start rounded-full bg-white py-1.5 pl-4 pr-1.5 text-sm font-medium text-black transition-opacity hover:opacity-80"
+                className="mt-2 inline-flex items-center gap-4 self-start rounded-full bg-white py-1.5 pl-4 pr-1.5 text-sm font-medium text-black transition-opacity hover:opacity-80 lg:gap-6"
               >
                 Play
                 <span className="grid h-6 w-6 place-items-center rounded-full bg-black text-white">
