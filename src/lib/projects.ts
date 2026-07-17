@@ -78,12 +78,12 @@ const titles = [
 
 // EDIT: real projects wired to specific cards — { title, category, video }
 const OVERRIDES: Record<number, Partial<Project>> = {
-  0: { title: "Timmy Story", category: "Music Video", video: "/reels/reel-a.gif" },
-  1: { title: "Hands Up", category: "Music Video", video: "/reels/reel-b.gif" },
+  0: { title: "Timmy Story", category: "Music Video", video: "/reels/reel-a.mp4" },
+  1: { title: "Hands Up", category: "Music Video", video: "/reels/reel-b.mp4" },
   2: {
     title: "Good Morning America",
     category: "Music Video",
-    video: "/reels/reel-c.gif",
+    video: "/reels/reel-c.mp4",
     // 4:3 source in a 16:9 cell — bias the crop down so the seated subject's
     // face + hands stay in frame instead of empty text headroom up top.
     objectPosition: "50% 60%",

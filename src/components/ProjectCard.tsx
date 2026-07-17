@@ -16,7 +16,13 @@ export default function ProjectCard({
   media?: string;
 }) {
   const reel = project.video ?? media;
+  const isVideo = !!reel && /\.(mp4|webm)$/i.test(reel);
   const subtitle = project.artist ?? project.category;
+  const fit = project.objectPosition
+    ? { objectPosition: project.objectPosition }
+    : undefined;
+  const mediaCls =
+    "absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]";
 
   return (
     <a data-card href="#" className="group block">
@@ -24,16 +30,32 @@ export default function ProjectCard({
         {/* Gradient base (poster) */}
         <div className="absolute inset-0" style={{ background: gradient }} />
 
-        {/* Reel — animated loop (autoplays) */}
-        {reel && (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={reel}
-            alt={project.title}
-            style={project.objectPosition ? { objectPosition: project.objectPosition } : undefined}
-            className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
-          />
-        )}
+        {/* Reel — autoplaying loop. Real footage is served as a tiny muted
+            <video> (mp4); the SVG placeholders stay as <img>. */}
+        {reel &&
+          (isVideo ? (
+            <video
+              src={reel}
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              aria-hidden
+              style={fit}
+              className={mediaCls}
+            />
+          ) : (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={reel}
+              alt={project.title}
+              loading="lazy"
+              decoding="async"
+              style={fit}
+              className={mediaCls}
+            />
+          ))}
 
         {/* Legibility scrim for the overlaid text */}
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/75 via-black/25 to-transparent" />
