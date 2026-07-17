@@ -3,7 +3,7 @@ import { recentClients, services } from "@/lib/about";
 
 const label = "text-sm text-muted";
 const listItem =
-  "text-lg font-medium leading-tight tracking-tight text-foreground sm:text-xl";
+  "text-sm font-medium leading-tight tracking-tight text-foreground sm:text-lg lg:text-xl";
 
 /**
  * Intro: "Recent Clients" and "Services" side by side as two lists that fill
@@ -12,8 +12,8 @@ const listItem =
 export default function AboutIntro() {
   return (
     <section id="about-intro" className="px-5 pt-10 sm:px-8 sm:pt-16">
-      {/* One column on mobile; the two lists sit directly next to each other from md up */}
-      <div className="flex flex-col gap-y-12 md:flex-row md:gap-x-16">
+      {/* Two columns side by side on mobile; tight side-by-side from sm up */}
+      <div className="grid grid-cols-2 gap-x-6 sm:flex sm:flex-row sm:gap-x-16">
         <ScrollFill>
           <p className={label} data-fill>
             Recent Clients
