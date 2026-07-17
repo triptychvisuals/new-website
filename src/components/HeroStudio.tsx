@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { clients } from "@/lib/projects";
+import HeroPlayButton from "@/components/HeroPlayButton";
 
 /**
  * Dark "studio" hero panel (fabrica-style), placed above the gallery.
@@ -62,12 +63,15 @@ export default function HeroStudio() {
           }}
         />
 
-        {/* Top: hero statement */}
-        <div className="flex flex-1 p-6 sm:p-8 lg:p-10">
+        {/* Top: hero statement (left) + song play button (right) */}
+        <div className="flex flex-1 flex-col gap-8 p-6 sm:p-8 lg:flex-row lg:items-start lg:justify-between lg:p-10">
           {/* EDIT: hero statement — About-page display font (regular weight) */}
           <h1 className="max-w-[12ch] text-[13vw] font-normal leading-[0.92] tracking-[-0.03em] lg:text-[8.5vw]">
             Imagination in Motion
           </h1>
+          <div className="lg:pt-[2vw]">
+            <HeroPlayButton />
+          </div>
         </div>
 
         {/* Plus-mark crosshairs */}
