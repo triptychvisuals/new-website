@@ -1,4 +1,5 @@
 import PartnerMarquee from "@/components/PartnerMarquee";
+import HeroReel from "@/components/HeroReel";
 
 /**
  * Dark "studio" hero panel (fabrica-style), placed above the gallery.
@@ -37,18 +38,9 @@ export default function HeroStudio() {
   return (
     <section className="bg-[#f4f2ec] px-2 pb-2 pt-2 dark:bg-[#0a0a0a] sm:px-3 sm:pb-3">
       <div className="relative isolate flex aspect-square min-h-0 flex-col overflow-hidden rounded-[26px] bg-[#0e0e10] text-white md:aspect-auto md:min-h-[88vh]">
-        {/* Background: looping hero video, a legibility overlay, and film grain.
-            EDIT: replace /public/hero/hero.mp4 (and optionally add a poster). */}
-        <video
-          className="pointer-events-none absolute inset-0 -z-10 h-full w-full object-cover"
-          src="/hero/hero.mp4"
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="auto"
-          aria-hidden
-        />
+        {/* Background: horizontal reel carousel (clips cycle every 2.5s with
+            dots), a legibility overlay, and film grain. EDIT clips in HeroReel. */}
+        <HeroReel />
         {/* Darken top + bottom so the white text / card stay readable */}
         <div
           aria-hidden
