@@ -76,7 +76,7 @@ export default function Hero() {
           {stats.map((s, i) => (
             <div
               key={s.label}
-              className={`flex items-center justify-between border-b border-hairline py-4 ${
+              className={`flex items-center justify-between border-b border-hairline py-2 ${
                 i === 0 ? "border-t" : ""
               }`}
             >

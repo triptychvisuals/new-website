@@ -25,7 +25,7 @@ export default function AboutIntro() {
       <div className="grid grid-cols-2 gap-x-6 sm:flex sm:flex-row sm:items-start sm:gap-x-16">
         <ScrollFill>
           <p className={label} data-fill>
-            Recent Clients
+            Partners
           </p>
           <ul className="mt-6 space-y-2.5">
             {recentClients.map((c, i) => (
