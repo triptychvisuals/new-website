@@ -24,7 +24,7 @@ export type Project = {
   logo?: string;
 };
 
-// EDIT: labels + artists Triptych works with (used on the About page)
+// EDIT: brands / labels Triptych works with (used on the About page + hero marquee)
 export const clients = [
   "Universal Music Group",
   "Interscope Records",
@@ -33,13 +33,6 @@ export const clients = [
   "Atlantic Records",
   "Capitol Records",
   "Republic Records",
-  "G Herbo",
-  "Lil Zay Osama",
-  "Queen Key",
-  "Lil Peep",
-  "Polo G",
-  "Nardo Wick",
-  "Lil Durk",
 ];
 
 // EDIT: placeholder titles for the not-yet-filled cards
