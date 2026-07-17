@@ -22,7 +22,7 @@ export default function ProjectCard({
     <a
       data-card
       href="#"
-      className="group block rounded-3xl border border-black/[0.07] bg-white p-3 shadow-[0_1px_2px_rgba(0,0,0,0.04)] transition-shadow hover:shadow-[0_8px_28px_rgba(0,0,0,0.10)] dark:border-white/10 dark:bg-neutral-900 dark:shadow-none dark:hover:shadow-none"
+      className="group block rounded-3xl border border-black/[0.07] bg-white p-3 shadow-[0_1px_2px_rgba(0,0,0,0.04)] transition duration-200 hover:bg-black hover:shadow-[0_8px_28px_rgba(0,0,0,0.10)] dark:border-white/10 dark:bg-neutral-900 dark:shadow-none dark:hover:bg-neutral-800 dark:hover:shadow-none"
     >
       <div className="relative aspect-[16/9] w-full overflow-hidden rounded-2xl bg-neutral-200 dark:bg-neutral-800">
         {/* Gradient base (poster) */}
@@ -43,7 +43,7 @@ export default function ProjectCard({
       {/* Meta */}
       <div className="px-1.5 pb-1 pt-3">
         <div className="flex items-baseline justify-between gap-3">
-          <h3 className="text-[17px] font-semibold leading-tight text-foreground">
+          <h3 className="text-[17px] font-semibold leading-tight text-foreground transition-colors group-hover:text-white">
             {project.title}
           </h3>
           {project.year && (

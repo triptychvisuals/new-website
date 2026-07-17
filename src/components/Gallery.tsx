@@ -28,7 +28,7 @@ export default function Gallery() {
   return (
     <section id="work" ref={root} className="px-5 pb-16 pt-6 sm:px-8 sm:pt-8">
       {/* 1 (phone) · 2 (2-up comes in earlier now) · 4 across (wide, xl) */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
         {projects.map((project, i) => (
           <ProjectCard
             key={project.title}
