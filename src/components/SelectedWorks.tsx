@@ -1,6 +1,6 @@
 /**
- * Oversized "Selected Works" title band that leads into the gallery.
- * A full-width grotesk line — "Triptych  ·001 [SELECTED WORKS]·  Studio" —
+ * Oversized title band that leads into the gallery.
+ * A full-width grotesk line — "Featured  ·001 [SELECTED WORKS]·  Work" —
  * black on the page background (inverts in dark mode).
  */
 
@@ -11,10 +11,10 @@ export default function SelectedWorks() {
   return (
     <section
       className="px-4 pb-2 pt-10 sm:px-6 sm:pt-14"
-      aria-label="Selected works"
+      aria-label="Featured work"
     >
       <div className="flex items-center justify-between gap-3">
-        <h2 className={wordCls}>Triptych</h2>
+        <h2 className={wordCls}>Featured</h2>
 
         {/* Index marker — EDIT: bump the number as the catalog grows */}
         <div className="mb-[1.2vw] flex flex-col self-end border-l border-foreground/30 pl-2 leading-tight">
@@ -24,7 +24,7 @@ export default function SelectedWorks() {
           </span>
         </div>
 
-        <span className={wordCls}>Studio</span>
+        <span className={wordCls}>Work</span>
       </div>
     </section>
   );

@@ -68,19 +68,9 @@ export default function HeroStudio() {
 
         {/* Top: wordmark (left) + services (right) */}
         <div className="flex flex-1 flex-col gap-8 p-6 sm:p-8 lg:flex-row lg:gap-6 lg:p-10">
-          <h1 className="lg:flex-1" aria-label="Triptych — Imagination in Motion">
-            <span className="flex items-start leading-[0.78]">
-              <span className="text-[20vw] font-bold tracking-[-0.045em] lg:text-[16vw]">
-                triptych
-              </span>
-              <span className="mt-[0.1em] text-[7vw] font-bold leading-none lg:text-[5.4vw]">
-                ®
-              </span>
-            </span>
-            {/* EDIT: sub-line under the wordmark (cleared below the p/y descenders) */}
-            <span className="mt-[5vw] block pl-[2%] text-[6.4vw] font-normal leading-[0.95] tracking-[-0.03em] lg:mt-[3.6vw] lg:text-[4.1vw]">
-              Imagination in Motion
-            </span>
+          {/* EDIT: hero statement — About-page display font (regular weight) */}
+          <h1 className="max-w-[10ch] text-[13vw] font-normal leading-[0.92] tracking-[-0.03em] lg:flex-1 lg:text-[8.5vw]">
+            Imagination in Motion
           </h1>
 
           <ul className="flex shrink-0 flex-col gap-2 text-[15px] font-semibold sm:text-base lg:w-[26%] lg:pt-[3vw]">
