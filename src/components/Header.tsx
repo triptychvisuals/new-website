@@ -83,6 +83,30 @@ function SocialRow() {
   );
 }
 
+// EDIT: your monetizable playlist — paste the Spotify / Apple Music / YouTube
+// Music playlist URL here. Streams there earn royalties; opens in a new tab.
+const PLAYLIST_URL = "https://open.spotify.com/"; // EDIT
+
+/** "Listen" link with an animated equalizer — points at the playlist. */
+function MusicLink({ className = "" }: { className?: string }) {
+  return (
+    <a
+      href={PLAYLIST_URL}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="Listen to our playlist"
+      className={`inline-flex items-center gap-2 text-[13px] font-medium uppercase tracking-tight text-foreground transition-opacity hover:opacity-60 ${className}`}
+    >
+      <span className="flex h-3.5 items-end gap-[2px]" aria-hidden>
+        <span className="w-[2px] animate-eq bg-current" />
+        <span className="w-[2px] animate-eq bg-current [animation-delay:0.2s]" />
+        <span className="w-[2px] animate-eq bg-current [animation-delay:0.45s]" />
+      </span>
+      Listen
+    </a>
+  );
+}
+
 function NavLink({ item }: { item: { label: string; href: string } }) {
   return (
     <Link href={item.href} className={linkCls}>
@@ -133,8 +157,9 @@ export default function Header() {
         </span>
       </nav>
 
-      {/* Right: clock + social icons */}
+      {/* Right: listen + clock + social icons */}
       <div className="hidden items-center gap-5 md:flex">
+        <MusicLink />
         <span className="hidden font-mono text-xs tabular-nums text-foreground/70 lg:inline" suppressHydrationWarning>
           {time || "--:--:-- --"}
         </span>
@@ -194,8 +219,9 @@ export default function Header() {
             </Link>
           ))}
         </nav>
-        <div className="px-5 pb-4 pt-1">
+        <div className="flex items-center justify-between px-5 pb-4 pt-1">
           <SocialRow />
+          <MusicLink />
         </div>
       </div>
     </header>
