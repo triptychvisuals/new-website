@@ -33,8 +33,10 @@
     system-ui, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
     "Liberation Mono", monospace;
-  /* Equalizer bars on the hero play button */
+  /* Equalizer bars (header Listen link) */
   --animate-eq: eq 0.7s ease-in-out infinite;
+  /* Partner logo marquee (hero bottom-left, scrolls left → right) */
+  --animate-marquee-r: marquee-r 30s linear infinite;
 }
 
 @keyframes eq {
@@ -44,6 +46,15 @@
   }
   50% {
     height: 100%;
+  }
+}
+
+@keyframes marquee-r {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
   }
 }
 

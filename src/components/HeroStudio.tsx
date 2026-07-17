@@ -1,5 +1,4 @@
-import Link from "next/link";
-import { clients } from "@/lib/projects";
+import PartnerMarquee from "@/components/PartnerMarquee";
 
 /**
  * Dark "studio" hero panel (fabrica-style), placed above the gallery.
@@ -7,9 +6,6 @@ import { clients } from "@/lib/projects";
  * a brands-we've-worked-with list, plus-mark crosshairs, and a team-lead
  * business card. Everything customizable is marked // EDIT.
  */
-
-// EDIT: some of the brands we've worked with (shown bottom-left).
-const BRANDS = clients.slice(0, 5);
 
 function Plus() {
   return (
@@ -83,45 +79,48 @@ export default function HeroStudio() {
 
         {/* Bottom: tagline (left) · copyright (center) · team card (right) */}
         <div className="relative flex flex-col gap-8 p-6 sm:p-8 lg:flex-row lg:items-end lg:justify-between lg:p-10">
-          {/* Brands we've worked with — bottom-left, same list style as before */}
-          <ul className="flex flex-col gap-1.5 text-[15px] font-semibold sm:text-base">
-            {BRANDS.map((b) => (
-              <li key={b}>{b}</li>
-            ))}
-          </ul>
+          {/* Partners — logo marquee, bottom-left */}
+          <div className="flex flex-col gap-3">
+            <p className="text-[11px] uppercase tracking-[0.2em] text-white/40">
+              Partners
+            </p>
+            <PartnerMarquee />
+          </div>
 
           {/* EDIT: copyright line */}
           <p className="order-last text-sm text-white/45 lg:absolute lg:bottom-10 lg:left-1/2 lg:order-none lg:-translate-x-1/2">
             © 2026 triptych® Studio
           </p>
 
-          {/* Team-lead card */}
+          {/* Watch-reel card — semi-transparent glass */}
           <div className="flex items-stretch gap-2">
-            <div className="w-[92px] shrink-0 rounded-2xl bg-white p-1.5">
+            <div className="w-[92px] shrink-0 rounded-2xl border border-white/15 bg-white/10 p-1.5 backdrop-blur-md">
               <div className="h-full w-full overflow-hidden rounded-xl">
                 <AvatarPlaceholder />
               </div>
             </div>
-            <div className="flex flex-col rounded-2xl bg-white px-5 py-4 text-black">
+            <div className="flex flex-col rounded-2xl border border-white/15 bg-white/10 px-5 py-4 text-white backdrop-blur-md">
               <p className="text-[13px] font-medium leading-tight">Team Lead</p>
-              <p className="text-[13px] leading-tight text-black/50">
+              <p className="text-[13px] leading-tight text-white/50">
                 at triptych®
               </p>
               {/* EDIT: real team-member name */}
               <p className="mt-2 text-lg font-semibold leading-tight">
                 Lauren Thompson
               </p>
-              <Link
-                href="/contact"
-                className="mt-3 inline-flex items-center gap-6 self-start rounded-full bg-black py-1.5 pl-4 pr-1.5 text-sm font-medium text-white transition-opacity hover:opacity-80"
+              <p className="mt-3 text-[13px] text-white/70">Watch video reel</p>
+              {/* EDIT: point to your showreel (YouTube / Vimeo / file) */}
+              <a
+                href="#reel"
+                className="mt-2 inline-flex items-center gap-6 self-start rounded-full bg-white py-1.5 pl-4 pr-1.5 text-sm font-medium text-black transition-opacity hover:opacity-80"
               >
-                Let&rsquo;s talk
-                <span className="grid h-6 w-6 place-items-center rounded-full bg-white text-black">
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                    <path d="M5 12h14M13 6l6 6-6 6" />
+                Play
+                <span className="grid h-6 w-6 place-items-center rounded-full bg-black text-white">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M8 5v14l11-7z" />
                   </svg>
                 </span>
-              </Link>
+              </a>
             </div>
           </div>
         </div>
