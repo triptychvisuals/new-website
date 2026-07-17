@@ -6,7 +6,8 @@ import { site } from "@/lib/site";
 
 /* EDIT: hero stat rows (right column) */
 const stats = [
-  { label: "Response time", value: "3H" },
+  { label: "Started in", value: "2016" },
+  { label: "Total projects", value: "500+" },
   { label: "Based in", value: "Chicago" },
   { label: "Creators", value: "23" },
 ];
