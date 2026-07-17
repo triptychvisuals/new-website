@@ -70,10 +70,10 @@ export default function HeroStudio() {
         <div className="flex flex-1 flex-col gap-8 p-6 sm:p-8 lg:flex-row lg:gap-6 lg:p-10">
           <h1 className="lg:flex-1" aria-label="Triptych — Imagination in Motion">
             <span className="flex items-start leading-[0.78]">
-              <span className="text-[20vw] font-normal tracking-[-0.03em] lg:text-[16vw]">
+              <span className="text-[20vw] font-bold tracking-[-0.045em] lg:text-[16vw]">
                 triptych
               </span>
-              <span className="mt-[0.1em] text-[7vw] font-normal leading-none lg:text-[5.4vw]">
+              <span className="mt-[0.1em] text-[7vw] font-bold leading-none lg:text-[5.4vw]">
                 ®
               </span>
             </span>

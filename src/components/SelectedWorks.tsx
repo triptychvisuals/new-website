@@ -5,7 +5,7 @@
  */
 
 const wordCls =
-  "text-[15vw] font-normal leading-[0.85] tracking-[-0.03em] lg:text-[12.5vw]";
+  "text-[15vw] font-bold leading-[0.85] tracking-[-0.03em] lg:text-[12.5vw]";
 
 export default function SelectedWorks() {
   return (
