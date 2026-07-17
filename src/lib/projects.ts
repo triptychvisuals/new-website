@@ -16,6 +16,10 @@ export type Project = {
    * crop cuts the subject. Higher second value = show more of the bottom.
    */
   objectPosition?: string;
+  /** EDIT: gray subtitle under the title (e.g. the artist). Falls back to category. */
+  artist?: string;
+  /** EDIT: year shown at the top-right of the card, e.g. "2020". */
+  year?: string;
 };
 
 // EDIT: labels + artists Triptych works with (used on the About page)
@@ -84,11 +88,16 @@ const OVERRIDES: Record<number, Partial<Project>> = {
   },
 };
 
+// EDIT: placeholder years shown top-right of each card (swap for the real ones)
+const YEARS = ["2026", "2025", "2024", "2023", "2022", "2021"];
+
 export const projects: Project[] = titles.map((title, i) => ({
   title: OVERRIDES[i]?.title ?? title,
   category: OVERRIDES[i]?.category ?? "Music Video", // EDIT: default category
   video: OVERRIDES[i]?.video,
   objectPosition: OVERRIDES[i]?.objectPosition,
+  artist: OVERRIDES[i]?.artist, // EDIT: set an artist to show instead of category
+  year: OVERRIDES[i]?.year ?? YEARS[i % YEARS.length],
 }));
 
 // Deterministic gradient base per card (poster behind the reel).

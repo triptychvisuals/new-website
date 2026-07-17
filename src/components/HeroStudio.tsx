@@ -36,7 +36,7 @@ function AvatarPlaceholder() {
 export default function HeroStudio() {
   return (
     <section className="bg-[#f4f2ec] px-2 pb-2 pt-2 dark:bg-[#0a0a0a] sm:px-3 sm:pb-3">
-      <div className="relative isolate flex min-h-[88vh] flex-col overflow-hidden rounded-[26px] bg-[#0e0e10] text-white">
+      <div className="relative isolate flex aspect-square min-h-0 flex-col overflow-hidden rounded-[26px] bg-[#0e0e10] text-white md:aspect-auto md:min-h-[88vh]">
         {/* Background: looping hero video, a legibility overlay, and film grain.
             EDIT: replace /public/hero/hero.mp4 (and optionally add a poster). */}
         <video
@@ -67,12 +67,15 @@ export default function HeroStudio() {
           }}
         />
 
-        {/* Top: hero statement */}
-        <div className="flex flex-1 p-6 sm:p-8 lg:p-10">
-          {/* EDIT: hero statement — About-page display font (regular weight) */}
-          <h1 className="max-w-[12ch] text-[13vw] font-normal leading-[0.92] tracking-[-0.03em] lg:text-[8.5vw]">
+        {/* Top: small, transparent labels across the top corners */}
+        <div className="flex flex-1 items-start justify-between gap-4 p-6 sm:p-8 lg:p-10">
+          <h1 className="text-sm font-medium text-white/50 sm:text-[15px]">
             Imagination in Motion
           </h1>
+          {/* EDIT: founding year */}
+          <p className="text-right text-sm font-medium text-white/50 sm:text-[15px]">
+            Est. 2016
+          </p>
         </div>
 
         {/* Plus-mark crosshairs */}

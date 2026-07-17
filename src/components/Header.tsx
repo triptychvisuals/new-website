@@ -15,7 +15,7 @@ function hasArrow(label: string) {
 }
 
 const linkCls =
-  "inline-flex items-center gap-1 text-[13px] font-medium uppercase tracking-tight text-foreground transition-opacity hover:opacity-60 whitespace-nowrap";
+  "inline-flex items-center gap-1 text-[13px] font-medium tracking-tight text-foreground transition-opacity hover:opacity-60 whitespace-nowrap";
 
 function useClock() {
   const [time, setTime] = useState("");
@@ -95,7 +95,7 @@ function MusicLink({ className = "" }: { className?: string }) {
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Listen to our playlist"
-      className={`inline-flex items-center gap-2 text-[13px] font-medium uppercase tracking-tight text-foreground transition-opacity hover:opacity-60 ${className}`}
+      className={`inline-flex items-center gap-2 text-[13px] font-medium tracking-tight text-foreground transition-opacity hover:opacity-60 ${className}`}
     >
       <span className="flex h-3.5 items-end gap-[2px]" aria-hidden>
         <span className="w-[2px] animate-eq bg-current" />
@@ -136,7 +136,7 @@ export default function Header() {
   const right = site.nav.slice(mid);
 
   return (
-    <header className="sticky top-0 z-40 flex items-center justify-between bg-background/80 px-5 py-4 backdrop-blur-md sm:px-8">
+    <header className="sticky top-2 z-40 mx-2 mt-2 flex items-center justify-between rounded-3xl border border-hairline bg-background/85 px-5 py-3.5 shadow-sm backdrop-blur-md sm:top-3 sm:mx-3 sm:mt-3 sm:px-6">
       {/* Left: light-switch toggle */}
       <div className="hidden items-center gap-3 md:flex">
         <ThemeToggle />
@@ -200,7 +200,7 @@ export default function Header() {
 
       {/* Mobile dropdown — drops from the top, sized to content */}
       <div
-        className={`absolute inset-x-0 top-full origin-top border-b border-hairline bg-background shadow-xl transition-all duration-300 ease-out md:hidden ${
+        className={`absolute inset-x-0 top-full mt-2 origin-top overflow-hidden rounded-3xl border border-hairline bg-background shadow-xl transition-all duration-300 ease-out md:hidden ${
           menuOpen
             ? "visible translate-y-0 opacity-100"
             : "pointer-events-none invisible -translate-y-3 opacity-0"
@@ -212,7 +212,7 @@ export default function Header() {
               key={item.label}
               href={item.href}
               onClick={close}
-              className="flex items-center gap-2 border-b border-hairline/70 py-3.5 text-xl font-normal uppercase tracking-tight text-foreground last:border-0"
+              className="flex items-center gap-2 border-b border-hairline/70 py-3.5 text-xl font-normal tracking-tight text-foreground last:border-0"
             >
               {item.label}
               {hasArrow(item.label) && <span aria-hidden>↗</span>}

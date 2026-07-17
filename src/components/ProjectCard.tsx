@@ -1,12 +1,12 @@
 import type { Project } from "@/lib/projects";
 
 /**
- * Gallery cell: an autoplaying animated reel over a gradient base, then
- * title · [n] · CLIENT metadata.
+ * Gallery card — a rounded card (white in light mode / near-black in dark) with
+ * an inset rounded reel, then the title with the year on the right and a gray
+ * subtitle (artist, falling back to category) beneath.
  */
 export default function ProjectCard({
   project,
-  index,
   gradient,
   media,
 }: {
@@ -15,12 +15,16 @@ export default function ProjectCard({
   gradient: string;
   media?: string;
 }) {
-  const n = index + 1;
   const reel = project.video ?? media;
+  const subtitle = project.artist ?? project.category;
 
   return (
-    <a data-card href="#" className="group block">
-      <div className="relative aspect-[16/9] w-full overflow-hidden rounded-xl bg-neutral-200 dark:bg-neutral-800">
+    <a
+      data-card
+      href="#"
+      className="group block rounded-3xl border border-black/[0.07] bg-white p-3 shadow-[0_1px_2px_rgba(0,0,0,0.04)] transition-shadow hover:shadow-[0_8px_28px_rgba(0,0,0,0.10)] dark:border-white/10 dark:bg-neutral-900 dark:shadow-none dark:hover:shadow-none"
+    >
+      <div className="relative aspect-[16/9] w-full overflow-hidden rounded-2xl bg-neutral-200 dark:bg-neutral-800">
         {/* Gradient base (poster) */}
         <div className="absolute inset-0" style={{ background: gradient }} />
 
@@ -37,15 +41,17 @@ export default function ProjectCard({
       </div>
 
       {/* Meta */}
-      <div className="mt-3 flex items-baseline justify-between gap-3">
-        <h3 className="text-[15px] font-normal leading-tight text-foreground">
-          {project.title}
-        </h3>
-        <span className="shrink-0 font-mono text-xs text-muted">[{n}]</span>
+      <div className="px-1.5 pb-1 pt-3">
+        <div className="flex items-baseline justify-between gap-3">
+          <h3 className="text-[17px] font-semibold leading-tight text-foreground">
+            {project.title}
+          </h3>
+          {project.year && (
+            <span className="shrink-0 text-sm text-muted">{project.year}</span>
+          )}
+        </div>
+        <p className="mt-1 text-sm text-muted">{subtitle}</p>
       </div>
-      <p className="mt-1 font-mono text-[11px] uppercase tracking-wider text-muted">
-        {project.category}
-      </p>
     </a>
   );
 }
