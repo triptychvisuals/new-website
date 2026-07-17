@@ -1,5 +1,5 @@
 import ScrollFill from "@/components/ScrollFill";
-import { recentClients, services, intro } from "@/lib/about";
+import { recentClients, services } from "@/lib/about";
 
 const label = "text-sm text-muted";
 const listItem =
@@ -7,8 +7,7 @@ const listItem =
 
 /**
  * Intro: "Recent Clients" and "Services" side by side as two lists that fill
- * grey→white on scroll, then a scroll-in statement block (where Contact used
- * to be), with the rounded image cards brought up directly beneath it.
+ * grey→white on scroll. The Result bento follows directly beneath.
  */
 export default function AboutIntro() {
   return (
@@ -41,23 +40,6 @@ export default function AboutIntro() {
           </ul>
         </ScrollFill>
       </div>
-
-      {/* New scroll-in statement — replaces where Contact was */}
-      <ScrollFill className="mt-24 max-w-4xl sm:mt-32" stagger={1}>
-        <h2
-          data-fill
-          className="text-[clamp(1.75rem,3.2vw,2.75rem)] font-medium leading-snug tracking-tight text-foreground"
-        >
-          {intro.statement}
-        </h2>
-        <div className="mt-8 space-y-6">
-          {intro.paragraphs.map((p, i) => (
-            <p key={i} data-fill className="text-[15px] leading-relaxed text-foreground/80">
-              {p}
-            </p>
-          ))}
-        </div>
-      </ScrollFill>
     </section>
   );
 }

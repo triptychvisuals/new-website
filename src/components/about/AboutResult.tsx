@@ -1,12 +1,11 @@
 import Reveal from "@/components/Reveal";
 import RuleLabel from "@/components/RuleLabel";
-import BracketBox from "@/components/BracketBox";
 import { stats, aboutGradient } from "@/lib/about";
 
 /** "Production Experience & Result" — a stats bento. */
 export default function AboutResult() {
   return (
-    <section className="px-5 pt-32 sm:px-8 sm:pt-44">
+    <section className="px-5 pt-20 sm:px-8 sm:pt-28">
       {/* Centered header */}
       <Reveal className="text-center">
         <RuleLabel className="justify-center">Result</RuleLabel>
@@ -19,7 +18,7 @@ export default function AboutResult() {
       <Reveal className="mt-14 grid grid-cols-1 gap-4 md:grid-cols-3">
         {/* Left: hero image + best-ads badge */}
         <div
-          className="relative min-h-[360px] overflow-hidden md:min-h-[460px]"
+          className="relative min-h-[360px] overflow-hidden rounded-2xl md:min-h-[460px]"
           style={{ background: aboutGradient(4) }}
         >
           <div className="absolute bottom-4 left-4 flex items-center gap-2 text-white">
@@ -40,14 +39,7 @@ export default function AboutResult() {
             <p className="mt-2 text-sm text-muted">{stats.awards.label}</p>
           </div>
 
-          <BracketBox className="mx-auto flex w-full max-w-xs items-center justify-between px-4 py-3.5">
-            <span className="font-mono text-xs uppercase tracking-[0.15em]">
-              Contact
-            </span>
-            <span className="h-1.5 w-1.5 rounded-full bg-foreground" />
-          </BracketBox>
-
-          <div className="flex flex-1 flex-col justify-between bg-accent p-6 text-white">
+          <div className="flex flex-1 flex-col justify-between rounded-2xl bg-accent p-6 text-white">
             <div className="flex items-start justify-between gap-3">
               <span className="text-5xl font-medium tracking-tight">
                 {stats.partners.value}
@@ -62,7 +54,7 @@ export default function AboutResult() {
 
         {/* Right column */}
         <div className="flex flex-col gap-4">
-          <div className="flex min-h-[120px] items-start bg-foreground p-6">
+          <div className="flex min-h-[120px] items-start rounded-2xl bg-foreground p-6">
             <p className="text-xl leading-snug text-background/70">
               {stats.decade}
             </p>
@@ -76,7 +68,7 @@ export default function AboutResult() {
           </div>
 
           <div
-            className="aspect-[16/10] w-full overflow-hidden rounded-md"
+            className="aspect-[16/10] w-full overflow-hidden rounded-2xl"
             style={{ background: aboutGradient(1) }}
             aria-hidden
           />
