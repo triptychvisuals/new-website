@@ -1,19 +1,15 @@
 import Link from "next/link";
+import { clients } from "@/lib/projects";
 
 /**
  * Dark "studio" hero panel (fabrica-style), placed above the gallery.
  * Rounded near-black panel inset in a cream page, with a massive wordmark,
- * a services list, a two-tone tagline, plus-mark crosshairs, and a
- * team-lead business card. Everything customizable is marked // EDIT.
+ * a brands-we've-worked-with list, plus-mark crosshairs, and a team-lead
+ * business card. Everything customizable is marked // EDIT.
  */
 
-// EDIT: the four services shown top-right of the hero.
-const SERVICES = [
-  "Music Video Production",
-  "Commercial and Brand Film",
-  "Directing and Treatments",
-  "Editing and Color",
-];
+// EDIT: some of the brands we've worked with (shown bottom-left).
+const BRANDS = clients.slice(0, 5);
 
 function Plus() {
   return (
@@ -66,18 +62,12 @@ export default function HeroStudio() {
           }}
         />
 
-        {/* Top: wordmark (left) + services (right) */}
-        <div className="flex flex-1 flex-col gap-8 p-6 sm:p-8 lg:flex-row lg:gap-6 lg:p-10">
+        {/* Top: hero statement */}
+        <div className="flex flex-1 p-6 sm:p-8 lg:p-10">
           {/* EDIT: hero statement — About-page display font (regular weight) */}
-          <h1 className="max-w-[10ch] text-[13vw] font-normal leading-[0.92] tracking-[-0.03em] lg:flex-1 lg:text-[8.5vw]">
+          <h1 className="max-w-[12ch] text-[13vw] font-normal leading-[0.92] tracking-[-0.03em] lg:text-[8.5vw]">
             Imagination in Motion
           </h1>
-
-          <ul className="flex shrink-0 flex-col gap-2 text-[15px] font-semibold sm:text-base lg:w-[26%] lg:pt-[3vw]">
-            {SERVICES.map((s) => (
-              <li key={s}>{s}</li>
-            ))}
-          </ul>
         </div>
 
         {/* Plus-mark crosshairs */}
@@ -93,18 +83,16 @@ export default function HeroStudio() {
 
         {/* Bottom: tagline (left) · copyright (center) · team card (right) */}
         <div className="relative flex flex-col gap-8 p-6 sm:p-8 lg:flex-row lg:items-end lg:justify-between lg:p-10">
-          {/* EDIT: tagline copy */}
-          <p className="max-w-[30rem] text-[22px] font-bold leading-[1.15] tracking-[-0.01em] sm:text-2xl">
-            No stock footage. No empty concepts.{" "}
-            <span className="text-white/45">
-              Just cinematic stories that move audiences and make your brand
-              impossible to ignore.
-            </span>
-          </p>
+          {/* Brands we've worked with — bottom-left, same list style as before */}
+          <ul className="flex flex-col gap-1.5 text-[15px] font-semibold sm:text-base">
+            {BRANDS.map((b) => (
+              <li key={b}>{b}</li>
+            ))}
+          </ul>
 
           {/* EDIT: copyright line */}
           <p className="order-last text-sm text-white/45 lg:absolute lg:bottom-10 lg:left-1/2 lg:order-none lg:-translate-x-1/2">
-            © 2025 triptych® Studio
+            © 2026 triptych® Studio
           </p>
 
           {/* Team-lead card */}
