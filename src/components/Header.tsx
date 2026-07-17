@@ -7,7 +7,7 @@ import ThemeToggle from "@/components/ThemeToggle";
 
 /**
  * Sticky header:
- *   [switch] Imagination in Motion .... NAV ◬logo NAV .... TIME  icons
+ *   [switch] .... NAV ◬logo NAV .... TIME  icons
  * On mobile it collapses to a hamburger that drops a compact panel from the top.
  */
 function hasArrow(label: string) {
@@ -113,12 +113,9 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-40 flex items-center justify-between bg-background/80 px-5 py-4 backdrop-blur-md sm:px-8">
-      {/* Left: light-switch toggle + tagline */}
+      {/* Left: light-switch toggle */}
       <div className="hidden items-center gap-3 md:flex">
         <ThemeToggle />
-        <span className="hidden text-[11px] tracking-wide text-foreground/55 lg:inline">
-          Imagination in Motion
-        </span>
       </div>
 
       {/* Center: nav clustered around the logo */}

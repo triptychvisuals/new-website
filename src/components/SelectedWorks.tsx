@@ -4,17 +4,13 @@
  * black on the page background (inverts in dark mode).
  */
 
-// EDIT: display face — keep in sync with HeroStudio.
-const DISPLAY = '"Helvetica Neue", Helvetica, Arial, system-ui, sans-serif';
-
 const wordCls =
-  "text-[15vw] font-bold leading-[0.85] tracking-[-0.03em] lg:text-[12.5vw]";
+  "text-[15vw] font-normal leading-[0.85] tracking-[-0.03em] lg:text-[12.5vw]";
 
 export default function SelectedWorks() {
   return (
     <section
       className="px-4 pb-2 pt-10 sm:px-6 sm:pt-14"
-      style={{ fontFamily: DISPLAY }}
       aria-label="Selected works"
     >
       <div className="flex items-center justify-between gap-3">

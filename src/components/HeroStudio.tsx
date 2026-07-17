@@ -7,10 +7,6 @@ import Link from "next/link";
  * team-lead business card. Everything customizable is marked // EDIT.
  */
 
-// EDIT: display face. Swap for a real webfont (e.g. Helvetica Now Display Bold)
-// by @font-face-ing it in globals.css and changing this stack.
-const DISPLAY = '"Helvetica Neue", Helvetica, Arial, system-ui, sans-serif';
-
 // EDIT: the four services shown top-right of the hero.
 const SERVICES = [
   "Music Video Production",
@@ -48,10 +44,7 @@ function AvatarPlaceholder() {
 export default function HeroStudio() {
   return (
     <section className="bg-[#f4f2ec] px-2 pb-2 pt-2 dark:bg-[#0a0a0a] sm:px-3 sm:pb-3">
-      <div
-        className="relative isolate flex min-h-[88vh] flex-col overflow-hidden rounded-[26px] bg-[#0e0e10] text-white"
-        style={{ fontFamily: DISPLAY }}
-      >
+      <div className="relative isolate flex min-h-[88vh] flex-col overflow-hidden rounded-[26px] bg-[#0e0e10] text-white">
         {/* Background: soft marble glow + film grain.
             EDIT: for the exact photographic look, drop /public/hero-bg.jpg and
             uncomment the <img> layer below. */}
@@ -75,17 +68,18 @@ export default function HeroStudio() {
 
         {/* Top: wordmark (left) + services (right) */}
         <div className="flex flex-1 flex-col gap-8 p-6 sm:p-8 lg:flex-row lg:gap-6 lg:p-10">
-          <h1 className="lg:flex-1" aria-label="Triptych Studio">
+          <h1 className="lg:flex-1" aria-label="Triptych — Imagination in Motion">
             <span className="flex items-start leading-[0.78]">
-              <span className="text-[20vw] font-bold tracking-[-0.045em] lg:text-[16vw]">
+              <span className="text-[20vw] font-normal tracking-[-0.03em] lg:text-[16vw]">
                 triptych
               </span>
-              <span className="mt-[0.1em] text-[7vw] font-bold leading-none lg:text-[5.4vw]">
+              <span className="mt-[0.1em] text-[7vw] font-normal leading-none lg:text-[5.4vw]">
                 ®
               </span>
             </span>
-            <span className="block pl-[42%] text-[8vw] font-bold leading-[0.9] tracking-[-0.02em] lg:text-[6.4vw]">
-              Studio
+            {/* EDIT: sub-line under the wordmark (cleared below the p/y descenders) */}
+            <span className="mt-[5vw] block pl-[2%] text-[6.4vw] font-normal leading-[0.95] tracking-[-0.03em] lg:mt-[3.6vw] lg:text-[4.1vw]">
+              Imagination in Motion
             </span>
           </h1>
 
