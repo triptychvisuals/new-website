@@ -46,33 +46,29 @@ export default function Hero() {
   }, []);
 
   const display =
-    "text-[clamp(2.5rem,11.5vw,9rem)] font-normal leading-[0.9] tracking-[-0.03em] text-foreground";
+    "whitespace-nowrap text-[clamp(1.75rem,8vw,7rem)] font-normal leading-[0.95] tracking-[-0.03em] text-foreground";
 
   return (
     <section id="top" ref={root} className="px-5 pb-4 pt-8 sm:px-8 sm:pt-10">
-      <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start lg:gap-12">
-        {/* Headline (wraps within its column so it stays large) */}
-        <div className="flex flex-col gap-x-8 gap-y-3 md:flex-row md:flex-wrap md:items-baseline">
-          <h1 data-hero-line className={display}>
-            {site.name}
-          </h1>
+      {/* Wordmark — one horizontal line across the top */}
+      <div className="flex items-start justify-between gap-4">
+        <h1 data-hero-line className={display}>
+          {site.name} {site.suffix}
+        </h1>
 
-          {/* Index label tucked between the words */}
-          <div
-            data-hero-label
-            className="border-l-2 border-accent pl-3 text-[11px] leading-relaxed md:self-end md:pb-[0.7em]"
-          >
-            <div className="text-muted">{site.sectionNumber}</div>
-            <div className="text-foreground">[{site.sectionLabel}]</div>
-          </div>
-
-          <h1 data-hero-line className={display}>
-            {site.suffix}
-          </h1>
+        {/* Index label to the right (only where there's room) */}
+        <div
+          data-hero-label
+          className="hidden shrink-0 border-l-2 border-accent pl-3 text-[11px] leading-relaxed lg:block"
+        >
+          <div className="text-muted">{site.sectionNumber}</div>
+          <div className="text-foreground">[{site.sectionLabel}]</div>
         </div>
+      </div>
 
-        {/* Stats — right margin, level with the headline */}
-        <div data-hero-stats className="w-full shrink-0 lg:w-[300px] lg:pt-3">
+      {/* Stats, then the reel directly under them (under "Creators") */}
+      <div className="mt-8 flex flex-col items-end gap-4 sm:mt-10">
+        <div data-hero-stats className="w-full sm:w-[340px]">
           {stats.map((s, i) => (
             <div
               key={s.label}
@@ -88,6 +84,24 @@ export default function Hero() {
               </span>
             </div>
           ))}
+        </div>
+
+        {/* Reel — sits under the stats block */}
+        <div
+          data-hero-stats
+          className="aspect-video w-full overflow-hidden rounded-2xl bg-black sm:w-[440px] lg:w-[560px]"
+        >
+          {/* EDIT: swap for the reel you want here */}
+          <video
+            className="h-full w-full object-cover"
+            src="/hero/hero.mp4"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            aria-label="Triptych reel"
+          />
         </div>
       </div>
     </section>
