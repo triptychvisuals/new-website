@@ -5,7 +5,7 @@
  */
 
 const wordCls =
-  "text-[15vw] font-bold leading-[0.85] tracking-[-0.03em] lg:text-[12.5vw]";
+  "text-[13vw] font-bold leading-[0.85] tracking-[-0.03em] lg:text-[12.5vw]";
 
 export default function SelectedWorks() {
   return (
@@ -16,8 +16,8 @@ export default function SelectedWorks() {
       <div className="flex items-center justify-between gap-3">
         <h2 className={wordCls}>Featured</h2>
 
-        {/* Index marker — EDIT: bump the number as the catalog grows */}
-        <div className="mb-[1.2vw] flex flex-col self-end border-l border-foreground/30 pl-2 leading-tight">
+        {/* Index marker (hidden on small screens so the words never overflow) */}
+        <div className="mb-[1.2vw] hidden flex-col self-end border-l border-foreground/30 pl-2 leading-tight lg:flex">
           <span className="font-mono text-[11px] text-muted sm:text-xs">001</span>
           <span className="font-mono text-[11px] font-semibold tracking-wide text-foreground sm:text-xs">
             [SELECTED WORKS]
