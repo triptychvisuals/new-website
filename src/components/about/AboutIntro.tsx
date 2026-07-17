@@ -12,8 +12,8 @@ const listItem =
 export default function AboutIntro() {
   return (
     <section id="about-intro" className="px-5 pt-10 sm:px-8 sm:pt-16">
-      {/* Two dropdown-style lists, each filling grey→white as it scrolls in */}
-      <div className="grid grid-cols-2 gap-x-8 gap-y-12">
+      {/* One column on mobile; the two lists sit side by side from md up */}
+      <div className="grid grid-cols-1 gap-x-8 gap-y-12 md:grid-cols-2">
         <ScrollFill>
           <p className={label} data-fill>
             Recent Clients

@@ -27,8 +27,8 @@ export default function Gallery() {
 
   return (
     <section id="work" ref={root} className="px-5 pb-16 pt-6 sm:px-8 sm:pt-8">
-      {/* 2 across from the smallest screens · 4 across on wide (xl) */}
-      <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
+      {/* 1 across on mobile · 2 from sm · 4 across on wide (xl) */}
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
         {projects.map((project, i) => (
           <ProjectCard
             key={project.title}
