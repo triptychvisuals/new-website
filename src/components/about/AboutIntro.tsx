@@ -12,8 +12,8 @@ const listItem =
 export default function AboutIntro() {
   return (
     <section id="about-intro" className="px-5 pt-10 sm:px-8 sm:pt-16">
-      {/* One column on mobile; the two lists sit side by side from md up */}
-      <div className="grid grid-cols-1 gap-x-8 gap-y-12 md:grid-cols-2">
+      {/* One column on mobile; the two lists sit directly next to each other from md up */}
+      <div className="flex flex-col gap-y-12 md:flex-row md:gap-x-16">
         <ScrollFill>
           <p className={label} data-fill>
             Recent Clients
