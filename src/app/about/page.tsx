@@ -9,6 +9,7 @@ import AboutFounded from "@/components/about/AboutFounded";
 import AboutAwards from "@/components/about/AboutAwards";
 import AboutTestimonial from "@/components/about/AboutTestimonial";
 import AboutCTA from "@/components/about/AboutCTA";
+import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
   title: "About — Triptych", // EDIT
@@ -17,9 +18,10 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <main className="relative min-h-screen">
-      <Header />
-      <Hero />
+    <>
+      <main className="relative min-h-screen">
+        <Header />
+        <Hero />
       <AboutIntro />
       <AboutResult />
       <AboutStatement />
@@ -28,5 +30,7 @@ export default function AboutPage() {
       <AboutTestimonial />
       <AboutCTA />
     </main>
+      <Footer />
+    </>
   );
 }

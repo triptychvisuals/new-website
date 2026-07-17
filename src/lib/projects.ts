@@ -5,6 +5,8 @@
 
 export type Project = {
   title: string;
+  /** URL-safe id for the /work/[slug] detail page. */
+  slug: string;
   category: string;
   /** EDIT: real still image, e.g. "/work/x.jpg" */
   src?: string;
@@ -95,15 +97,34 @@ const PLACEHOLDER_LOGOS = [
   "/logos/mark-4.svg",
 ];
 
-export const projects: Project[] = titles.map((title, i) => ({
-  title: OVERRIDES[i]?.title ?? title,
-  category: OVERRIDES[i]?.category ?? "Music Video", // EDIT: default category
-  video: OVERRIDES[i]?.video,
-  objectPosition: OVERRIDES[i]?.objectPosition,
-  artist: OVERRIDES[i]?.artist, // EDIT: set an artist to show instead of category
-  year: OVERRIDES[i]?.year ?? YEARS[i % YEARS.length],
-  logo: OVERRIDES[i]?.logo ?? PLACEHOLDER_LOGOS[i % PLACEHOLDER_LOGOS.length],
-}));
+export function slugify(s: string): string {
+  return s
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+export const projects: Project[] = titles.map((title, i) => {
+  const t = OVERRIDES[i]?.title ?? title;
+  return {
+    title: t,
+    slug: slugify(t),
+    category: OVERRIDES[i]?.category ?? "Music Video", // EDIT: default category
+    video: OVERRIDES[i]?.video,
+    objectPosition: OVERRIDES[i]?.objectPosition,
+    artist: OVERRIDES[i]?.artist, // EDIT: set an artist to show instead of category
+    year: OVERRIDES[i]?.year ?? YEARS[i % YEARS.length],
+    logo: OVERRIDES[i]?.logo ?? PLACEHOLDER_LOGOS[i % PLACEHOLDER_LOGOS.length],
+  };
+});
+
+/** Look up a project (and its index) by slug — for the detail route. */
+export function projectBySlug(
+  slug: string
+): { project: Project; index: number } | undefined {
+  const index = projects.findIndex((p) => p.slug === slug);
+  return index === -1 ? undefined : { project: projects[index], index };
+}
 
 // Deterministic gradient base per card (poster behind the reel).
 const GRADIENTS = [

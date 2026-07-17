@@ -25,7 +25,7 @@ export default function ProjectCard({
     "absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]";
 
   return (
-    <a data-card href="#" className="group block">
+    <a data-card href={`/work/${project.slug}`} className="group block">
       <div className="relative aspect-[16/9] w-full overflow-hidden rounded-2xl bg-neutral-200 dark:bg-neutral-800">
         {/* Gradient base (poster) */}
         <div className="absolute inset-0" style={{ background: gradient }} />

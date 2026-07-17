@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import SmoothScroll from "@/components/SmoothScroll";
-import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
   title: "Triptych — Selected Works", // EDIT
@@ -29,11 +28,10 @@ export default function RootLayout({
           Both files are kept in the repo — re-enable Scene here if a future
           section needs the 3D canvas back.
         */}
-        {/* Global smooth scroll + ScrollTrigger sync */}
-        <SmoothScroll>
-          {children}
-          <Footer />
-        </SmoothScroll>
+        {/* Global smooth scroll + ScrollTrigger sync. The site footer lives in
+            the individual pages so standalone routes (e.g. /work/[slug]) can
+            provide their own. */}
+        <SmoothScroll>{children}</SmoothScroll>
       </body>
     </html>
   );
