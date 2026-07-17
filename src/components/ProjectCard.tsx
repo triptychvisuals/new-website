@@ -40,8 +40,18 @@ export default function ProjectCard({
 
         {/* Meta — overlaid on the video */}
         <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 p-4">
-          {/* Bottom-left: small logo, title, type */}
-          <div className="flex flex-col gap-1.5">
+          {/* Bottom-left: title + type */}
+          <div className="min-w-0">
+            <h3 className="text-[15px] font-semibold leading-tight text-white">
+              {project.title}
+            </h3>
+            <p className="mt-0.5 text-[12px] leading-tight text-white/70">
+              {subtitle}
+            </p>
+          </div>
+
+          {/* Bottom-right: small logo above the year */}
+          <div className="flex shrink-0 flex-col items-end gap-1.5">
             {/* EDIT: small per-project logo — set project.logo to an image path */}
             {project.logo ? (
               // eslint-disable-next-line @next/next/no-img-element
@@ -53,22 +63,12 @@ export default function ProjectCard({
             ) : (
               <span aria-hidden className="block h-4 w-4 rounded bg-white/25" />
             )}
-            <div>
-              <h3 className="text-[15px] font-semibold leading-tight text-white">
-                {project.title}
-              </h3>
-              <p className="mt-0.5 text-[12px] leading-tight text-white/70">
-                {subtitle}
-              </p>
-            </div>
+            {project.year && (
+              <span className="text-[13px] font-medium text-white/85">
+                {project.year}
+              </span>
+            )}
           </div>
-
-          {/* Bottom-right: year */}
-          {project.year && (
-            <span className="shrink-0 text-[13px] font-medium text-white/85">
-              {project.year}
-            </span>
-          )}
         </div>
       </div>
     </a>

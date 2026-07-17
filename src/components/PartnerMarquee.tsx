@@ -10,9 +10,15 @@ const PARTNERS = clients.slice(0, 7);
  * fixed-width strip, scrolls left → right, loops seamlessly, and fades out at
  * both edges via a gradient mask.
  */
-export default function PartnerMarquee() {
+export default function PartnerMarquee({
+  className = "w-[240px] sm:w-[340px]",
+}: {
+  className?: string;
+}) {
   return (
-    <div className="relative w-[240px] overflow-hidden sm:w-[340px] [mask-image:linear-gradient(to_right,transparent,#000_14%,#000_86%,transparent)]">
+    <div
+      className={`relative overflow-hidden [mask-image:linear-gradient(to_right,transparent,#000_14%,#000_86%,transparent)] ${className}`}
+    >
       {/* Track is two identical copies; -50% shift loops seamlessly. */}
       <div className="flex w-max animate-marquee-r">
         {[...PARTNERS, ...PARTNERS].map((name, i) => (

@@ -89,58 +89,74 @@ export default function HeroStudio() {
           <Plus />
         </div>
 
-        {/* Bottom band.
-            Desktop: partners (left) · copyright (center) · card (right).
-            Mobile: partners centered on top, then copyright (left) + card (right). */}
-        <div className="relative grid grid-cols-2 items-end gap-x-3 gap-y-6 p-6 sm:p-8 lg:flex lg:flex-row lg:items-end lg:justify-between lg:gap-8 lg:p-10">
-          {/* Partners — logo marquee (centered on mobile) */}
-          <div className="col-span-2 flex flex-col items-center gap-2 lg:col-auto lg:items-start lg:gap-3">
-            <p className="text-[11px] uppercase tracking-[0.2em] text-white/40">
-              Partners
-            </p>
-            <PartnerMarquee />
+        {/* Bottom band */}
+        <div className="relative p-6 sm:p-8 md:p-10">
+          {/* ---- Mobile (9:16 square): logos + copyright (left) · Watch reel / Play (right) ---- */}
+          <div className="flex items-end justify-between gap-3 md:hidden">
+            <div className="flex min-w-0 flex-col gap-2">
+              <PartnerMarquee className="w-[150px]" />
+              {/* EDIT: copyright */}
+              <p className="text-xs text-white/45">© 2026 Triptych Studio</p>
+            </div>
+            {/* EDIT: point to your showreel (YouTube / Vimeo / file) */}
+            <a
+              href="#reel"
+              className="inline-flex shrink-0 items-center gap-2 rounded-full border border-white/15 bg-white/10 py-1.5 pl-4 pr-1.5 text-white backdrop-blur-md"
+            >
+              <span className="text-[13px] font-medium">Watch reel</span>
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-2.5 py-1 text-[13px] font-medium text-black">
+                Play
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+              </span>
+            </a>
           </div>
 
-          {/* EDIT: copyright line — bottom-left on mobile, centered on desktop */}
-          <p className="self-end text-xs text-white/45 sm:text-sm lg:absolute lg:bottom-10 lg:left-1/2 lg:-translate-x-1/2">
-            © 2026 Triptych Studio
-          </p>
+          {/* ---- Desktop: partners (left) · copyright (center) · card (right) ---- */}
+          <div className="hidden md:flex md:items-end md:justify-between md:gap-8">
+            <div className="flex flex-col items-start gap-3">
+              <p className="text-[11px] uppercase tracking-[0.2em] text-white/40">
+                Partners
+              </p>
+              <PartnerMarquee />
+            </div>
 
-          {/* Watch-reel card — semi-transparent glass (compact + bottom-right on mobile) */}
-          <div className="flex items-stretch gap-2 justify-self-end lg:justify-self-auto">
-            <div className="hidden w-[92px] shrink-0 rounded-2xl border border-white/15 bg-white/10 p-1.5 backdrop-blur-md lg:block">
-              <div className="h-full w-full overflow-hidden rounded-xl">
-                <AvatarPlaceholder />
+            <div className="flex items-stretch gap-2">
+              <div className="w-[92px] shrink-0 rounded-2xl border border-white/15 bg-white/10 p-1.5 backdrop-blur-md">
+                <div className="h-full w-full overflow-hidden rounded-xl">
+                  <AvatarPlaceholder />
+                </div>
+              </div>
+              <div className="flex flex-col rounded-2xl border border-white/15 bg-white/10 px-5 py-4 text-white backdrop-blur-md">
+                <p className="text-[13px] font-medium leading-tight">Team Lead</p>
+                <p className="text-[13px] leading-tight text-white/50">
+                  at triptych®
+                </p>
+                {/* EDIT: real team-member name */}
+                <p className="mt-2 text-lg font-semibold leading-tight">
+                  Lauren Thompson
+                </p>
+                <p className="mt-3 text-[13px] text-white/70">Watch video reel</p>
+                <a
+                  href="#reel"
+                  className="mt-2 inline-flex items-center gap-6 self-start rounded-full bg-white py-1.5 pl-4 pr-1.5 text-sm font-medium text-black transition-opacity hover:opacity-80"
+                >
+                  Play
+                  <span className="grid h-6 w-6 place-items-center rounded-full bg-black text-white">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M8 5v14l11-7z" />
+                    </svg>
+                  </span>
+                </a>
               </div>
             </div>
-            <div className="flex flex-col rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-white backdrop-blur-md lg:px-5 lg:py-4">
-              <p className="text-[12px] font-medium leading-tight lg:text-[13px]">
-                Team Lead
-              </p>
-              <p className="text-[12px] leading-tight text-white/50 lg:text-[13px]">
-                at triptych®
-              </p>
-              {/* EDIT: real team-member name */}
-              <p className="mt-1.5 text-sm font-semibold leading-tight lg:mt-2 lg:text-lg">
-                Lauren Thompson
-              </p>
-              <p className="mt-2 text-[12px] text-white/70 lg:mt-3 lg:text-[13px]">
-                Watch video reel
-              </p>
-              {/* EDIT: point to your showreel (YouTube / Vimeo / file) */}
-              <a
-                href="#reel"
-                className="mt-2 inline-flex items-center gap-4 self-start rounded-full bg-white py-1.5 pl-4 pr-1.5 text-sm font-medium text-black transition-opacity hover:opacity-80 lg:gap-6"
-              >
-                Play
-                <span className="grid h-6 w-6 place-items-center rounded-full bg-black text-white">
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M8 5v14l11-7z" />
-                  </svg>
-                </span>
-              </a>
-            </div>
           </div>
+
+          {/* Desktop copyright — centered */}
+          <p className="hidden text-sm text-white/45 md:absolute md:bottom-10 md:left-1/2 md:block md:-translate-x-1/2">
+            © 2026 Triptych Studio
+          </p>
         </div>
       </div>
     </section>

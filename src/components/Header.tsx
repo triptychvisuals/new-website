@@ -160,7 +160,7 @@ export default function Header() {
       {/* Right: listen + clock + social icons */}
       <div className="hidden items-center gap-5 md:flex">
         <MusicLink />
-        <span className="hidden font-mono text-xs tabular-nums text-foreground/70 lg:inline" suppressHydrationWarning>
+        <span className="hidden text-[13px] font-medium tabular-nums tracking-tight text-foreground/70 lg:inline" suppressHydrationWarning>
           {time || "--:--:-- --"}
         </span>
         <SocialRow />
@@ -170,7 +170,7 @@ export default function Header() {
       <div className="relative flex w-full items-center justify-between md:hidden">
         <Logo />
         <span
-          className="absolute left-1/2 -translate-x-1/2 font-mono text-xs tabular-nums text-foreground/70"
+          className="absolute left-1/2 -translate-x-1/2 text-[13px] font-medium tabular-nums tracking-tight text-foreground/70"
           suppressHydrationWarning
         >
           {time || "--:--:-- --"}
