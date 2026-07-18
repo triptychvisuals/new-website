@@ -182,52 +182,8 @@ export default function ProjectDetail({
     <main className="pd">
       <style>{CSS}</style>
 
-      {/* TOP BAR */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          gap: 16,
-          height: 72,
-          borderBottom: "1px solid var(--hair)",
-          margin: "0 clamp(-20px,-4.5vw,-72px)",
-          padding: "0 clamp(20px,4.5vw,72px)",
-        }}
-      >
-        <div
-          style={{
-            position: "relative",
-            width: 120,
-            height: 40,
-            border: "1px solid var(--hair)",
-            borderRadius: 10,
-            overflow: "hidden",
-          }}
-        >
-          <Slot label="Client logo" />
-        </div>
-        <a
-          href="/#work"
-          className="pd-back"
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 8,
-            fontSize: 12,
-            color: "#e7e4df",
-            border: "1px solid var(--hair)",
-            borderRadius: 999,
-            padding: "9px 16px",
-            transition: "border-color .2s, color .2s",
-          }}
-        >
-          ← Back to Projects
-        </a>
-      </div>
-
       {/* 001 — PROJECT */}
-      <section style={{ padding: "clamp(26px,3.5vw,44px) 0 0" }}>
+      <section style={{ padding: "clamp(30px,4vw,52px) 0 0" }}>
         <div
           className="pd-hero-grid"
           style={{
@@ -955,9 +911,6 @@ export default function ProjectDetail({
         }}
       >
         <span>PRJ-2025-041 · {project.title}</span>
-        <a href="/#work" style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          ← Back to Projects
-        </a>
         <span>© 2026 Triptych Studios</span>
       </footer>
     </main>

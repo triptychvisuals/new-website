@@ -12,12 +12,21 @@
   --accent: #e5361f; /* EDIT: red accent — rule marks, red stat block */
 }
 
-/* EDIT: dark theme palette */
-:root[data-theme="dark"] {
+/* EDIT: dark theme palette. Matches the <html> toggle AND any nested element
+   with data-theme="dark" (e.g. the project page forces dark for its header). */
+:root[data-theme="dark"],
+[data-theme="dark"] {
   --background: #0a0a0a;
   --foreground: #f4f4f5;
   --muted: #7a7a7a;
   --hairline: #262626;
+  /* Also override the Tailwind color tokens directly so a NESTED data-theme
+     (e.g. the project page) re-themes utilities — @theme resolves these once at
+     :root, so the --background overrides above don't reach them on their own. */
+  --color-background: #0a0a0a;
+  --color-foreground: #f4f4f5;
+  --color-muted: #7a7a7a;
+  --color-hairline: #262626;
 }
 
 @theme {

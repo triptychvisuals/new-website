@@ -8,6 +8,7 @@ import {
   placeholderGradient,
   projectMedia,
 } from "@/lib/projects";
+import Header from "@/components/Header";
 import ProjectDetail from "@/components/ProjectDetail";
 
 /** /work/<slug>/camera.png if the file exists in public/, else undefined. */
@@ -42,11 +43,16 @@ export default async function ProjectPage({
   if (!found) notFound();
 
   return (
-    <ProjectDetail
-      project={found.project}
-      gradient={placeholderGradient(found.index)}
-      media={projectMedia(found.index)}
-      cameraImage={cameraImageFor(slug)}
-    />
+    // Force the dark palette so the site menu header matches the page, and keep
+    // a dark backdrop behind the sticky header.
+    <div data-theme="dark" style={{ background: "#0b0a0a", minHeight: "100vh" }}>
+      <Header />
+      <ProjectDetail
+        project={found.project}
+        gradient={placeholderGradient(found.index)}
+        media={projectMedia(found.index)}
+        cameraImage={cameraImageFor(slug)}
+      />
+    </div>
   );
 }
