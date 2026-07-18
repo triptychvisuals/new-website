@@ -110,10 +110,13 @@ export default function ProjectDetail({
   project,
   gradient,
   media,
+  cameraImage,
 }: {
   project: Project;
   gradient: string;
   media?: string;
+  /** /work/<slug>/camera.png when present — else the blueprint drawing shows. */
+  cameraImage?: string;
 }) {
   const [playing, setPlaying] = useState(false);
   const [format, setFormat] = useState<"16:9" | "9:16">("16:9");
@@ -511,31 +514,46 @@ export default function ProjectDetail({
                 justifyContent: "center",
               }}
             >
-              <svg
-                viewBox="0 0 340 200"
-                style={{ position: "relative", width: "100%", maxWidth: 300, color: "#d9d6d1" }}
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={1.4}
-                strokeLinejoin="round"
-                strokeLinecap="round"
-              >
-                <rect x="46" y="70" width="196" height="104" rx="7" />
-                <rect x="78" y="48" width="96" height="24" rx="4" />
-                <rect x="14" y="92" width="30" height="46" rx="3" />
-                <path d="M44 108h4M44 122h4" />
-                <line x1="46" y1="96" x2="242" y2="96" />
-                <circle cx="242" cy="122" r="44" />
-                <circle cx="242" cy="122" r="31" />
-                <circle cx="242" cy="122" r="17" />
-                <circle cx="90" cy="118" r="7" stroke="var(--accent)" />
-                <circle cx="196" cy="60" r="9" />
-                <path d="M196 51v-4M205 60h4" />
-                <path d="M66 150h30M66 158h30M66 166h20" />
-                <path d="M46 40h196" stroke="var(--accent)" strokeWidth={1} />
-                <path d="M46 36v8M242 36v8" stroke="var(--accent)" strokeWidth={1} />
-                <circle cx="150" cy="120" r="2.4" fill="var(--accent)" stroke="none" />
-              </svg>
+              {cameraImage ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={cameraImage}
+                  alt=""
+                  style={{
+                    maxWidth: "100%",
+                    maxHeight: 196,
+                    width: "auto",
+                    height: "auto",
+                    objectFit: "contain",
+                  }}
+                />
+              ) : (
+                <svg
+                  viewBox="0 0 340 200"
+                  style={{ position: "relative", width: "100%", maxWidth: 300, color: "#d9d6d1" }}
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={1.4}
+                  strokeLinejoin="round"
+                  strokeLinecap="round"
+                >
+                  <rect x="46" y="70" width="196" height="104" rx="7" />
+                  <rect x="78" y="48" width="96" height="24" rx="4" />
+                  <rect x="14" y="92" width="30" height="46" rx="3" />
+                  <path d="M44 108h4M44 122h4" />
+                  <line x1="46" y1="96" x2="242" y2="96" />
+                  <circle cx="242" cy="122" r="44" />
+                  <circle cx="242" cy="122" r="31" />
+                  <circle cx="242" cy="122" r="17" />
+                  <circle cx="90" cy="118" r="7" stroke="var(--accent)" />
+                  <circle cx="196" cy="60" r="9" />
+                  <path d="M196 51v-4M205 60h4" />
+                  <path d="M66 150h30M66 158h30M66 166h20" />
+                  <path d="M46 40h196" stroke="var(--accent)" strokeWidth={1} />
+                  <path d="M46 36v8M242 36v8" stroke="var(--accent)" strokeWidth={1} />
+                  <circle cx="150" cy="120" r="2.4" fill="var(--accent)" stroke="none" />
+                </svg>
+              )}
             </div>
             <div style={{ marginTop: "auto", padding: "0 0 6px" }}>
               <div style={{ fontSize: 19, fontWeight: 600, letterSpacing: "-.01em" }}>
