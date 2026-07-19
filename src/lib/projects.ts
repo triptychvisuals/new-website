@@ -83,6 +83,7 @@ const OVERRIDES: Record<number, Partial<Project>> = {
     // face + hands stay in frame instead of empty text headroom up top.
     objectPosition: "50% 60%",
   },
+  3: { title: "Feel the Love", category: "Music Video", video: "/reels/feel-the-love.mp4" },
 };
 
 // EDIT: placeholder years shown top-right of each card (swap for the real ones)
