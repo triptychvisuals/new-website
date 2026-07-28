@@ -2,15 +2,15 @@ import Reveal from "@/components/Reveal";
 import RuleLabel from "@/components/RuleLabel";
 import { stats, aboutGradient } from "@/lib/about";
 
-/** "Production Experience & Result" — a stats bento. */
+/** "Production Experience & Press" — a stats bento. */
 export default function AboutResult() {
   return (
     <section className="px-5 pt-20 sm:px-8 sm:pt-28">
       {/* Centered header */}
       <Reveal className="text-center">
-        <RuleLabel className="justify-center">Result</RuleLabel>
+        <RuleLabel className="justify-center">Press</RuleLabel>
         <h2 className="mx-auto mt-6 max-w-3xl text-[clamp(2rem,5vw,3.75rem)] font-medium leading-[1.05] tracking-tight">
-          Production Experience &amp; Result
+          Production Experience &amp; Press
         </h2>
       </Reveal>
 

@@ -101,7 +101,7 @@ export const stats = {
       "Our clients consistently rate our production process and final results as highly professional and impactful.",
     clients: "500+ Happy Clients",
   }, // EDIT
-  bestAds: "BEST ADS in 2026", // EDIT
+  bestAds: "Featured in Chicago Reader", // EDIT: press feature shown in the purple box
 };
 
 export const testimonials: { quote: string; author: string; role: string }[] = [
