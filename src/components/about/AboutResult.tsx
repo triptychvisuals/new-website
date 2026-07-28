@@ -60,15 +60,8 @@ export default function AboutResult() {
           </div>
         </a>
 
-        {/* Middle column */}
+        {/* Middle column — the 80+ partners card fills the height */}
         <div className="flex flex-col gap-4">
-          <div className="py-6 text-center">
-            <div className="text-6xl font-medium tracking-tight">
-              {stats.awards.value}
-            </div>
-            <p className="mt-2 text-sm text-muted">{stats.awards.label}</p>
-          </div>
-
           <div className="flex flex-1 flex-col justify-between rounded-2xl bg-accent p-6 text-white">
             <div className="flex items-start justify-between gap-3">
               <span className="text-5xl font-medium tracking-tight">
