@@ -39,6 +39,7 @@ export const clients = [
 
 // EDIT: placeholder titles for the not-yet-filled cards
 const titles = [
+  "Overthinking",
   "Echoes of the City",
   "Shadow of Tomorrow",
   "Silent Horizon",
@@ -73,9 +74,12 @@ const titles = [
 
 // EDIT: real projects wired to specific cards — { title, category, video }
 const OVERRIDES: Record<number, Partial<Project>> = {
-  0: { title: "Timmy Story", category: "Music Video", video: "/reels/reel-a.mp4" },
-  1: { title: "Hands Up", category: "Music Video", video: "/reels/reel-b.mp4" },
-  2: {
+  // New project — no reel yet, so it shows the placeholder gradient. Year auto
+  // resolves to YEARS[0] = "2026".
+  0: { title: "Overthinking", category: "Music Video" },
+  1: { title: "Timmy Story", category: "Music Video", video: "/reels/reel-a.mp4" },
+  2: { title: "Hands Up", category: "Music Video", video: "/reels/reel-b.mp4" },
+  3: {
     title: "Good Morning America",
     category: "Music Video",
     video: "/reels/reel-c.mp4",
@@ -83,7 +87,7 @@ const OVERRIDES: Record<number, Partial<Project>> = {
     // face + hands stay in frame instead of empty text headroom up top.
     objectPosition: "50% 60%",
   },
-  3: { title: "Feel the Love", category: "Music Video", video: "/reels/feel-the-love.mp4" },
+  4: { title: "Feel the Love", category: "Music Video", video: "/reels/feel-the-love.mp4" },
 };
 
 // EDIT: placeholder years shown top-right of each card (swap for the real ones)
