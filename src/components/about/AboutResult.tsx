@@ -1,6 +1,18 @@
+import fs from "fs";
+import path from "path";
 import Reveal from "@/components/Reveal";
 import RuleLabel from "@/components/RuleLabel";
 import { stats, aboutGradient } from "@/lib/about";
+
+// EDIT: the featured press card (purple box) links here.
+const PRESS_URL =
+  "https://chicagoreader.com/music/chicagoans-of-note/lawrence-law-mahone-triptych-visuals-video/";
+// EDIT: drop the article photo at public/about/press-chicago-reader.jpg and it
+// becomes the card background automatically (until then, the gradient shows).
+const PRESS_PHOTO = "/about/press-chicago-reader.jpg";
+const hasPressPhoto = fs.existsSync(
+  path.join(process.cwd(), "public", PRESS_PHOTO)
+);
 
 /** "Production Experience & Press" — a stats bento. */
 export default function AboutResult() {
@@ -16,19 +28,37 @@ export default function AboutResult() {
 
       {/* Bento */}
       <Reveal className="mt-14 grid grid-cols-1 gap-4 md:grid-cols-3">
-        {/* Left: hero image + best-ads badge */}
-        <div
-          className="relative min-h-[360px] overflow-hidden rounded-2xl md:min-h-[460px]"
+        {/* Left: Chicago Reader feature — photo (when present) + badge, links out */}
+        <a
+          href={PRESS_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group relative block min-h-[360px] overflow-hidden rounded-2xl md:min-h-[460px]"
           style={{ background: aboutGradient(4) }}
         >
+          {hasPressPhoto && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={PRESS_PHOTO}
+              alt="Lawrence “Law” Mahone of Triptych featured in the Chicago Reader"
+              className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+            />
+          )}
+          {/* Bottom scrim so the badge stays readable over any photo */}
+          <div
+            aria-hidden
+            className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/70 to-transparent"
+          />
           <div className="absolute bottom-4 left-4 flex items-center gap-2 text-white">
             <span aria-hidden className="text-lg">
               {/* EDIT: swap for a laurel mark */}
               ❖
             </span>
-            <span className="text-sm font-medium leading-tight">{stats.bestAds}</span>
+            <span className="text-sm font-medium leading-tight underline-offset-4 group-hover:underline">
+              {stats.bestAds}
+            </span>
           </div>
-        </div>
+        </a>
 
         {/* Middle column */}
         <div className="flex flex-col gap-4">
