@@ -88,7 +88,7 @@ const OVERRIDES: Record<number, Partial<Project>> = {
     objectPosition: "50% 60%",
   },
   4: { title: "Feel the Love", category: "Music Video", video: "/reels/feel-the-love.mp4" },
-  5: { title: "The Midnight Route", category: "Dramatic", year: "2026" },
+  5: { title: "Dramatic", category: "Music Video", year: "2026" },
 };
 
 // EDIT: placeholder years shown top-right of each card (swap for the real ones)
