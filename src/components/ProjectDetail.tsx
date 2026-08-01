@@ -391,8 +391,9 @@ export default function ProjectDetail({
                   src={cameraImage}
                   alt=""
                   style={{
-                    maxWidth: "100%",
-                    maxHeight: 196,
+                    // EDIT: camera photo size within the Fig. A box
+                    maxWidth: "80%",
+                    maxHeight: 140,
                     width: "auto",
                     height: "auto",
                     objectFit: "contain",
@@ -401,7 +402,7 @@ export default function ProjectDetail({
               ) : (
                 <svg
                   viewBox="0 0 340 200"
-                  style={{ position: "relative", width: "100%", maxWidth: 300, color: "#d9d6d1" }}
+                  style={{ position: "relative", width: "100%", maxWidth: 240, color: "#d9d6d1" }}
                   fill="none"
                   stroke="currentColor"
                   strokeWidth={1.4}
@@ -427,7 +428,7 @@ export default function ProjectDetail({
               )}
             </div>
             <div style={{ marginTop: "auto", padding: "0 0 6px" }}>
-              <div style={{ fontSize: 19, fontWeight: 600, letterSpacing: "-.01em" }}>
+              <div style={{ fontSize: 15, fontWeight: 600, letterSpacing: "-.01em" }}>
                 RED V-RAPTOR 8K VV
               </div>
             </div>
@@ -485,7 +486,7 @@ export default function ProjectDetail({
               </svg>
             </div>
             <div style={{ marginTop: "auto", padding: "0 0 6px" }}>
-              <div style={{ fontSize: 19, fontWeight: 600, letterSpacing: "-.01em" }}>
+              <div style={{ fontSize: 15, fontWeight: 600, letterSpacing: "-.01em" }}>
                 Cooke S4/i Primes
               </div>
             </div>
