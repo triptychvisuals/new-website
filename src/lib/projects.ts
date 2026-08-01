@@ -91,6 +91,10 @@ const OVERRIDES: Record<number, Partial<Project>> = {
   5: { title: "Dramatic", category: "Music Video", year: "2026" },
   6: { title: "Ridin Wit It", category: "Music Video", year: "2023" },
   7: { title: "Locked In", category: "Music Video", year: "2024" },
+  8: { title: "OK Cool", category: "Music Video" },
+  9: { title: "Wiscansin", category: "Music Video" },
+  10: { title: "Bogus", category: "Music Video" },
+  11: { title: "Letter to the Game", category: "Music Video" },
 };
 
 // EDIT: placeholder years shown top-right of each card (swap for the real ones)
