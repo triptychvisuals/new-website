@@ -119,7 +119,6 @@ export default function ProjectDetail({
   cameraImage?: string;
 }) {
   const [playing, setPlaying] = useState(false);
-  const [format, setFormat] = useState<"16:9" | "9:16">("16:9");
   const [shot, setShot] = useState(0);
   const [lutPos, setLutPos] = useState(55);
   const draggingRef = useRef(false);
@@ -162,21 +161,6 @@ export default function ProjectDetail({
       setPlaying((p) => !p);
     }
   }
-
-  const is169 = format === "16:9";
-  const ratio = is169 ? "16 / 9" : "9 / 16";
-  const frameMax = is169 ? "100%" : "420px";
-
-  const tab = (on: boolean): CSSProperties => ({
-    fontSize: 12,
-    letterSpacing: 0,
-    padding: "7px 15px",
-    borderRadius: 999,
-    cursor: "pointer",
-    border: `1px solid ${on ? "var(--accent)" : "var(--hair)"}`,
-    background: on ? "var(--accent)" : "transparent",
-    color: on ? "#0b0a0a" : "#cdcac5",
-  });
 
   return (
     <main className="pd">
@@ -282,14 +266,6 @@ export default function ProjectDetail({
               ))}
             </div>
           </div>
-          <div style={{ display: "flex", gap: 8 }}>
-            <button onClick={() => setFormat("16:9")} style={tab(is169)}>
-              16:9
-            </button>
-            <button onClick={() => setFormat("9:16")} style={tab(!is169)}>
-              9:16
-            </button>
-          </div>
         </div>
 
         {/* VIDEO frame */}
@@ -297,8 +273,7 @@ export default function ProjectDetail({
           style={{
             position: "relative",
             margin: "0 auto",
-            aspectRatio: ratio,
-            maxWidth: frameMax,
+            aspectRatio: "16 / 9",
             width: "100%",
             border: "1px solid var(--hair)",
             borderRadius: 16,
@@ -341,53 +316,6 @@ export default function ProjectDetail({
             />
           )}
 
-          <div
-            style={{
-              position: "absolute",
-              inset: 0,
-              pointerEvents: "none",
-              background:
-                "linear-gradient(180deg,rgba(0,0,0,.32) 0%,transparent 26%,transparent 60%,rgba(0,0,0,.55) 100%)",
-            }}
-          />
-          <div
-            style={{
-              position: "absolute",
-              top: 18,
-              left: 20,
-              pointerEvents: "none",
-              display: "flex",
-              gap: 10,
-              alignItems: "center",
-              fontSize: 11,
-              color: "#e7e4df",
-            }}
-          >
-            <span
-              style={{
-                width: 8,
-                height: 8,
-                borderRadius: "50%",
-                background: "var(--accent)",
-              }}
-            />
-            Self-hosted · MP4 / H.264
-          </div>
-          <div
-            style={{
-              position: "absolute",
-              top: 18,
-              right: 20,
-              pointerEvents: "none",
-              fontSize: 11,
-              color: "#e7e4df",
-              border: "1px solid rgba(255,255,255,.35)",
-              padding: "5px 9px",
-              borderRadius: 6,
-            }}
-          >
-            {format} · 03:42
-          </div>
           <button
             onClick={togglePlay}
             aria-label="Play"
@@ -427,18 +355,6 @@ export default function ProjectDetail({
               />
             )}
           </button>
-          <div
-            style={{
-              position: "absolute",
-              left: 20,
-              bottom: 16,
-              pointerEvents: "none",
-              fontSize: 12,
-              color: "#e7e4df",
-            }}
-          >
-            Dir. Cut — Final Master
-          </div>
         </div>
       </section>
 
@@ -448,11 +364,10 @@ export default function ProjectDetail({
           <span style={secLabel}>002 &nbsp;/&nbsp; Technical Breakdown</span>
         </div>
         <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))",
-            gap: "clamp(30px,4vw,60px)",
-          }}
+          // EDIT: phone = camera + lens side by side, LUT full-width below;
+          // md+ keeps the previous auto-fit columns.
+          className="grid grid-cols-2 md:grid-cols-[repeat(auto-fit,minmax(300px,1fr))]"
+          style={{ gap: "clamp(20px,4vw,60px)" }}
         >
           {/* CAMERA */}
           <div style={{ display: "flex", flexDirection: "column" }}>
@@ -588,8 +503,8 @@ export default function ProjectDetail({
             </div>
           </div>
 
-          {/* COLOR / LUT */}
-          <div style={{ display: "flex", flexDirection: "column" }}>
+          {/* COLOR / LUT — full row on phones, one column on md+ */}
+          <div className="col-span-2 md:col-span-1" style={{ display: "flex", flexDirection: "column" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
               <span style={specKey}>Color / LUT</span>
               <span style={{ fontSize: 11, color: "var(--faint)" }}>Drag →</span>
