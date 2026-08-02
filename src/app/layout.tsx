@@ -3,7 +3,7 @@ import "./globals.css";
 import SmoothScroll from "@/components/SmoothScroll";
 
 export const metadata: Metadata = {
-  title: "Triptych — Selected Works", // EDIT
+  title: "Triptych Studios", // EDIT: browser-tab / search-result title
   description:
     "Triptych Studios — cinematic storytelling, film, and motion for brands.", // EDIT
 };
