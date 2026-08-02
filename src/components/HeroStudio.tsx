@@ -83,13 +83,12 @@ export default function HeroStudio() {
 
         {/* Bottom band */}
         <div className="relative p-6 sm:p-8 md:p-10">
-          {/* ---- Mobile (9:16 square): logos + copyright (left) · Watch reel / Play (right) ---- */}
-          <div className="flex items-end justify-between gap-3 md:hidden">
-            <div className="flex min-w-0 flex-col gap-2">
-              <PartnerMarquee className="w-[150px]" />
-              {/* EDIT: copyright */}
-              <p className="text-xs text-white/45">© 2026 Triptych Studio</p>
-            </div>
+          {/* ---- Mobile (9:16 square): copyright (left) · Watch reel / Play
+               (right), with the logo scroll centered underneath ---- */}
+          <div className="flex flex-col gap-4 md:hidden">
+          <div className="flex items-end justify-between gap-3">
+            {/* EDIT: copyright */}
+            <p className="text-xs text-white/45">© 2026 Triptych Studio</p>
             {/* EDIT: point to your showreel (YouTube / Vimeo / file) */}
             <a
               href="#reel"
@@ -104,15 +103,13 @@ export default function HeroStudio() {
               </span>
             </a>
           </div>
+          {/* Logo scroll — bottom center */}
+          <PartnerMarquee className="mx-auto w-[240px]" />
+          </div>
 
-          {/* ---- Desktop: partners (left) · copyright (center) · card (right) ---- */}
+          {/* ---- Desktop: copyright (left) · logo scroll (center) · card (right) ---- */}
           <div className="hidden md:flex md:items-end md:justify-between md:gap-8">
-            <div className="flex flex-col items-start gap-3">
-              <p className="text-[11px] uppercase tracking-[0.2em] text-white/40">
-                Partners
-              </p>
-              <PartnerMarquee />
-            </div>
+            <p className="text-sm text-white/45">© 2026 Triptych Studio</p>
 
             <div className="flex items-stretch gap-2">
               <div className="w-[92px] shrink-0 rounded-2xl border border-white/15 bg-white/10 p-1.5 backdrop-blur-md">
@@ -145,10 +142,10 @@ export default function HeroStudio() {
             </div>
           </div>
 
-          {/* Desktop copyright — centered */}
-          <p className="hidden text-sm text-white/45 md:absolute md:bottom-10 md:left-1/2 md:block md:-translate-x-1/2">
-            © 2026 Triptych Studio
-          </p>
+          {/* Logo scroll — centered at the bottom of the hero */}
+          <div className="hidden md:absolute md:bottom-10 md:left-1/2 md:block md:-translate-x-1/2">
+            <PartnerMarquee className="w-[420px]" />
+          </div>
         </div>
       </div>
     </section>
