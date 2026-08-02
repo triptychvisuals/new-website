@@ -126,6 +126,8 @@ export default function ProjectDetail({
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const reel = project.video;
+  // GIF (or any non-mp4/webm) reels render as a plain looping <img> — no player.
+  const reelIsVideo = !!reel && /\.(mp4|webm)$/i.test(reel);
   const poster = media && /\.(png|jpe?g|webp|svg)$/i.test(media) ? media : undefined;
 
   useEffect(() => {
@@ -281,7 +283,7 @@ export default function ProjectDetail({
             background: "#000",
           }}
         >
-          {reel ? (
+          {reel && reelIsVideo ? (
             <video
               ref={videoRef}
               src={reel}
@@ -289,6 +291,20 @@ export default function ProjectDetail({
               muted
               playsInline
               preload="metadata"
+              style={{
+                position: "absolute",
+                inset: 0,
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                objectPosition: project.objectPosition,
+              }}
+            />
+          ) : reel ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={reel}
+              alt=""
               style={{
                 position: "absolute",
                 inset: 0,
@@ -316,6 +332,7 @@ export default function ProjectDetail({
             />
           )}
 
+          {(!reel || reelIsVideo) && (
           <button
             onClick={togglePlay}
             aria-label="Play"
@@ -355,6 +372,7 @@ export default function ProjectDetail({
               />
             )}
           </button>
+          )}
         </div>
       </section>
 
