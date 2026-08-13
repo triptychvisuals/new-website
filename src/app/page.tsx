@@ -4,6 +4,7 @@ import Header from "@/components/Header";
 import HeroStudio from "@/components/HeroStudio";
 import SelectedWorks from "@/components/SelectedWorks";
 import Gallery from "@/components/Gallery";
+import Hero from "@/components/Hero";
 import AboutIntro from "@/components/about/AboutIntro";
 import AboutResult from "@/components/about/AboutResult";
 import AboutStatement from "@/components/about/AboutStatement";
@@ -26,6 +27,7 @@ export default function Home() {
             the mobile menu can scroll here instead of loading another page.
             Desktop keeps the standalone /about route. */}
         <div id="about" className="scroll-mt-24 sm:hidden">
+          <Hero />
           <AboutIntro />
           <AboutResult />
           <AboutStatement />
