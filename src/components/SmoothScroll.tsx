@@ -20,6 +20,9 @@ export default function SmoothScroll({
     const lenis = new Lenis({
       duration: 1.1, // EDIT: higher = more inertia/glide
       smoothWheel: true,
+      // Smoothly scroll in-page #hash links (mobile menu → About section)
+      // instead of letting the browser jump.
+      anchors: true,
     });
 
     // Keep ScrollTrigger updated on every Lenis frame.

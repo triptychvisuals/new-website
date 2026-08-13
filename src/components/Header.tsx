@@ -14,6 +14,16 @@ function hasArrow(label: string) {
   return label.toLowerCase() === "store";
 }
 
+/**
+ * On phones the About content lives inline on the home page, so the menu
+ * scrolls to it instead of loading /about — mobile stays one continuous scroll.
+ */
+function mobileHref(href: string) {
+  if (href === "/about") return "/#about";
+  if (href.startsWith("/about#")) return `/#${href.split("#")[1]}`;
+  return href;
+}
+
 const linkCls =
   "inline-flex items-center gap-1 text-[13px] font-medium tracking-tight text-foreground transition-opacity hover:opacity-60 whitespace-nowrap";
 
@@ -210,7 +220,7 @@ export default function Header() {
           {site.nav.map((item) => (
             <Link
               key={item.label}
-              href={item.href}
+              href={mobileHref(item.href)}
               onClick={close}
               className="flex items-center gap-2 border-b border-hairline/70 py-3.5 text-xl font-normal tracking-tight text-foreground last:border-0"
             >
