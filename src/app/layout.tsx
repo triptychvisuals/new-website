@@ -15,6 +15,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="h-full antialiased">
+      <head>
+        {/* Google Sans — site typeface (EDIT weights in the css2 URL) */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap"
+          rel="stylesheet"
+        />
+      </head>
       <body className="min-h-full bg-background text-foreground">
         {/* Every visit starts on the light theme — dark is only ever set by
             clicking the toggle. sessionStorage (not localStorage) keeps that

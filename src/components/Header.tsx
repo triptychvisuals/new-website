@@ -142,14 +142,20 @@ function Logo({
   // (it's white artwork that has to invert on the light background).
   const isDefault = src === DEFAULT_LOGO;
   return (
-    <Link href="/" onClick={onClick} aria-label="Triptych — home" className={`inline-flex items-start gap-0.5 ${className}`}>
+    <Link href="/" onClick={onClick} aria-label="Triptych Studios — home" className={`inline-flex items-center gap-2 ${className}`}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={src}
-        alt="Triptych"
+        alt=""
         className={`h-5 w-auto ${isDefault ? "[filter:brightness(0)] dark:[filter:none]" : ""}`}
       />
-      <sup className="text-[0.5rem] leading-none text-foreground">®</sup>
+      {/* EDIT: wordmark — sits right of the mark, ® floated above its end */}
+      <span className="relative whitespace-nowrap pr-2 text-[15px] font-medium leading-none tracking-tight text-foreground">
+        Triptych Studios
+        <span aria-hidden className="absolute -top-1.5 right-0 text-[8px] leading-none">
+          ®
+        </span>
+      </span>
     </Link>
   );
 }
@@ -165,28 +171,21 @@ export default function Header({ logo }: { logo?: string }) {
 
   return (
     <header className="sticky top-2 z-40 mx-2 mt-2 flex items-center justify-between rounded-3xl border border-hairline bg-background/85 px-5 py-3.5 shadow-sm backdrop-blur-md sm:top-3 sm:mx-3 sm:mt-3 sm:px-6">
-      {/* Left: light-switch toggle */}
+      {/* Left: logo + wordmark */}
       <div className="hidden items-center gap-3 md:flex">
-        <ThemeToggle />
+        <Logo src={logo} />
       </div>
 
-      {/* Center: nav clustered around the logo */}
-      <nav className="absolute left-1/2 hidden -translate-x-1/2 items-center md:flex">
-        <span className="flex items-center gap-6">
-          {left.map((item) => (
-            <NavLink key={item.label} item={item} />
-          ))}
-        </span>
-        <Logo className="mx-8" src={logo} />
-        <span className="flex items-center gap-6">
-          {right.map((item) => (
-            <NavLink key={item.label} item={item} />
-          ))}
-        </span>
+      {/* Center: nav links */}
+      <nav className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-6 md:flex">
+        {[...left, ...right].map((item) => (
+          <NavLink key={item.label} item={item} />
+        ))}
       </nav>
 
-      {/* Right: listen + clock + social icons */}
+      {/* Right: theme toggle + listen + clock + social icons */}
       <div className="hidden items-center gap-5 md:flex">
+        <ThemeToggle />
         <MusicLink />
         <span className="hidden text-[13px] font-medium tabular-nums tracking-tight text-foreground/70 lg:inline" suppressHydrationWarning>
           {time || "--:--:-- --"}
@@ -198,7 +197,7 @@ export default function Header({ logo }: { logo?: string }) {
       <div className="relative flex w-full items-center justify-between md:hidden">
         <Logo src={logo} />
         <span
-          className="absolute left-1/2 -translate-x-1/2 text-[13px] font-medium tabular-nums tracking-tight text-foreground/70"
+          className="absolute left-1/2 hidden -translate-x-1/2 text-[13px] font-medium tabular-nums tracking-tight text-foreground/70 min-[480px]:block"
           suppressHydrationWarning
         >
           {time || "--:--:-- --"}
