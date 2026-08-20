@@ -4,7 +4,7 @@ import Header from "@/components/Header";
 import HeroStudio from "@/components/HeroStudio";
 import PartnerCard from "@/components/PartnerCard";
 import SelectedWorks from "@/components/SelectedWorks";
-import Gallery from "@/components/Gallery";
+import WalletStack from "@/components/WalletStack";
 import Hero from "@/components/Hero";
 import AboutIntro from "@/components/about/AboutIntro";
 import AboutResult from "@/components/about/AboutResult";
@@ -28,7 +28,7 @@ export default async function Home() {
         <HeroStudio tagline={content.tagline} />
         <PartnerCard />
         <SelectedWorks />
-        <Gallery works={content.works} />
+        <WalletStack works={content.works} />
 
         {/* Phones only: the About page inline, right under the third reel, so
             the mobile menu can scroll here instead of loading another page.

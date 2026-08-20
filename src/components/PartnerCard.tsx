@@ -15,8 +15,9 @@ const SECONDS_PER_NAME = 2.2;
 export default function PartnerCard() {
   return (
     <section className="px-2 pt-2 sm:px-3">
-      <div className="flex items-center gap-5 rounded-2xl border border-hairline px-5 py-3 sm:gap-8 sm:px-7">
-        <span className="shrink-0 text-[10px] uppercase tracking-[0.2em] text-muted sm:text-[11px]">
+      {/* Black card in both themes — white logos on near-black, matching the hero panel. */}
+      <div className="flex items-center gap-5 rounded-2xl bg-[#0e0e10] px-5 py-3 text-white sm:gap-8 sm:px-7">
+        <span className="shrink-0 text-[10px] uppercase tracking-[0.2em] text-white/40 sm:text-[11px]">
           Partners
         </span>
 
@@ -34,7 +35,7 @@ export default function PartnerCard() {
             {[...PARTNERS, ...PARTNERS].map((name, i) => (
               <span
                 key={i}
-                className="flex h-6 shrink-0 items-center whitespace-nowrap text-[13px] font-medium text-foreground/80 sm:text-sm"
+                className="flex h-6 shrink-0 items-center whitespace-nowrap text-[13px] font-medium text-white/85 sm:text-sm"
               >
                 {name}
               </span>

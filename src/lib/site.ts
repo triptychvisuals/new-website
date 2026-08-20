@@ -11,7 +11,7 @@ export const site = {
   sectionNumber: "001", // EDIT: hero index label
   sectionLabel: "SELECTED WORKS", // EDIT: hero bracket label
   nav: [
-    { label: "Projects", href: "/#work" }, // EDIT: works grid on the home page
+    { label: "Projects", href: "/projects" }, // EDIT: the full project index
     { label: "About", href: "/about" }, // EDIT
     { label: "Press", href: "/about#awards" }, // EDIT
     { label: "Store", href: "#" }, // EDIT: link to your store; shows the ↗
