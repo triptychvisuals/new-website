@@ -10,6 +10,9 @@ import ThemeToggle from "@/components/ThemeToggle";
  *   [switch] .... NAV ◬logo NAV .... TIME  icons
  * On mobile it collapses to a hamburger that drops a compact panel from the top.
  */
+/** EDIT: the authored wordmark, used whenever the portal has no logo set. */
+const DEFAULT_LOGO = "/triptych-logo.png";
+
 function hasArrow(label: string) {
   return label.toLowerCase() === "store";
 }
@@ -126,17 +129,32 @@ function NavLink({ item }: { item: { label: string; href: string } }) {
   );
 }
 
-function Logo({ onClick, className = "" }: { onClick?: () => void; className?: string }) {
+function Logo({
+  onClick,
+  className = "",
+  src = DEFAULT_LOGO,
+}: {
+  onClick?: () => void;
+  className?: string;
+  src?: string;
+}) {
+  // A portal logo is used as-is; only the authored mark gets the theme filter
+  // (it's white artwork that has to invert on the light background).
+  const isDefault = src === DEFAULT_LOGO;
   return (
     <Link href="/" onClick={onClick} aria-label="Triptych — home" className={`inline-flex items-start gap-0.5 ${className}`}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src="/triptych-logo.png" alt="Triptych" className="h-5 w-auto [filter:brightness(0)] dark:[filter:none]" />
+      <img
+        src={src}
+        alt="Triptych"
+        className={`h-5 w-auto ${isDefault ? "[filter:brightness(0)] dark:[filter:none]" : ""}`}
+      />
       <sup className="text-[0.5rem] leading-none text-foreground">®</sup>
     </Link>
   );
 }
 
-export default function Header() {
+export default function Header({ logo }: { logo?: string }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const close = () => setMenuOpen(false);
   const time = useClock();
@@ -159,7 +177,7 @@ export default function Header() {
             <NavLink key={item.label} item={item} />
           ))}
         </span>
-        <Logo className="mx-8" />
+        <Logo className="mx-8" src={logo} />
         <span className="flex items-center gap-6">
           {right.map((item) => (
             <NavLink key={item.label} item={item} />
@@ -178,7 +196,7 @@ export default function Header() {
 
       {/* Mobile: logo + centered clock + toggle + hamburger */}
       <div className="relative flex w-full items-center justify-between md:hidden">
-        <Logo />
+        <Logo src={logo} />
         <span
           className="absolute left-1/2 -translate-x-1/2 text-[13px] font-medium tabular-nums tracking-tight text-foreground/70"
           suppressHydrationWarning

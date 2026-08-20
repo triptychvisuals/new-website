@@ -34,7 +34,12 @@ function AvatarPlaceholder() {
   );
 }
 
-export default function HeroStudio() {
+export default function HeroStudio({
+  // EDIT: authored tagline — the portal's tagline replaces it when set.
+  tagline = "Imagination in Motion",
+}: {
+  tagline?: string;
+}) {
   return (
     <section className="bg-[#f4f2ec] px-2 pb-2 pt-2 dark:bg-[#0a0a0a] sm:px-3 sm:pb-3">
       <div className="relative isolate flex aspect-square min-h-0 flex-col overflow-hidden rounded-[26px] bg-[#0e0e10] text-white md:aspect-auto md:min-h-[88vh]">
@@ -62,7 +67,7 @@ export default function HeroStudio() {
         {/* Top: small, transparent labels across the top corners */}
         <div className="flex flex-1 items-start justify-between gap-4 p-6 sm:p-8 lg:p-10">
           <h1 className="text-sm font-medium text-white/50 sm:text-[15px]">
-            Imagination in Motion
+            {tagline}
           </h1>
           {/* EDIT: founding year */}
           <p className="text-right text-sm font-medium text-white/50 sm:text-[15px]">

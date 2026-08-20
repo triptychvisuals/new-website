@@ -10,18 +10,21 @@ import AboutAwards from "@/components/about/AboutAwards";
 import AboutTestimonial from "@/components/about/AboutTestimonial";
 import AboutCTA from "@/components/about/AboutCTA";
 import Footer from "@/components/Footer";
+import { getSiteContent } from "@/lib/siteContent";
 
 export const metadata: Metadata = {
   title: "About — Triptych", // EDIT
   description: "Who we are — cinematic storytelling, film, and motion.", // EDIT
 };
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const content = await getSiteContent();
+
   return (
     <>
       <main className="relative min-h-screen">
-        <Header />
-        <Hero />
+        <Header logo={content.logo} />
+        <Hero title={content.heroTitle} />
       <AboutIntro />
       <AboutResult />
       <AboutStatement />

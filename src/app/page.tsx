@@ -13,21 +13,26 @@ import AboutAwards from "@/components/about/AboutAwards";
 import AboutTestimonial from "@/components/about/AboutTestimonial";
 import AboutCTA from "@/components/about/AboutCTA";
 import Footer from "@/components/Footer";
+import { getSiteContent } from "@/lib/siteContent";
 
-export default function Home() {
+export default async function Home() {
+  // Portal content (empty when the portal is unreachable — the page then
+  // renders exactly as authored).
+  const content = await getSiteContent();
+
   return (
     <>
       <main className="relative min-h-screen">
-        <Header />
-        <HeroStudio />
+        <Header logo={content.logo} />
+        <HeroStudio tagline={content.tagline} />
         <SelectedWorks />
-        <Gallery />
+        <Gallery works={content.works} />
 
         {/* Phones only: the About page inline, right under the third reel, so
             the mobile menu can scroll here instead of loading another page.
             Desktop keeps the standalone /about route. */}
         <div id="about" className="scroll-mt-24 sm:hidden">
-          <Hero />
+          <Hero title={content.heroTitle} />
           <AboutIntro />
           <AboutResult />
           <AboutStatement />

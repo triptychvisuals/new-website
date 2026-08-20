@@ -10,6 +10,7 @@ import {
 } from "@/lib/projects";
 import Header from "@/components/Header";
 import ProjectDetail from "@/components/ProjectDetail";
+import { getSiteContent } from "@/lib/siteContent";
 
 /** /work/<slug>/camera.png if the file exists in public/, else undefined. */
 function cameraImageFor(slug: string): string | undefined {
@@ -42,11 +43,13 @@ export default async function ProjectPage({
   const found = projectBySlug(slug);
   if (!found) notFound();
 
+  const content = await getSiteContent();
+
   return (
     // Force the dark palette so the site menu header matches the page, and keep
     // a dark backdrop behind the sticky header.
     <div data-theme="dark" style={{ background: "#0b0a0a", minHeight: "100vh" }}>
-      <Header />
+      <Header logo={content.logo} />
       <ProjectDetail
         project={found.project}
         gradient={placeholderGradient(found.index)}

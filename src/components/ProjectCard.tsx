@@ -10,6 +10,7 @@ export default function ProjectCard({
   gradient,
   media,
   className = "",
+  href,
 }: {
   project: Project;
   index: number;
@@ -17,6 +18,8 @@ export default function ProjectCard({
   media?: string;
   /** Extra classes on the card link — used to hide overflow cards on mobile. */
   className?: string;
+  /** Portal link for this tile; falls back to the local /work/<slug> page. */
+  href?: string;
 }) {
   const reel = project.video ?? media;
   const isVideo = !!reel && /\.(mp4|webm)$/i.test(reel);
@@ -28,7 +31,7 @@ export default function ProjectCard({
     "absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]";
 
   return (
-    <a data-card href={`/work/${project.slug}`} className={`group block ${className}`}>
+    <a data-card href={href || `/work/${project.slug}`} className={`group block ${className}`}>
       <div className="relative aspect-[16/9] w-full overflow-hidden rounded-2xl bg-neutral-200 dark:bg-neutral-800">
         {/* Gradient base (poster) */}
         <div className="absolute inset-0" style={{ background: gradient }} />

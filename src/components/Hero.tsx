@@ -16,7 +16,7 @@ const stats = [
  * Oversized split headline: {name} … [index label] … {suffix} on the left,
  * with a stats block pinned to the right margin at the same level.
  */
-export default function Hero() {
+export default function Hero({ title }: { title?: string }) {
   const root = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -53,7 +53,8 @@ export default function Hero() {
       {/* Wordmark — one horizontal line across the top */}
       <div className="flex items-start justify-between gap-4">
         <h1 data-hero-line className={display}>
-          {site.name} {site.suffix}
+          {/* Portal hero title wins; otherwise the authored wordmark. */}
+          {title ?? `${site.name} ${site.suffix}`}
         </h1>
 
         {/* Index label to the right (only where there's room) */}
