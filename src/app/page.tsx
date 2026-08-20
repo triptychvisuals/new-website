@@ -2,6 +2,7 @@
 // content is inlined below the gallery so the whole site is one scroll.
 import Header from "@/components/Header";
 import HeroStudio from "@/components/HeroStudio";
+import PartnerCard from "@/components/PartnerCard";
 import SelectedWorks from "@/components/SelectedWorks";
 import Gallery from "@/components/Gallery";
 import Hero from "@/components/Hero";
@@ -25,6 +26,7 @@ export default async function Home() {
       <main className="relative min-h-screen">
         <Header logo={content.logo} />
         <HeroStudio tagline={content.tagline} />
+        <PartnerCard />
         <SelectedWorks />
         <Gallery works={content.works} />
 

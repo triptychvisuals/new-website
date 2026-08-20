@@ -17,15 +17,17 @@ export default function ThemeToggle() {
     const next = !dark;
     setDark(next);
     const el = document.documentElement;
+    // sessionStorage so the choice follows them across pages this visit, but
+    // the next visit starts light again.
     if (next) {
       el.setAttribute("data-theme", "dark");
       try {
-        localStorage.setItem("theme", "dark");
+        sessionStorage.setItem("theme", "dark");
       } catch {}
     } else {
       el.removeAttribute("data-theme");
       try {
-        localStorage.setItem("theme", "light");
+        sessionStorage.setItem("theme", "light");
       } catch {}
     }
   };

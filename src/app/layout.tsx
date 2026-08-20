@@ -16,10 +16,13 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full antialiased">
       <body className="min-h-full bg-background text-foreground">
-        {/* Set theme before paint to avoid a flash */}
+        {/* Every visit starts on the light theme — dark is only ever set by
+            clicking the toggle. sessionStorage (not localStorage) keeps that
+            choice while browsing between pages, then clears on the next visit.
+            Applied before paint so there's no flash. */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `try{if(localStorage.getItem('theme')==='dark'){document.documentElement.setAttribute('data-theme','dark')}}catch(e){}`,
+            __html: `try{if(sessionStorage.getItem('theme')==='dark'){document.documentElement.setAttribute('data-theme','dark')}}catch(e){}`,
           }}
         />
         {/*

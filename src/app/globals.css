@@ -44,7 +44,7 @@
     "Liberation Mono", monospace;
   /* Equalizer bars (header Listen link) */
   --animate-eq: eq 0.7s ease-in-out infinite;
-  /* Partner logo marquee (hero bottom-left, scrolls left → right) */
+  /* Partner logo marquee (scrolls left → right) */
   --animate-marquee-r: marquee-r 30s linear infinite;
 }
 
@@ -64,6 +64,16 @@
   }
   to {
     transform: translateX(0);
+  }
+}
+
+/* Track holds two identical copies; -50% lands on the seam so it loops clean. */
+@keyframes marquee-up {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-50%);
   }
 }
 
