@@ -12,13 +12,6 @@ export default function AboutStatement() {
         >
           {intro.statement}
         </h2>
-        <div className="mt-8 space-y-6">
-          {intro.paragraphs.map((p, i) => (
-            <p key={i} data-fill className="text-[15px] leading-relaxed text-foreground/80">
-              {p}
-            </p>
-          ))}
-        </div>
       </ScrollFill>
     </section>
   );

@@ -9,7 +9,6 @@ import Hero from "@/components/Hero";
 import AboutIntro from "@/components/about/AboutIntro";
 import AboutResult from "@/components/about/AboutResult";
 import AboutStatement from "@/components/about/AboutStatement";
-import AboutFounded from "@/components/about/AboutFounded";
 import AboutAwards from "@/components/about/AboutAwards";
 import AboutTestimonial from "@/components/about/AboutTestimonial";
 import AboutCTA from "@/components/about/AboutCTA";
@@ -38,7 +37,6 @@ export default async function Home() {
           <AboutIntro />
           <AboutResult />
           <AboutStatement />
-          <AboutFounded />
           <AboutAwards />
           <AboutTestimonial />
           <AboutCTA />

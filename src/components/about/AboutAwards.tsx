@@ -1,17 +1,20 @@
 import Reveal from "@/components/Reveal";
 import RuleLabel from "@/components/RuleLabel";
-import { awards, awardsStatement } from "@/lib/about";
+import { awards } from "@/lib/about";
 
-/** Left statement, right "Selected Awards / Year" table. */
+/** Left: giant "Awards (N)" headline. Right: "Selected Awards / Year" table. */
 export default function AboutAwards() {
   return (
     <section id="awards" className="px-5 pt-32 sm:px-8 sm:pt-44">
       <div className="grid grid-cols-1 gap-x-12 gap-y-10 md:grid-cols-2">
-        {/* Left: label + statement */}
+        {/* Left: label + oversized count headline */}
         <Reveal>
-          <RuleLabel>Awards</RuleLabel>
-          <h2 className="mt-8 max-w-xl text-[clamp(1.75rem,3.4vw,2.75rem)] font-medium leading-tight tracking-tight text-foreground">
-            {awardsStatement}
+          <RuleLabel>Selected Honors</RuleLabel>
+          <h2 className="mt-8 text-[clamp(3.25rem,10vw,7.5rem)] font-medium leading-[0.95] tracking-[-0.03em] text-foreground">
+            Awards
+            <sup className="ml-[0.15em] align-[1em] text-[0.26em] font-normal tracking-normal text-muted">
+              ({awards.length})
+            </sup>
           </h2>
         </Reveal>
 

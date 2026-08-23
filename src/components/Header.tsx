@@ -144,10 +144,11 @@ function Logo({
   return (
     <Link href="/" onClick={onClick} aria-label="Triptych Studios — home" className={`inline-flex items-center gap-2 ${className}`}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
+      {/* Mark height matches the wordmark's cap height; w-auto keeps its scale */}
       <img
         src={src}
         alt=""
-        className={`h-5 w-auto ${isDefault ? "[filter:brightness(0)] dark:[filter:none]" : ""}`}
+        className={`h-4 w-auto ${isDefault ? "[filter:brightness(0)] dark:[filter:none]" : ""}`}
       />
       {/* EDIT: wordmark — sits right of the mark, ® floated above its end */}
       <span className="relative whitespace-nowrap pr-2 text-[15px] font-medium leading-none tracking-tight text-foreground">
@@ -211,7 +212,7 @@ export default function Header({ logo }: { logo?: string }) {
             onClick={() => setMenuOpen((o) => !o)}
             aria-label={menuOpen ? "Close menu" : "Open menu"}
             aria-expanded={menuOpen}
-            className="relative flex h-5 w-7 flex-col items-end justify-center"
+            className="relative flex h-[18px] w-7 flex-col items-end justify-center"
           >
             <span
               className={`block h-[1.5px] w-7 bg-foreground transition-transform duration-300 ${
