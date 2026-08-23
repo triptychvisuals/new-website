@@ -52,7 +52,7 @@ export default function WalletStack({ works = [] }: { works?: PortalWork[] }) {
   }, []);
 
   return (
-    <section ref={root} id="work" className="relative px-5 pb-20 sm:px-8">
+    <section ref={root} id="work" className="relative px-5 pb-20 pt-12 sm:px-8 sm:pt-16">
       {/* The dimmer — fixed so it swallows the whole viewport (header included) */}
       <div
         ref={dim}

@@ -45,6 +45,8 @@
   --animate-eq: eq 0.7s ease-in-out infinite;
   /* Partner logo marquee (scrolls left → right) */
   --animate-marquee-r: marquee-r 30s linear infinite;
+  /* EDIT: Featured© Work title marquee — raise the duration to slow it. */
+  --animate-marquee-l: marquee-l 22s linear infinite;
 }
 
 @keyframes eq {
@@ -63,6 +65,15 @@
   }
   to {
     transform: translateX(0);
+  }
+}
+
+@keyframes marquee-l {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
   }
 }
 

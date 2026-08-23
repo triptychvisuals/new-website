@@ -1,9 +1,8 @@
 import type { Project } from "@/lib/projects";
 
 /**
- * Gallery card — the reel itself with the meta overlaid on it: a small logo,
- * the title, and the type (category/artist) at the bottom-left, and the year
- * at the bottom-right, over a gradient scrim for legibility.
+ * Gallery card — the reel with a bold uppercase title at the bottom-left and
+ * the year as "/26" at the bottom-right, over a gradient scrim for legibility.
  */
 export default function ProjectCard({
   project,
@@ -23,7 +22,8 @@ export default function ProjectCard({
 }) {
   const reel = project.video ?? media;
   const isVideo = !!reel && /\.(mp4|webm)$/i.test(reel);
-  const subtitle = project.artist ?? project.category;
+  // "2026" → "/26"
+  const shortYear = project.year ? `/${project.year.slice(-2)}` : "";
   const fit = project.objectPosition
     ? { objectPosition: project.objectPosition }
     : undefined;
@@ -66,37 +66,16 @@ export default function ProjectCard({
         {/* Legibility scrim for the overlaid text */}
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/75 via-black/25 to-transparent" />
 
-        {/* Meta — overlaid on the video */}
-        <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 p-4">
-          {/* Bottom-left: title + type */}
-          <div className="min-w-0">
-            <h3 className="text-[15px] font-normal leading-tight tracking-[-0.03em] text-white">
-              {project.title}
-            </h3>
-            <p className="mt-0.5 text-[12px] leading-tight text-white/70">
-              {subtitle}
-            </p>
-          </div>
-
-          {/* Bottom-right: small logo above the year */}
-          <div className="flex shrink-0 flex-col items-end gap-1.5">
-            {/* EDIT: small per-project logo — set project.logo to an image path */}
-            {project.logo ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={project.logo}
-                alt=""
-                className="h-4 w-auto max-w-[80px] object-contain"
-              />
-            ) : (
-              <span aria-hidden className="block h-4 w-4 rounded bg-white/25" />
-            )}
-            {project.year && (
-              <span className="text-[13px] font-medium text-white/85">
-                {project.year}
-              </span>
-            )}
-          </div>
+        {/* Meta — big uppercase title left, /YY right */}
+        <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 p-4 sm:p-5">
+          <h3 className="min-w-0 truncate text-[clamp(1.4rem,4.5vw,2rem)] font-bold uppercase leading-none tracking-tight text-white">
+            {project.title}
+          </h3>
+          {shortYear && (
+            <span className="shrink-0 text-[clamp(1.4rem,4.5vw,2rem)] font-bold leading-none tracking-tight text-white">
+              {shortYear}
+            </span>
+          )}
         </div>
       </div>
     </a>
