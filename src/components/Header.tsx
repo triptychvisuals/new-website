@@ -171,7 +171,7 @@ export default function Header({ logo }: { logo?: string }) {
   const right = site.nav.slice(mid);
 
   return (
-    <header className="sticky top-2 z-40 mx-2 mt-2 flex items-center justify-between rounded-3xl border border-hairline bg-background/85 px-5 py-3.5 shadow-sm backdrop-blur-md sm:top-3 sm:mx-3 sm:mt-3 sm:px-6">
+    <header className="sticky top-0 z-40 flex items-center justify-between border-b border-hairline bg-background/85 px-5 py-3.5 backdrop-blur-md sm:px-6">
       {/* Left: logo + wordmark */}
       <div className="hidden items-center gap-3 md:flex">
         <Logo src={logo} />
@@ -230,7 +230,7 @@ export default function Header({ logo }: { logo?: string }) {
 
       {/* Mobile dropdown — drops from the top, sized to content */}
       <div
-        className={`absolute inset-x-0 top-full mt-2 origin-top overflow-hidden rounded-3xl border border-hairline bg-background shadow-xl transition-all duration-300 ease-out md:hidden ${
+        className={`absolute inset-x-0 top-full origin-top overflow-hidden border-b border-hairline bg-background shadow-xl transition-all duration-300 ease-out md:hidden ${
           menuOpen
             ? "visible translate-y-0 opacity-100"
             : "pointer-events-none invisible -translate-y-3 opacity-0"

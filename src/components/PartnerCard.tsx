@@ -4,44 +4,25 @@ import { clients } from "@/lib/projects";
 // /public/partners (then swap each <span> for an <img className="h-4 w-auto" />).
 const PARTNERS = clients;
 
-// EDIT: seconds each partner stays on screen before the next one steps up.
-const SECONDS_PER_NAME = 2.2;
-
 /**
- * Skinny full-width card that sits between the hero video and "Featured Work".
- * The partner list scrolls vertically inside it — one row visible at a time,
- * looping seamlessly — with the label pinned to the left.
+ * Full-bleed black partners strip between the hero and the featured-work
+ * band. The names loop horizontally forever — same endless marquee as the
+ * Featured© Work title (shared animate-marquee-l timing).
  */
 export default function PartnerCard() {
   return (
-    <section className="px-2 pt-2 sm:px-3">
-      {/* Black card in both themes — white logos on near-black, matching the hero panel. */}
-      <div className="flex items-center gap-5 rounded-2xl bg-[#0e0e10] px-5 py-3 text-white sm:gap-8 sm:px-7">
-        <span className="shrink-0 text-[10px] uppercase tracking-[0.2em] text-white/40 sm:text-[11px]">
-          Partners
-        </span>
-
-        {/* Viewport is exactly one row tall. The track is two identical copies,
-            so travelling -50% lands back at the start invisibly. steps() moves
-            a whole row at a time, so a name is never caught mid-scroll. */}
-        <div className="relative h-6 flex-1 overflow-hidden">
-          <div
-            className="flex flex-col"
-            style={{
-              // EDIT: SECONDS_PER_NAME controls how long each partner holds.
-              animation: `marquee-up ${PARTNERS.length * SECONDS_PER_NAME}s steps(${PARTNERS.length}) infinite`,
-            }}
+    <section aria-label="Partners" className="overflow-hidden bg-[#0e0e10] py-4 text-white">
+      {/* Two identical copies; the -50% loop lands on the seam invisibly. */}
+      <div className="flex w-max animate-marquee-l">
+        {[...PARTNERS, ...PARTNERS].map((name, i) => (
+          <span
+            key={i}
+            aria-hidden={i >= PARTNERS.length}
+            className="whitespace-nowrap pr-14 text-sm font-medium text-white/85"
           >
-            {[...PARTNERS, ...PARTNERS].map((name, i) => (
-              <span
-                key={i}
-                className="flex h-6 shrink-0 items-center whitespace-nowrap text-[13px] font-medium text-white/85 sm:text-sm"
-              >
-                {name}
-              </span>
-            ))}
-          </div>
-        </div>
+            {name}
+          </span>
+        ))}
       </div>
     </section>
   );

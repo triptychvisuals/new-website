@@ -11,7 +11,7 @@ import ProjectCard from "./ProjectCard";
 const COUNT = 5;
 
 // EDIT: where the first card parks below the header (px)…
-const TOP = 84;
+const TOP = 56;
 // EDIT: …and the strip of each card left peeking when the next stacks onto it.
 const PEEK = 26;
 
@@ -52,7 +52,7 @@ export default function WalletStack({ works = [] }: { works?: PortalWork[] }) {
   }, []);
 
   return (
-    <section ref={root} id="work" className="relative pb-20 pt-12 sm:pt-16">
+    <section ref={root} id="work" className="relative">
       {/* The dimmer — fixed so it swallows the whole viewport (header included) */}
       <div
         ref={dim}
@@ -64,7 +64,7 @@ export default function WalletStack({ works = [] }: { works?: PortalWork[] }) {
       {cards.map(({ project, index, media, href }, i) => (
         <div
           key={project.slug}
-          className="sticky w-full pb-5 last:pb-0"
+          className="sticky w-full"
           style={{ top: TOP + i * PEEK, zIndex: DIM_Z + 1 + i }}
         >
           {/* Lifted shadow so each card reads as its own layer in the stack */}

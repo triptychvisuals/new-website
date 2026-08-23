@@ -17,7 +17,7 @@ const STATEMENT_2_ACCENT = "your story."; // accent-underlined tail
  */
 export default function SelectedWorks() {
   return (
-    <section aria-label="Featured work" className="mt-2 bg-[#0e0e10] text-white">
+    <section aria-label="Featured work" className="bg-[#0e0e10] text-white">
       {/* Meta row */}
       <div className="flex items-center justify-between gap-3 px-5 pt-6 text-[10px] font-bold uppercase tracking-[0.08em] sm:px-8 sm:text-[12px]">
         <span>{META_LEFT}</span>
@@ -43,7 +43,7 @@ export default function SelectedWorks() {
         </div>
       </div>
 
-      {/* Bold uppercase statements + vertical label */}
+      {/* Statements */}
       <div className="relative px-5 pb-12 pt-10 sm:px-8 sm:pb-16 sm:pt-14">
         {/* Crosshair accents */}
         <span aria-hidden className="absolute right-6 top-8 text-2xl font-extralight text-[color:var(--accent)]">
@@ -53,19 +53,11 @@ export default function SelectedWorks() {
           +
         </span>
 
-        {/* Vertical section label */}
-        <span
-          aria-hidden
-          className="absolute right-2 top-1/2 -translate-y-1/2 rotate-180 text-[clamp(2.5rem,7vw,4.5rem)] font-bold uppercase leading-none tracking-tight [writing-mode:vertical-rl] sm:right-5"
-        >
-          /Work
-        </span>
-
-        <div className="max-w-2xl pr-16 sm:pr-24">
-          <p className="text-[clamp(1.05rem,2.2vw,1.6rem)] font-bold uppercase leading-[1.35] tracking-tight">
+        <div className="max-w-2xl">
+          <p className="text-[clamp(1.05rem,2.2vw,1.6rem)] font-bold leading-[1.35] tracking-tight">
             {STATEMENT_1}
           </p>
-          <p className="mt-8 text-[clamp(1.05rem,2.2vw,1.6rem)] font-bold uppercase leading-[1.35] tracking-tight sm:mt-10">
+          <p className="mt-8 text-[clamp(1.05rem,2.2vw,1.6rem)] font-bold leading-[1.35] tracking-tight sm:mt-10">
             {STATEMENT_2_LEAD}
             <span className="text-[color:var(--accent)] underline decoration-2 underline-offset-4">
               {STATEMENT_2_ACCENT}
