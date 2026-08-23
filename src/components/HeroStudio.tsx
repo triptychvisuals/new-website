@@ -21,9 +21,9 @@ export default function HeroStudio({
   tagline?: string;
 }) {
   return (
-    <section className="bg-background px-2 pb-2 pt-2 sm:px-3 sm:pb-3">
-      {/* Square on phones, 16:9 on desktop */}
-      <div className="relative isolate flex aspect-square min-h-0 flex-col overflow-hidden rounded-[26px] bg-[#0e0e10] text-white md:aspect-video">
+    <section className="bg-background">
+      {/* Full-bleed panel — square on phones, 16:9 on desktop */}
+      <div className="relative isolate flex aspect-square min-h-0 flex-col overflow-hidden bg-[#0e0e10] text-white md:aspect-video">
         {/* Background: horizontal reel carousel (clips cycle every 2.5s with
             dots), a legibility overlay, and film grain. EDIT clips in HeroReel. */}
         <HeroReel />

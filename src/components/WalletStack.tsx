@@ -52,7 +52,7 @@ export default function WalletStack({ works = [] }: { works?: PortalWork[] }) {
   }, []);
 
   return (
-    <section ref={root} id="work" className="relative px-5 pb-20 pt-12 sm:px-8 sm:pt-16">
+    <section ref={root} id="work" className="relative pb-20 pt-12 sm:pt-16">
       {/* The dimmer — fixed so it swallows the whole viewport (header included) */}
       <div
         ref={dim}
@@ -64,17 +64,18 @@ export default function WalletStack({ works = [] }: { works?: PortalWork[] }) {
       {cards.map(({ project, index, media, href }, i) => (
         <div
           key={project.slug}
-          className="sticky mx-auto w-full max-w-[980px] pb-5 last:pb-0"
+          className="sticky w-full pb-5 last:pb-0"
           style={{ top: TOP + i * PEEK, zIndex: DIM_Z + 1 + i }}
         >
           {/* Lifted shadow so each card reads as its own layer in the stack */}
-          <div className="overflow-hidden rounded-2xl shadow-[0_-14px_36px_rgba(0,0,0,0.22)]">
+          <div className="overflow-hidden shadow-[0_-14px_36px_rgba(0,0,0,0.22)]">
             <ProjectCard
               project={project}
               index={index}
               gradient={placeholderGradient(index)}
               media={media}
               href={href}
+              rounded={false}
             />
           </div>
         </div>
