@@ -21,7 +21,7 @@ export default function HeroStudio({
   tagline?: string;
 }) {
   return (
-    <section className="bg-[#f4f2ec] px-2 pb-2 pt-2 dark:bg-[#0a0a0a] sm:px-3 sm:pb-3">
+    <section className="bg-background px-2 pb-2 pt-2 sm:px-3 sm:pb-3">
       {/* Square on phones, 16:9 on desktop */}
       <div className="relative isolate flex aspect-square min-h-0 flex-col overflow-hidden rounded-[26px] bg-[#0e0e10] text-white md:aspect-video">
         {/* Background: horizontal reel carousel (clips cycle every 2.5s with

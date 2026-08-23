@@ -4,8 +4,8 @@
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
 :root {
-  /* EDIT: editorial palette — white page, near-black ink (Visual Frame style) */
-  --background: #ffffff;
+  /* EDIT: editorial palette — off-white page, near-black ink */
+  --background: #f4f2ec;
   --foreground: #0a0a0a;
   --muted: #9a9a9a; /* EDIT: metadata / mono labels */
   --hairline: #e6e6e6; /* EDIT: thin dividers */
