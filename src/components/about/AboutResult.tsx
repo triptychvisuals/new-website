@@ -14,6 +14,32 @@ const hasPressPhoto = fs.existsSync(
   path.join(process.cwd(), "public", PRESS_PHOTO)
 );
 
+// Phones: the three bento blocks stack into the top wallet-style while
+// scrolling, matching the homepage reel cards. EDIT: same numbers as
+// WalletStack — where block 1 parks, and the peek strip each next one leaves.
+const STACK_TOP = 84;
+const STACK_PEEK = 26;
+
+/** Sticky-on-mobile wrapper for one bento block (plain grid item on md+). */
+function StackItem({
+  i,
+  className = "",
+  children,
+}: {
+  i: number;
+  className?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div
+      className={`max-md:sticky ${className}`}
+      style={{ top: STACK_TOP + i * STACK_PEEK, zIndex: i + 1 }}
+    >
+      {children}
+    </div>
+  );
+}
+
 /** "Production Experience & Press" — a stats bento. */
 export default function AboutResult() {
   return (
@@ -29,6 +55,7 @@ export default function AboutResult() {
       {/* Bento */}
       <Reveal className="mt-14 grid grid-cols-1 gap-4 md:grid-cols-3">
         {/* Left: Chicago Reader feature — photo (when present) + badge, links out */}
+        <StackItem i={0}>
         <a
           href={PRESS_URL}
           target="_blank"
@@ -59,9 +86,10 @@ export default function AboutResult() {
             </span>
           </div>
         </a>
+        </StackItem>
 
         {/* Middle column — the 80+ partners card fills the height */}
-        <div className="flex flex-col gap-4">
+        <StackItem i={1} className="flex flex-col gap-4">
           <div className="flex flex-1 flex-col justify-between rounded-2xl bg-accent p-6 text-white">
             <div className="flex items-start justify-between gap-3">
               <span className="text-5xl font-medium tracking-tight">
@@ -73,10 +101,14 @@ export default function AboutResult() {
               {stats.partners.body}
             </p>
           </div>
-        </div>
+        </StackItem>
 
-        {/* Right column */}
-        <div className="flex flex-col gap-4">
+        {/* Right column — opaque panel on phones so it occludes the cards
+            beneath it while stacking */}
+        <StackItem
+          i={2}
+          className="flex flex-col gap-4 max-md:rounded-2xl max-md:bg-background max-md:pt-2"
+        >
           <div className="flex min-h-[120px] items-start rounded-2xl bg-foreground p-6">
             <p className="text-xl leading-snug text-background/70">
               {stats.decade}
@@ -114,7 +146,7 @@ export default function AboutResult() {
               {stats.satisfaction.clients}
             </span>
           </div>
-        </div>
+        </StackItem>
       </Reveal>
     </section>
   );

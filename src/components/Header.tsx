@@ -193,17 +193,19 @@ export default function Header({ logo }: { logo?: string }) {
         <SocialRow />
       </div>
 
-      {/* Mobile: logo + centered clock + toggle + hamburger */}
+      {/* Mobile: logo + clock right beside the theme toggle + hamburger */}
       <div className="relative flex w-full items-center justify-between md:hidden">
         <Logo src={logo} />
-        <span
-          className="absolute left-1/2 hidden -translate-x-1/2 text-[13px] font-medium tabular-nums tracking-tight text-foreground/70 min-[480px]:block"
-          suppressHydrationWarning
-        >
-          {time || "--:--:-- --"}
-        </span>
         <div className="flex items-center gap-4">
-          <ThemeToggle />
+          <div className="flex items-center gap-2">
+            <span
+              className="text-[13px] font-medium tabular-nums tracking-tight text-foreground/70"
+              suppressHydrationWarning
+            >
+              {time || "--:--:-- --"}
+            </span>
+            <ThemeToggle />
+          </div>
           <button
             type="button"
             onClick={() => setMenuOpen((o) => !o)}
