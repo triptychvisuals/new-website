@@ -5,8 +5,6 @@ import HeroStudio from "@/components/HeroStudio";
 import PartnerCard from "@/components/PartnerCard";
 import SelectedWorks from "@/components/SelectedWorks";
 import WalletStack from "@/components/WalletStack";
-import Hero from "@/components/Hero";
-import AboutIntro from "@/components/about/AboutIntro";
 import AboutResult from "@/components/about/AboutResult";
 import AboutStatement from "@/components/about/AboutStatement";
 import AboutAwards from "@/components/about/AboutAwards";
@@ -33,8 +31,6 @@ export default async function Home() {
             the mobile menu can scroll here instead of loading another page.
             Desktop keeps the standalone /about route. */}
         <div id="about" className="scroll-mt-24 sm:hidden">
-          <Hero title={content.heroTitle} />
-          <AboutIntro />
           <AboutResult />
           <AboutStatement />
           <AboutAwards />

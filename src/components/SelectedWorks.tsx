@@ -49,15 +49,15 @@ export default function SelectedWorks() {
         <span aria-hidden className="absolute right-6 top-8 text-2xl font-extralight text-[color:var(--accent)]">
           +
         </span>
-        <span aria-hidden className="absolute bottom-8 left-5 text-2xl font-extralight text-[color:var(--accent)] sm:left-8">
+        <span aria-hidden className="absolute bottom-3 left-5 text-2xl font-extralight text-[color:var(--accent)] sm:left-8">
           +
         </span>
 
         <div className="max-w-2xl">
-          <p className="text-[clamp(1.05rem,2.2vw,1.6rem)] font-bold leading-[1.35] tracking-tight">
+          <p className="text-[clamp(1.05rem,2.2vw,1.6rem)] font-normal leading-[1.35] tracking-tight">
             {STATEMENT_1}
           </p>
-          <p className="mt-8 text-[clamp(1.05rem,2.2vw,1.6rem)] font-bold leading-[1.35] tracking-tight sm:mt-10">
+          <p className="mt-8 text-[clamp(1.05rem,2.2vw,1.6rem)] font-normal leading-[1.35] tracking-tight sm:mt-10">
             {STATEMENT_2_LEAD}
             <span className="text-[color:var(--accent)] underline decoration-2 underline-offset-4">
               {STATEMENT_2_ACCENT}
@@ -66,7 +66,7 @@ export default function SelectedWorks() {
 
           <Link
             href="/projects"
-            className="mt-9 inline-flex items-center rounded-full border-2 border-white px-7 py-3 text-[15px] font-bold uppercase tracking-tight transition-colors hover:bg-white hover:text-black sm:mt-11"
+            className="mt-9 inline-flex items-center rounded-full border-2 border-white px-7 py-1.5 text-[15px] font-bold uppercase tracking-tight transition-colors hover:bg-white hover:text-black sm:mt-11"
           >
             See Works
           </Link>

@@ -52,15 +52,15 @@ export default function AboutResult() {
         </h2>
       </Reveal>
 
-      {/* Bento */}
-      <Reveal className="mt-14 grid grid-cols-1 gap-4 md:grid-cols-3">
+      {/* Bento — full-bleed on phones (bleeds out of the section padding) */}
+      <Reveal className="mt-14 grid grid-cols-1 gap-4 max-md:-mx-5 md:grid-cols-3">
         {/* Left: Chicago Reader feature — photo (when present) + badge, links out */}
         <StackItem i={0}>
         <a
           href={PRESS_URL}
           target="_blank"
           rel="noopener noreferrer"
-          className="group relative block min-h-[360px] overflow-hidden rounded-2xl md:min-h-[460px]"
+          className="group relative block min-h-[360px] overflow-hidden rounded-2xl max-md:rounded-none md:min-h-[460px]"
           style={{ background: aboutGradient(4) }}
         >
           {hasPressPhoto && (
@@ -90,7 +90,7 @@ export default function AboutResult() {
 
         {/* Middle column — the 80+ partners card fills the height */}
         <StackItem i={1} className="flex flex-col gap-4">
-          <div className="flex flex-1 flex-col justify-between rounded-2xl bg-accent p-6 text-white">
+          <div className="flex flex-1 flex-col justify-between rounded-2xl bg-accent p-6 text-white max-md:rounded-none">
             <div className="flex items-start justify-between gap-3">
               <span className="text-5xl font-medium tracking-tight">
                 {stats.partners.value}
@@ -107,9 +107,9 @@ export default function AboutResult() {
             beneath it while stacking */}
         <StackItem
           i={2}
-          className="flex flex-col gap-4 max-md:rounded-2xl max-md:bg-background max-md:pt-2"
+          className="flex flex-col gap-4 max-md:bg-background max-md:px-5 max-md:pt-2"
         >
-          <div className="flex min-h-[120px] items-start rounded-2xl bg-foreground p-6">
+          <div className="flex min-h-[120px] items-start rounded-2xl bg-foreground p-6 max-md:-mx-5 max-md:rounded-none">
             <p className="text-xl leading-snug text-background/70">
               {stats.decade}
             </p>
@@ -123,7 +123,7 @@ export default function AboutResult() {
           </div>
 
           <div
-            className="aspect-[16/10] w-full overflow-hidden rounded-2xl"
+            className="aspect-[16/10] w-full overflow-hidden rounded-2xl max-md:-mx-5 max-md:w-auto max-md:self-stretch max-md:rounded-none"
             style={{ background: aboutGradient(1) }}
             aria-hidden
           />
