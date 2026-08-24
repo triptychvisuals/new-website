@@ -14,7 +14,20 @@ const PARTNERS = clients;
  * screen-blended, so the mark renders white and any background melts into the
  * black strip — clearly visible in both site themes (the strip stays black).
  */
-function logoFor(name: string): { src: string; white: boolean } | undefined {
+// EDIT: per-logo height (Tailwind class) so dense or portrait marks read at
+// the same visual weight as wide wordmarks. Anything not listed uses DEFAULT.
+const LOGO_SIZES: Record<string, string> = {
+  capitol: "h-10", // detail-heavy oval lockup
+  interscope: "h-10", // tall portrait crop
+  universal: "h-9", // globe lockup with small sub-line
+  atlantic: "h-8",
+  warner: "h-8",
+};
+const DEFAULT_LOGO_SIZE = "h-6";
+
+function logoFor(
+  name: string
+): { src: string; white: boolean; size: string } | undefined {
   const dir = path.join(process.cwd(), "public", "partners");
   const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
   const alias = slug.split("-")[0];
@@ -26,7 +39,11 @@ function logoFor(name: string): { src: string; white: boolean } | undefined {
     ] as const) {
       for (const ext of ["svg", "png", "webp"]) {
         if (fs.existsSync(path.join(dir, `${base}${suffix}.${ext}`))) {
-          return { src: `/partners/${base}${suffix}.${ext}`, white };
+          return {
+            src: `/partners/${base}${suffix}.${ext}`,
+            white,
+            size: LOGO_SIZES[base] ?? DEFAULT_LOGO_SIZE,
+          };
         }
       }
     }
@@ -59,7 +76,7 @@ export default function PartnerCard() {
               <img
                 src={logo.src}
                 alt={name}
-                className={`h-6 w-auto mix-blend-screen ${
+                className={`${logo.size} w-auto mix-blend-screen ${
                   logo.white ? "" : "[filter:invert(1)]"
                 }`}
               />
