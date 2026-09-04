@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { CSSProperties } from "react";
 import type { Project } from "@/lib/projects";
+import type { PortalWork } from "@/lib/siteContent";
 
 /* Reference palette (Video Project.dc.html) */
 const ACCENT = "#d5602c";
@@ -108,11 +109,14 @@ const SHOTS = [
 
 export default function ProjectDetail({
   project,
+  work,
   gradient,
   media,
   cameraImage,
 }: {
   project: Project;
+  /** Portal feed record — every filled field overrides the authored copy. */
+  work?: PortalWork;
   gradient: string;
   media?: string;
   /** /work/<slug>/camera.png when present — else the blueprint drawing shows. */
@@ -125,10 +129,26 @@ export default function ProjectDetail({
   const lutRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  const reel = project.video;
+  const reel = work?.reel || project.video;
   // GIF (or any non-mp4/webm) reels render as a plain looping <img> — no player.
   const reelIsVideo = !!reel && /\.(mp4|webm)$/i.test(reel);
-  const poster = media && /\.(png|jpe?g|webp|svg)$/i.test(media) ? media : undefined;
+  // Portal thumbnails arrive as data-URLs; local media as file paths.
+  const poster =
+    media && (/\.(png|jpe?g|webp|svg)$/i.test(media) || media.startsWith("data:image/"))
+      ? media
+      : undefined;
+
+  // Portal crew, split into the two authored columns.
+  const crewProd = (work?.crew ?? []).filter((c) => c.group !== "post");
+  const crewPost = (work?.crew ?? []).filter((c) => c.group === "post");
+  const PROD_ICONS = ["circle", "diamond", "squares"];
+  const POST_ICONS = ["bars", "target", "diamond-faint"];
+  const stills = work?.stills ?? [];
+  const stillsTop = stills.filter((_, i) => i % 2 === 0);
+  // With too few stills for two distinct rows, the bottom row repeats
+  // the top instead of falling back to placeholder slots.
+  const oddStills = stills.filter((_, i) => i % 2 === 1);
+  const stillsBottom = oddStills.length ? oddStills : stillsTop;
 
   useEffect(() => {
     const onMove = (e: PointerEvent) => {
@@ -200,9 +220,10 @@ export default function ProjectDetail({
                 color: "#b9b6b1",
               }}
             >
-              {/* EDIT: per-project synopsis */}
-              A neon-soaked descent through a city that never sleeps — one long
-              night, one broken promise, and the search for a way back home.
+              {/* Portal synopsis when set — else the authored placeholder. */}
+              {work?.synopsis ||
+                `A neon-soaked descent through a city that never sleeps — one long
+              night, one broken promise, and the search for a way back home.`}
             </p>
           </div>
 
@@ -218,14 +239,14 @@ export default function ProjectDetail({
           >
             {(
               [
-                ["Client", "Atlantic Records"],
+                ["Client", work?.clientCompany ?? "Atlantic Records"],
                 ["Artist", project.artist ?? "Sable Wynn"],
-                ["Date Shot", "Mar 2025"],
-                ["Date Released", project.year ?? "Jun 2025"],
-                ["Runtime", "03:42"],
-                ["Location", "Chicago, IL"],
+                ["Date Shot", work?.dateShot ?? "Mar 2025"],
+                ["Date Released", work?.dateReleased ?? project.year ?? "Jun 2025"],
+                ["Runtime", work?.runtime ?? "03:42"],
+                ["Location", work?.location ?? "Chicago, IL"],
                 ["Category", project.category],
-                ["Format", "6K ProRes"],
+                ["Format", work?.format ?? "6K ProRes"],
               ] as const
             ).map(([k, v]) => (
               <div key={k} style={metaCell}>
@@ -447,14 +468,14 @@ export default function ProjectDetail({
             </div>
             <div style={{ marginTop: "auto", padding: "0 0 6px" }}>
               <div style={{ fontSize: 15, fontWeight: 600, letterSpacing: "-.01em" }}>
-                RED V-RAPTOR 8K VV
+                {work?.camera?.name || "RED V-RAPTOR 8K VV"}
               </div>
             </div>
             <div style={{ padding: "6px 0 0" }}>
               {[
-                ["Sensor", "8K VV · Full Frame"],
-                ["Codec", "REDCODE RAW HQ"],
-                ["Frame Rate / Res", "23.98 fps · 6K"],
+                ["Sensor", work?.camera?.sensor ?? "8K VV · Full Frame"],
+                ["Codec", work?.camera?.codec ?? "REDCODE RAW HQ"],
+                ["Frame Rate / Res", work?.camera?.frameRate ?? "23.98 fps · 6K"],
               ].map(([k, v]) => (
                 <div key={k} style={specRow}>
                   <span style={specKey}>{k}</span>
@@ -505,14 +526,14 @@ export default function ProjectDetail({
             </div>
             <div style={{ marginTop: "auto", padding: "0 0 6px" }}>
               <div style={{ fontSize: 15, fontWeight: 600, letterSpacing: "-.01em" }}>
-                Cooke S4/i Primes
+                {work?.lens?.name || "Cooke S4/i Primes"}
               </div>
             </div>
             <div style={{ padding: "6px 0 0" }}>
               {[
-                ["Focal Set", "32 · 50 · 75 mm"],
-                ["Aperture", "T2.0"],
-                ["Mount", "PL"],
+                ["Focal Set", work?.lens?.focalSet ?? "32 · 50 · 75 mm"],
+                ["Aperture", work?.lens?.aperture ?? "T2.0"],
+                ["Mount", work?.lens?.mount ?? "PL"],
               ].map(([k, v]) => (
                 <div key={k} style={specRow}>
                   <span style={specKey}>{k}</span>
@@ -678,14 +699,14 @@ export default function ProjectDetail({
             </div>
             <div style={{ marginTop: "auto", padding: "0 0 6px" }}>
               <div style={{ fontSize: 19, fontWeight: 600, letterSpacing: "-.01em" }}>
-                Kodak 2383 Emulation
+                {work?.color?.name || "Kodak 2383 Emulation"}
               </div>
             </div>
             <div style={{ padding: "6px 0 0" }}>
               {[
-                ["Graded In", "DaVinci Resolve"],
-                ["Color Space", "ACEScct"],
-                ["Delivery", "Rec.709"],
+                ["Graded In", work?.color?.gradedIn ?? "DaVinci Resolve"],
+                ["Color Space", work?.color?.colorSpace ?? "ACEScct"],
+                ["Delivery", work?.color?.delivery ?? "Rec.709"],
               ].map(([k, v]) => (
                 <div key={k} style={specRow}>
                   <span style={specKey}>{k}</span>
@@ -711,19 +732,35 @@ export default function ProjectDetail({
         >
           <CrewColumn
             title="Production"
-            rows={[
-              { name: "Elena Voss", role: "Director", icon: "circle" },
-              { name: "Marcus Reyes", role: "DP", icon: "diamond" },
-              { name: "Priya Anand", role: "Producer", icon: "squares" },
-            ]}
+            rows={
+              crewProd.length
+                ? crewProd.map((c, i) => ({
+                    name: c.name ?? "",
+                    role: c.role ?? "",
+                    icon: PROD_ICONS[i % PROD_ICONS.length],
+                  }))
+                : [
+                    { name: "Elena Voss", role: "Director", icon: "circle" },
+                    { name: "Marcus Reyes", role: "DP", icon: "diamond" },
+                    { name: "Priya Anand", role: "Producer", icon: "squares" },
+                  ]
+            }
           />
           <CrewColumn
             title="Post"
-            rows={[
-              { name: "Jonah Kim", role: "Editor", icon: "bars" },
-              { name: "Sofia Marchetti", role: "Colorist", icon: "target" },
-              { name: "Full Crew & Grips", role: "", icon: "diamond-faint" },
-            ]}
+            rows={
+              crewPost.length
+                ? crewPost.map((c, i) => ({
+                    name: c.name ?? "",
+                    role: c.role ?? "",
+                    icon: POST_ICONS[i % POST_ICONS.length],
+                  }))
+                : [
+                    { name: "Jonah Kim", role: "Editor", icon: "bars" },
+                    { name: "Sofia Marchetti", role: "Colorist", icon: "target" },
+                    { name: "Full Crew & Grips", role: "", icon: "diamond-faint" },
+                  ]
+            }
           />
         </div>
       </section>
@@ -748,40 +785,84 @@ export default function ProjectDetail({
           }}
         >
           <div className="pd-marquee" style={{ display: "flex", gap: 12, width: "max-content" }}>
-            {[...BTS_TOP, ...BTS_TOP].map((b, i) => (
-              <div
-                key={`t-${i}`}
-                style={{
-                  position: "relative",
-                  width: b.w,
-                  height: 264,
-                  flex: "none",
-                  border: "1px solid var(--hair)",
-                  borderRadius: 14,
-                  overflow: "hidden",
-                }}
-              >
-                <Slot label={b.label} />
-              </div>
-            ))}
+            {stillsTop.length
+              ? [...stillsTop, ...stillsTop].map((src, i) => (
+                  <div
+                    key={`t-${i}`}
+                    style={{
+                      position: "relative",
+                      width: BTS_TOP[i % BTS_TOP.length].w,
+                      height: 264,
+                      flex: "none",
+                      border: "1px solid var(--hair)",
+                      borderRadius: 14,
+                      overflow: "hidden",
+                    }}
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={src}
+                      alt="BTS still"
+                      style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
+                    />
+                  </div>
+                ))
+              : [...BTS_TOP, ...BTS_TOP].map((b, i) => (
+                  <div
+                    key={`t-${i}`}
+                    style={{
+                      position: "relative",
+                      width: b.w,
+                      height: 264,
+                      flex: "none",
+                      border: "1px solid var(--hair)",
+                      borderRadius: 14,
+                      overflow: "hidden",
+                    }}
+                  >
+                    <Slot label={b.label} />
+                  </div>
+                ))}
           </div>
           <div className="pd-marquee-2" style={{ display: "flex", gap: 12, width: "max-content" }}>
-            {[...BTS_BOTTOM, ...BTS_BOTTOM].map((b, i) => (
-              <div
-                key={`b-${i}`}
-                style={{
-                  position: "relative",
-                  width: b.w,
-                  height: 188,
-                  flex: "none",
-                  border: "1px solid var(--hair)",
-                  borderRadius: 14,
-                  overflow: "hidden",
-                }}
-              >
-                <Slot label={b.label} />
-              </div>
-            ))}
+            {stillsBottom.length
+              ? [...stillsBottom, ...stillsBottom].map((src, i) => (
+                  <div
+                    key={`b-${i}`}
+                    style={{
+                      position: "relative",
+                      width: BTS_BOTTOM[i % BTS_BOTTOM.length].w,
+                      height: 188,
+                      flex: "none",
+                      border: "1px solid var(--hair)",
+                      borderRadius: 14,
+                      overflow: "hidden",
+                    }}
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={src}
+                      alt="BTS still"
+                      style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
+                    />
+                  </div>
+                ))
+              : [...BTS_BOTTOM, ...BTS_BOTTOM].map((b, i) => (
+                  <div
+                    key={`b-${i}`}
+                    style={{
+                      position: "relative",
+                      width: b.w,
+                      height: 188,
+                      flex: "none",
+                      border: "1px solid var(--hair)",
+                      borderRadius: 14,
+                      overflow: "hidden",
+                    }}
+                  >
+                    <Slot label={b.label} />
+                  </div>
+                ))}
           </div>
         </div>
 

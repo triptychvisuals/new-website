@@ -138,6 +138,36 @@ export function projectBySlug(
   return index === -1 ? undefined : { project: projects[index], index };
 }
 
+// ── portal-driven projects ──────────────────────────────────────────
+// When the portal feed carries works, THEY are the project list —
+// adding or removing a project in the portal adds or removes it here.
+// The authored list above stays as the fallback for an empty or
+// unreachable feed.
+
+/** The portal work shape this module needs (structural — see siteContent.ts). */
+type WorkLike = {
+  title?: string;
+  client?: string;
+  slug?: string;
+  category?: string;
+  year?: string;
+  reel?: string;
+};
+
+/** A feed work as a gallery/detail Project, with authored-style defaults. */
+export function projectFromWork(w: WorkLike, index: number): Project {
+  const title = w.title || `Untitled ${index + 1}`;
+  return {
+    title,
+    slug: w.slug || slugify(title),
+    category: w.category || "Music Video",
+    artist: w.client,
+    year: w.year ?? YEARS[index % YEARS.length],
+    video: w.reel,
+    logo: PLACEHOLDER_LOGOS[index % PLACEHOLDER_LOGOS.length],
+  };
+}
+
 // Deterministic gradient base per card (poster behind the reel).
 const GRADIENTS = [
   ["#3a2e26", "#7a5c3e"],

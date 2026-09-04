@@ -22,11 +22,37 @@ const TIMEOUT_MS = 4000;
 /** How many work tiles to look for when the feed uses flat work-N-* keys. */
 const MAX_WORKS = 40;
 
+export type PortalCrewRow = {
+  name?: string;
+  role?: string;
+  group?: "production" | "post";
+};
+
 export type PortalWork = {
   title?: string;
   client?: string;
   thumb?: string;
   link?: string;
+  // ── the /work/<slug> project page, all optional — absent fields
+  //    keep the site's authored placeholders ──
+  slug?: string;
+  category?: string;
+  year?: string;
+  synopsis?: string;
+  /** Player source for the detail page (a /reels/… path, mp4/webm). */
+  reel?: string;
+  clientCompany?: string;
+  dateShot?: string;
+  dateReleased?: string;
+  runtime?: string;
+  location?: string;
+  format?: string;
+  camera?: { name?: string; sensor?: string; codec?: string; frameRate?: string; image?: string };
+  lens?: { name?: string; focalSet?: string; aperture?: string; mount?: string };
+  color?: { name?: string; gradedIn?: string; colorSpace?: string; delivery?: string };
+  crew?: PortalCrewRow[];
+  /** BTS stills — data-URLs from the portal. */
+  stills?: string[];
 };
 
 export type SiteContent = {
@@ -72,6 +98,19 @@ function unwrap(raw: unknown): Bag {
   return raw;
 }
 
+/** A sub-object ({camera}, {lens}, {color}) read tolerantly, field by field. */
+function subBag(raw: unknown, ...fields: string[]): Record<string, string | undefined> | undefined {
+  if (!isBag(raw)) return undefined;
+  const out: Record<string, string | undefined> = {};
+  let any = false;
+  for (const f of fields) {
+    const v = str(raw[f]);
+    if (v) any = true;
+    out[f] = v;
+  }
+  return any ? out : undefined;
+}
+
 /** A tile can name its fields a few ways; images/links likewise. */
 function toWork(raw: unknown): PortalWork | undefined {
   if (!isBag(raw)) return undefined;
@@ -89,6 +128,34 @@ function toWork(raw: unknown): PortalWork | undefined {
       "src"
     ),
     link: pick(raw, "link", "workLink", "work_link", "work-link", "url", "href"),
+    // Project-page fields — the portal serves these names exactly.
+    slug: pick(raw, "slug"),
+    category: pick(raw, "category"),
+    year: pick(raw, "year"),
+    synopsis: pick(raw, "synopsis", "description"),
+    reel: pick(raw, "reel", "video"),
+    clientCompany: pick(raw, "clientCompany", "client_company"),
+    dateShot: pick(raw, "dateShot", "date_shot"),
+    dateReleased: pick(raw, "dateReleased", "date_released"),
+    runtime: pick(raw, "runtime"),
+    location: pick(raw, "location"),
+    format: pick(raw, "format"),
+    camera: subBag(raw.camera, "name", "sensor", "codec", "frameRate", "image"),
+    lens: subBag(raw.lens, "name", "focalSet", "aperture", "mount"),
+    color: subBag(raw.color, "name", "gradedIn", "colorSpace", "delivery"),
+    crew: Array.isArray(raw.crew)
+      ? raw.crew
+          .map((c): PortalCrewRow | undefined => {
+            if (!isBag(c)) return undefined;
+            const name = str(c.name);
+            if (!name) return undefined;
+            return { name, role: str(c.role), group: c.group === "post" ? "post" : "production" };
+          })
+          .filter((c): c is PortalCrewRow => !!c)
+      : undefined,
+    stills: Array.isArray(raw.stills)
+      ? raw.stills.map(str).filter((s): s is string => !!s)
+      : undefined,
   };
   return work.title || work.client || work.thumb || work.link ? work : undefined;
 }
