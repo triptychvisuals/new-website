@@ -19,9 +19,12 @@ export async function POST(request: Request) {
   const isHttps =
     request.headers.get("x-forwarded-proto") === "https" ||
     new URL(request.url).protocol === "https:";
+  // SameSite=None (HTTPS only) so the cookie also works when the site runs
+  // inside the Triptych Portal's iframe — Lax cookies are never sent in a
+  // cross-site frame, which would make the login loop forever there.
   res.cookies.set(AUTH_COOKIE, AUTH_TOKEN, {
     httpOnly: true,
-    sameSite: "lax",
+    sameSite: isHttps ? "none" : "lax",
     secure: isHttps,
     path: "/",
     maxAge: 60 * 60 * 24 * 30, // 30 days

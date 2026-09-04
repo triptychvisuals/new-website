@@ -20,12 +20,15 @@ const isDev = process.env.NODE_ENV === "development";
 const csp = [
   `default-src 'self'`,
   `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
-  `style-src 'self' 'unsafe-inline'`,
+  // Google Sans loads from Google Fonts (see layout.tsx)
+  `style-src 'self' 'unsafe-inline' https://fonts.googleapis.com`,
   `img-src 'self' data: blob:`,
   `media-src 'self'`,
-  `font-src 'self'`,
+  `font-src 'self' https://fonts.gstatic.com`,
   `connect-src 'self'${isDev ? " ws:" : ""}`,
-  `frame-ancestors 'none'`,
+  // EDIT: origins allowed to embed this site in an iframe — the Triptych
+  // Portal's Live Site tab. Everyone else stays blocked.
+  `frame-ancestors 'self' https://triptych-portal.vercel.app`,
   `frame-src 'none'`,
   `base-uri 'self'`,
   `form-action 'self'`,
@@ -41,8 +44,9 @@ const securityHeaders = [
     key: "Strict-Transport-Security",
     value: "max-age=63072000; includeSubDomains; preload",
   },
-  // Belt-and-braces clickjacking guard (CSP frame-ancestors already covers this).
-  { key: "X-Frame-Options", value: "DENY" },
+  // No X-Frame-Options: it can't whitelist origins (DENY would override the
+  // frame-ancestors allowance above for the portal); every modern browser
+  // enforces CSP frame-ancestors instead.
   // Stop MIME-type sniffing.
   { key: "X-Content-Type-Options", value: "nosniff" },
   // Leak only the origin (not the full path) on cross-site navigation.
