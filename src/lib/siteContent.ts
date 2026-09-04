@@ -50,9 +50,9 @@ function str(v: unknown): string | undefined {
 }
 
 /**
- * First non-empty value among several spellings of the same field. The feed's
- * exact casing isn't pinned down, so camelCase / snake_case / kebab-case and
- * the bare name are all accepted.
+ * First non-empty value among several spellings of the same field. The live
+ * feed serves camelCase ({ heroTitle, tagline, logo, works } — confirmed
+ * against the portal 2026-09-04); the other spellings stay as insurance.
  */
 function pick(src: Bag, ...keys: string[]): string | undefined {
   for (const key of keys) {
