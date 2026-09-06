@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import type { CSSProperties } from "react";
 import type { Project } from "@/lib/projects";
 import type { PortalWork } from "@/lib/siteContent";
+import { gradeFrame } from "@/lib/lut";
 
 /* Reference palette (Video Project.dc.html) */
 const ACCENT = "#d5602c";
@@ -149,6 +150,39 @@ export default function ProjectDetail({
   // the top instead of falling back to placeholder slots.
   const oddStills = stills.filter((_, i) => i % 2 === 1);
   const stillsBottom = oddStills.length ? oddStills : stillsTop;
+
+  // ── real LUT for the Log↔Graded slider ──
+  // When the portal work carries a .cube (lut.data) and a frame to grade
+  // (first BTS still, else the thumb), the graded side is that frame mapped
+  // through the LUT — computed client-side after mount, showing the
+  // ungraded frame until ready. No LUT (or no frame, or a bad file) keeps
+  // the authored placeholder gradients.
+  const lutData = work?.lut?.data;
+  const lutFrame = stills[0] || work?.thumb;
+  const lutActive = !!lutData && !!lutFrame;
+  const lutKey = `${lutData?.length ?? 0}:${lutFrame ?? ""}`;
+  const [lutResult, setLutResult] = useState<{
+    key: string;
+    original: string;
+    graded: string;
+  } | null>(null);
+  useEffect(() => {
+    if (!lutData || !lutFrame) return;
+    let cancelled = false;
+    const key = `${lutData.length}:${lutFrame}`;
+    gradeFrame(lutFrame, lutData, 720)
+      .then((r) => {
+        if (!cancelled) setLutResult({ key, ...r });
+      })
+      .catch(() => {
+        /* bad frame or LUT — the ungraded frame keeps standing in */
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [lutData, lutFrame]);
+  // Only trust a result computed for the current LUT + frame.
+  const lutImgs = lutResult && lutResult.key === lutKey ? lutResult : null;
 
   useEffect(() => {
     const onMove = (e: PointerEvent) => {
@@ -501,28 +535,45 @@ export default function ProjectDetail({
                 justifyContent: "center",
               }}
             >
-              <svg
-                viewBox="0 0 340 180"
-                style={{ position: "relative", width: "100%", maxWidth: 300, color: "#d9d6d1" }}
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={1.4}
-                strokeLinejoin="round"
-                strokeLinecap="round"
-              >
-                <rect x="44" y="60" width="14" height="60" rx="2" />
-                <rect x="58" y="66" width="180" height="48" rx="6" />
-                <line x1="96" y1="66" x2="96" y2="114" />
-                <line x1="140" y1="66" x2="140" y2="114" />
-                <line x1="184" y1="66" x2="184" y2="114" />
-                <path d="M238 70c22 4 22 40 0 40" />
-                <ellipse cx="256" cy="90" rx="16" ry="30" />
-                <ellipse cx="262" cy="90" rx="9" ry="22" stroke="var(--accent)" />
-                <path d="M58 52h180" stroke="var(--accent)" strokeWidth={1} />
-                <path d="M58 48v8M238 48v8" stroke="var(--accent)" strokeWidth={1} />
-                <path d="M108 60v-6M118 60v-4M128 60v-6" stroke="var(--accent)" />
-                <circle cx="118" cy="90" r="2.2" fill="var(--accent)" stroke="none" />
-              </svg>
+              {work?.lens?.image ? (
+                // Per-project lens photo from the portal (Fig. B slot).
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={work.lens.image}
+                  alt=""
+                  style={{
+                    // EDIT: lens photo size within the Fig. B box
+                    maxWidth: "80%",
+                    maxHeight: 140,
+                    width: "auto",
+                    height: "auto",
+                    objectFit: "contain",
+                  }}
+                />
+              ) : (
+                <svg
+                  viewBox="0 0 340 180"
+                  style={{ position: "relative", width: "100%", maxWidth: 300, color: "#d9d6d1" }}
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={1.4}
+                  strokeLinejoin="round"
+                  strokeLinecap="round"
+                >
+                  <rect x="44" y="60" width="14" height="60" rx="2" />
+                  <rect x="58" y="66" width="180" height="48" rx="6" />
+                  <line x1="96" y1="66" x2="96" y2="114" />
+                  <line x1="140" y1="66" x2="140" y2="114" />
+                  <line x1="184" y1="66" x2="184" y2="114" />
+                  <path d="M238 70c22 4 22 40 0 40" />
+                  <ellipse cx="256" cy="90" rx="16" ry="30" />
+                  <ellipse cx="262" cy="90" rx="9" ry="22" stroke="var(--accent)" />
+                  <path d="M58 52h180" stroke="var(--accent)" strokeWidth={1} />
+                  <path d="M58 48v8M238 48v8" stroke="var(--accent)" strokeWidth={1} />
+                  <path d="M108 60v-6M118 60v-4M128 60v-6" stroke="var(--accent)" />
+                  <circle cx="118" cy="90" r="2.2" fill="var(--accent)" stroke="none" />
+                </svg>
+              )}
             </div>
             <div style={{ marginTop: "auto", padding: "0 0 6px" }}>
               <div style={{ fontSize: 15, fontWeight: 600, letterSpacing: "-.01em" }}>
@@ -563,19 +614,48 @@ export default function ProjectDetail({
                   touchAction: "none",
                 }}
               >
-                {/* graded (full) */}
-                <div style={{ position: "absolute", inset: 0, background: SHOTS[shot] }} />
-                {/* log (clipped) */}
-                <div style={{ position: "absolute", inset: 0, overflow: "hidden", width: `${lutPos}%` }}>
-                  <div
-                    style={{
-                      position: "absolute",
-                      inset: 0,
-                      background: SHOTS[shot],
-                      filter: "saturate(.28) contrast(.85) brightness(1.02)",
-                    }}
-                  />
-                </div>
+                {lutActive ? (
+                  <>
+                    {/* graded (full) — the project frame through its .cube LUT;
+                        the ungraded frame stands in until the grade is ready */}
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={lutImgs?.graded ?? lutFrame}
+                      alt=""
+                      style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
+                    />
+                    {/* log/original (clipped to the left of the handle) */}
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={lutImgs?.original ?? lutFrame}
+                      alt=""
+                      style={{
+                        position: "absolute",
+                        inset: 0,
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                        clipPath: `inset(0 ${100 - lutPos}% 0 0)`,
+                      }}
+                    />
+                  </>
+                ) : (
+                  <>
+                    {/* graded (full) */}
+                    <div style={{ position: "absolute", inset: 0, background: SHOTS[shot] }} />
+                    {/* log (clipped) */}
+                    <div style={{ position: "absolute", inset: 0, overflow: "hidden", width: `${lutPos}%` }}>
+                      <div
+                        style={{
+                          position: "absolute",
+                          inset: 0,
+                          background: SHOTS[shot],
+                          filter: "saturate(.28) contrast(.85) brightness(1.02)",
+                        }}
+                      />
+                    </div>
+                  </>
+                )}
                 <div
                   style={{
                     position: "absolute",
@@ -641,7 +721,17 @@ export default function ProjectDetail({
                   </div>
                 </div>
               </div>
-              {/* arrows — outside the picture, inside the card */}
+              {/* arrows — outside the picture, inside the card. With a real
+                  LUT there is one frame, so the shot cycler gives way to the
+                  LUT's name. */}
+              {lutActive ? (
+                <div style={{ display: "flex", justifyContent: "center", marginTop: 12 }}>
+                  <span style={{ fontSize: 11, color: "var(--muted)" }}>
+                    {(work?.lut?.name || "Project LUT").replace(/\.cube$/i, "")} · applied to a
+                    project still
+                  </span>
+                </div>
+              ) : (
               <div
                 style={{
                   display: "flex",
@@ -696,6 +786,7 @@ export default function ProjectDetail({
                   ›
                 </button>
               </div>
+              )}
             </div>
             <div style={{ marginTop: "auto", padding: "0 0 6px" }}>
               <div style={{ fontSize: 19, fontWeight: 600, letterSpacing: "-.01em" }}>

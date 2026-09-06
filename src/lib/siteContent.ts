@@ -48,8 +48,11 @@ export type PortalWork = {
   location?: string;
   format?: string;
   camera?: { name?: string; sensor?: string; codec?: string; frameRate?: string; image?: string };
-  lens?: { name?: string; focalSet?: string; aperture?: string; mount?: string };
+  lens?: { name?: string; focalSet?: string; aperture?: string; mount?: string; image?: string };
   color?: { name?: string; gradedIn?: string; colorSpace?: string; delivery?: string };
+  /** The grade's .cube LUT — name plus raw cube text. When present (with a
+   *  still to grade), the Log↔Graded slider shows the real look. */
+  lut?: { name?: string; data?: string };
   crew?: PortalCrewRow[];
   /** BTS stills — data-URLs from the portal. */
   stills?: string[];
@@ -141,8 +144,9 @@ function toWork(raw: unknown): PortalWork | undefined {
     location: pick(raw, "location"),
     format: pick(raw, "format"),
     camera: subBag(raw.camera, "name", "sensor", "codec", "frameRate", "image"),
-    lens: subBag(raw.lens, "name", "focalSet", "aperture", "mount"),
+    lens: subBag(raw.lens, "name", "focalSet", "aperture", "mount", "image"),
     color: subBag(raw.color, "name", "gradedIn", "colorSpace", "delivery"),
+    lut: subBag(raw.lut, "name", "data"),
     crew: Array.isArray(raw.crew)
       ? raw.crew
           .map((c): PortalCrewRow | undefined => {
