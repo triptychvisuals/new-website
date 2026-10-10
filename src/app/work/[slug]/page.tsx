@@ -12,10 +12,19 @@ import Header from "@/components/Header";
 import ProjectDetail from "@/components/ProjectDetail";
 import { getSiteContent } from "@/lib/siteContent";
 
-/** /work/<slug>/camera.png if the file exists in public/, else undefined. */
-function cameraImageFor(slug: string): string | undefined {
-  const file = path.join(process.cwd(), "public", "work", slug, "camera.png");
-  return fs.existsSync(file) ? `/work/${slug}/camera.png` : undefined;
+/**
+ * Finished frames for a project: every still in /public/work/<slug>/
+ * (jpg / png / webp). `camera.png` was the old equipment shot — skipped.
+ * EDIT: drop stills in that folder and they appear on the page, pinnable.
+ */
+function framesFor(slug: string): string[] {
+  const dir = path.join(process.cwd(), "public", "work", slug);
+  if (!fs.existsSync(dir)) return [];
+  return fs
+    .readdirSync(dir)
+    .filter((f) => /\.(jpe?g|png|webp)$/i.test(f) && f.toLowerCase() !== "camera.png")
+    .sort()
+    .map((f) => `/work/${slug}/${f}`);
 }
 
 export function generateStaticParams() {
@@ -54,7 +63,7 @@ export default async function ProjectPage({
         project={found.project}
         gradient={placeholderGradient(found.index)}
         media={projectMedia(found.index)}
-        cameraImage={cameraImageFor(slug)}
+        frames={framesFor(slug)}
       />
     </div>
   );
