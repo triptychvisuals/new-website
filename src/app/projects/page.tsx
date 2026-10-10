@@ -33,9 +33,12 @@ export default async function ProjectsPage() {
         <Header logo={content.logo} />
 
         {/* Oversized header band — mirrors the home "Featured Work" type */}
-        <section className="px-4 pb-2 pt-10 sm:px-6 sm:pt-14" aria-label="Projects">
+        <section
+          className="mx-auto w-full max-w-[1760px] px-4 pb-2 pt-10 sm:px-6 sm:pt-14"
+          aria-label="Projects"
+        >
           <div className="flex items-center justify-between gap-1.5 sm:gap-3">
-            <h1 className="text-[13vw] font-normal leading-[0.9] tracking-[-0.03em] sm:text-[12.5vw]">
+            <h1 className="text-[min(13vw,150px)] font-normal leading-[0.9] tracking-[-0.03em] sm:text-[min(12.5vw,170px)]">
               Projects
             </h1>
 
@@ -70,7 +73,7 @@ export default async function ProjectsPage() {
           </div>
         </section>
 
-        <div className="pt-6 sm:pt-8">
+        <div className="mx-auto w-full max-w-[1760px] pt-6 sm:pt-8">
           <ProjectsGrid works={content.works} />
         </div>
       </main>

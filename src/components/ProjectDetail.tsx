@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import type { Project } from "@/lib/projects";
+import type { PortalWork } from "@/lib/siteContent";
 import { site } from "@/lib/site";
 
 /**
@@ -66,11 +67,14 @@ function PinButton({ href }: { href: string }) {
 
 export default function ProjectDetail({
   project,
+  work,
   gradient,
   media,
   frames = [],
 }: {
   project: Project;
+  /** Portal detail fields (synopsis, client, runtime…) when the feed has them. */
+  work?: PortalWork;
   gradient: string;
   media?: string;
   /** /work/<slug>/… stills found on disk (absolute public paths). */
@@ -96,6 +100,23 @@ export default function ProjectDetail({
     }
   }
 
+  // A little context, not the old full breakdown: synopsis + compact
+  // metadata, shown only for fields that actually have values (the portal
+  // fills them in; authored category/artist/year always exist).
+  const synopsis = work?.synopsis;
+  const meta: [string, string][] = (
+    [
+      ["Client", work?.clientCompany],
+      ["Artist", project.artist],
+      ["Category", project.category],
+      ["Year", project.year],
+      ["Runtime", work?.runtime],
+      ["Location", work?.location],
+      ["Format", work?.format],
+      ["Released", work?.dateReleased],
+    ] as [string, string | undefined][]
+  ).filter((row): row is [string, string] => !!row[1]);
+
   return (
     <main
       className="pd"
@@ -108,19 +129,68 @@ export default function ProjectDetail({
     >
       <style>{CSS}</style>
 
-      {/* Title */}
+      {/* Title + a little information */}
       <section style={{ padding: "clamp(30px,4vw,52px) 0 0" }}>
-        <h1
-          style={{
-            fontWeight: 400,
-            letterSpacing: "-.035em",
-            lineHeight: 0.9,
-            fontSize: "clamp(52px,9vw,132px)",
-            textWrap: "balance",
-          }}
-        >
-          {project.title}
-        </h1>
+        <div className="pd-head">
+          <div>
+            <h1
+              style={{
+                fontWeight: 400,
+                letterSpacing: "-.035em",
+                lineHeight: 0.9,
+                fontSize: "clamp(52px,9vw,132px)",
+                textWrap: "balance",
+              }}
+            >
+              {project.title}
+            </h1>
+            {synopsis && (
+              <p
+                style={{
+                  maxWidth: "44ch",
+                  marginTop: "clamp(18px,2.2vw,28px)",
+                  fontSize: "clamp(15px,1.3vw,19px)",
+                  lineHeight: 1.5,
+                  color: "#b9b6b1",
+                }}
+              >
+                {synopsis}
+              </p>
+            )}
+          </div>
+
+          {meta.length > 0 && (
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr",
+                columnGap: "clamp(20px,2.4vw,40px)",
+                borderTop: "1px solid var(--hair)",
+                alignSelf: "end",
+              }}
+            >
+              {meta.map(([k, v]) => (
+                <div
+                  key={k}
+                  style={{ padding: "12px 0", borderBottom: "1px solid var(--hair)" }}
+                >
+                  <div
+                    style={{
+                      fontSize: 10,
+                      letterSpacing: ".14em",
+                      textTransform: "uppercase",
+                      color: "var(--muted)",
+                      marginBottom: 5,
+                    }}
+                  >
+                    {k}
+                  </div>
+                  <div style={{ fontSize: 15, letterSpacing: "-.01em" }}>{v}</div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </section>
 
       {/* The film */}
@@ -339,6 +409,10 @@ export default function ProjectDetail({
    (always visible on touch devices, which never hover). */
 const CSS = `
 .pd { --hair: rgba(255,255,255,.14); --muted: rgba(231,228,223,.55); }
+.pd-head { display: grid; gap: clamp(28px,4vw,56px); }
+@media (min-width: 900px) {
+  .pd-head { grid-template-columns: minmax(0,1fr) clamp(280px,26vw,360px); align-items: end; }
+}
 .pd-play { transition: transform .25s ease, background .25s ease; }
 .pd-play:hover { transform: translate(-50%,-50%) scale(1.06); background: rgba(11,10,10,.6); }
 .pd-pin { opacity: 1; transition: opacity .2s ease, transform .2s ease; }

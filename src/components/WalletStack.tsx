@@ -64,7 +64,7 @@ export default function WalletStack({ works = [] }: { works?: PortalWork[] }) {
       {cards.map(({ project, index, media, href }, i) => (
         <div
           key={project.slug}
-          className="sticky w-full"
+          className="sticky mx-auto w-full max-w-[1760px]"
           style={{ top: TOP + i * PEEK, zIndex: DIM_Z + 1 + i }}
         >
           {/* Lifted shadow so each card reads as its own layer in the stack */}

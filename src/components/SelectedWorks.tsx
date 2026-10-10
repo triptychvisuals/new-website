@@ -19,7 +19,7 @@ export default function SelectedWorks() {
   return (
     <section aria-label="Featured work" className="bg-[#0e0e10] text-white">
       {/* Meta row */}
-      <div className="flex items-center justify-between gap-3 px-5 pt-6 text-[10px] font-bold uppercase tracking-[0.08em] sm:px-8 sm:text-[12px]">
+      <div className="mx-auto flex max-w-[1760px] items-center justify-between gap-3 px-5 pt-6 text-[10px] font-bold uppercase tracking-[0.08em] sm:px-8 sm:text-[12px]">
         <span>{META_LEFT}</span>
         <span className="text-white/80">{META_RIGHT}</span>
       </div>
@@ -31,7 +31,7 @@ export default function SelectedWorks() {
             <span
               key={i}
               aria-hidden={i > 0}
-              className="whitespace-nowrap pr-[7vw] text-[13vw] font-medium leading-[1.05] tracking-[-0.04em] sm:text-[11.5vw]"
+              className="whitespace-nowrap pr-[7vw] text-[min(13vw,120px)] font-medium leading-[1.05] tracking-[-0.04em] sm:text-[min(11.5vw,170px)]"
             >
               Featured
               <span aria-hidden className="align-[0.12em] text-[0.62em]">
@@ -44,7 +44,7 @@ export default function SelectedWorks() {
       </div>
 
       {/* Statements */}
-      <div className="relative px-5 pb-12 pt-10 sm:px-8 sm:pb-16 sm:pt-14">
+      <div className="relative mx-auto max-w-[1760px] px-5 pb-12 pt-10 sm:px-8 sm:pb-16 sm:pt-14">
         {/* Crosshair accents */}
         <span aria-hidden className="absolute right-6 top-8 text-2xl font-extralight text-[color:var(--accent)]">
           +

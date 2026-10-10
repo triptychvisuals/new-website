@@ -82,6 +82,7 @@ export default async function ProjectPage({
       <Header logo={content.logo} />
       <ProjectDetail
         project={project}
+        work={work}
         gradient={placeholderGradient(index)}
         media={work?.thumb ?? projectMedia(index)}
         frames={framesFor(slug)}

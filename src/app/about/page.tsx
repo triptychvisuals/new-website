@@ -23,14 +23,17 @@ export default async function AboutPage() {
     <>
       <main className="relative min-h-screen">
         <Header logo={content.logo} />
-        <Hero title={content.heroTitle} />
-      <AboutIntro />
-      <AboutResult />
-      <AboutStatement />
-      <AboutAwards />
-      <AboutTestimonial />
-      <AboutCTA />
-    </main>
+        {/* Cap the about flow on very wide windows */}
+        <div className="mx-auto w-full max-w-[1760px]">
+          <Hero title={content.heroTitle} />
+          <AboutIntro />
+          <AboutResult />
+          <AboutStatement />
+          <AboutAwards />
+          <AboutTestimonial />
+          <AboutCTA />
+        </div>
+      </main>
       <Footer />
     </>
   );

@@ -11,10 +11,10 @@
 export const AUTH_COOKIE = "triptych_preview";
 
 /** The shared password visitors type on the /login screen. */
-export const SITE_PASSWORD = process.env.SITE_PASSWORD || "triptych2026"; // EDIT
+export const SITE_PASSWORD = process.env.SITE_PASSWORD || "TriptychMotion26"; // EDIT
 
 /**
  * Opaque value stored in the cookie once signed in; the proxy checks for it.
  * Change SITE_AUTH_TOKEN in Vercel to instantly sign everyone out.
  */
-export const AUTH_TOKEN = process.env.SITE_AUTH_TOKEN || "granted-9f3c1a7b";
+export const AUTH_TOKEN = process.env.SITE_AUTH_TOKEN || "granted-7k2m9x4e";

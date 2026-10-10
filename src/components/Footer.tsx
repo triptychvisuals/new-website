@@ -22,7 +22,7 @@ export default function Footer() {
   return (
     <footer className="border-t border-hairline px-5 pt-12 sm:px-8">
       {/* Newsletter + link columns */}
-      <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1fr]">
+      <div className="mx-auto grid max-w-[1760px] grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1fr]">
         {/* Newsletter */}
         <div>
           <div className="flex items-start gap-4">
@@ -106,7 +106,7 @@ export default function Footer() {
       </div>
 
       {/* Studio + contact strip */}
-      <div className="mt-12 grid grid-cols-1 gap-10 border-t border-hairline py-8 md:grid-cols-3">
+      <div className="mx-auto mt-12 grid max-w-[1760px] grid-cols-1 gap-10 border-t border-hairline py-8 md:grid-cols-3">
         <div>
           <p className="text-xl leading-snug text-foreground">
             <span className="text-accent">{site.name}</span> is a creative studio
