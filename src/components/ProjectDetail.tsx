@@ -124,7 +124,6 @@ export default function ProjectDetail({
         maxWidth: 1760,
         margin: "0 auto",
         padding: "0 clamp(20px,4.5vw,72px) 60px",
-        color: "#e7e4df",
       }}
     >
       <style>{CSS}</style>
@@ -151,7 +150,7 @@ export default function ProjectDetail({
                   marginTop: "clamp(18px,2.2vw,28px)",
                   fontSize: "clamp(15px,1.3vw,19px)",
                   lineHeight: 1.5,
-                  color: "#b9b6b1",
+                  color: "var(--muted)",
                 }}
               >
                 {synopsis}
@@ -332,7 +331,7 @@ export default function ProjectDetail({
                     border: "1px solid var(--hair)",
                     borderRadius: 14,
                     overflow: "hidden",
-                    background: "#0f0e0e",
+                    background: "var(--hairline)",
                   }}
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -408,7 +407,7 @@ export default function ProjectDetail({
 /* Hover affordances: play button scales, Pin button appears on frame hover
    (always visible on touch devices, which never hover). */
 const CSS = `
-.pd { --hair: rgba(255,255,255,.14); --muted: rgba(231,228,223,.55); }
+.pd { --hair: var(--hairline); }
 .pd-head { display: grid; gap: clamp(28px,4vw,56px); }
 @media (min-width: 900px) {
   .pd-head { grid-template-columns: minmax(0,1fr) clamp(280px,26vw,360px); align-items: end; }

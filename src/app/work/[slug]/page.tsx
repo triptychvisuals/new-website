@@ -76,9 +76,7 @@ export default async function ProjectPage({
   const index = work ? workIndex : found!.index;
 
   return (
-    // Force the dark palette so the site menu header matches the page, and keep
-    // a dark backdrop behind the sticky header.
-    <div data-theme="dark" style={{ background: "#0b0a0a", minHeight: "100vh" }}>
+    <div className="min-h-screen bg-background text-foreground">
       <Header logo={content.logo} />
       <ProjectDetail
         project={project}

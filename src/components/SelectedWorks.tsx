@@ -17,15 +17,15 @@ const STATEMENT_2_ACCENT = "your story."; // accent-underlined tail
  */
 export default function SelectedWorks() {
   return (
-    <section aria-label="Featured work" className="bg-[#0e0e10] text-white">
+    <section aria-label="Featured work" className="bg-background text-foreground">
       {/* Meta row */}
       <div className="mx-auto flex max-w-[1760px] items-center justify-between gap-3 px-5 pt-6 text-[10px] font-bold uppercase tracking-[0.08em] sm:px-8 sm:text-[12px]">
         <span>{META_LEFT}</span>
-        <span className="text-white/80">{META_RIGHT}</span>
+        <span className="text-foreground/80">{META_RIGHT}</span>
       </div>
 
       {/* Endless title marquee between hairlines */}
-      <div className="mt-5 overflow-hidden border-y border-white/15">
+      <div className="mt-5 overflow-hidden border-y border-hairline">
         <div className="flex w-max animate-marquee-l">
           {Array.from({ length: 4 }).map((_, i) => (
             <span
@@ -66,7 +66,7 @@ export default function SelectedWorks() {
 
           <Link
             href="/projects"
-            className="mt-9 inline-flex items-center rounded-full border-2 border-white px-7 py-1.5 text-[15px] font-bold uppercase tracking-tight transition-colors hover:bg-white hover:text-black sm:mt-11"
+            className="mt-9 inline-flex items-center rounded-full border-2 border-foreground px-7 py-1.5 text-[15px] font-bold uppercase tracking-tight transition-colors hover:bg-foreground hover:text-background sm:mt-11"
           >
             See Works
           </Link>

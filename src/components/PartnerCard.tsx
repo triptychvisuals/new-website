@@ -60,11 +60,11 @@ export default function PartnerCard() {
   const items = PARTNERS.map((name) => ({ name, logo: logoFor(name) }));
 
   return (
-    <section aria-label="Partners" className="overflow-hidden bg-[#0e0e10] py-4 text-white">
+    <section aria-label="Partners" className="overflow-hidden bg-background py-4 text-foreground">
       {/* Two identical copies; the -50% loop lands on the seam invisibly. */}
       {/* bg on the track too: the transform creates a stacking context, so the
           screen blend needs its black inside that context to melt logo boxes. */}
-      <div className="flex w-max animate-marquee-l items-center bg-[#0e0e10]">
+      <div className="flex w-max animate-marquee-l items-center bg-background">
         {[...items, ...items].map(({ name, logo }, i) => (
           <span
             key={i}
@@ -76,12 +76,14 @@ export default function PartnerCard() {
               <img
                 src={logo.src}
                 alt={name}
-                className={`${logo.size} w-auto mix-blend-screen ${
-                  logo.white ? "" : "[filter:invert(1)]"
+                className={`${logo.size} w-auto mix-blend-multiply dark:mix-blend-screen ${
+                  logo.white
+                    ? "[filter:invert(1)] dark:[filter:none]"
+                    : "dark:[filter:invert(1)]"
                 }`}
               />
             ) : (
-              <span className="text-sm font-medium text-white/85">{name}</span>
+              <span className="text-sm font-medium text-foreground/85">{name}</span>
             )}
           </span>
         ))}

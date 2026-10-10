@@ -14,7 +14,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full antialiased">
+    // suppressHydrationWarning: the pre-paint theme script below stamps
+    // data-theme on <html> before React hydrates — an expected mismatch.
+    <html lang="en" className="h-full antialiased" suppressHydrationWarning>
       <head>
         {/* Google Sans — site typeface (EDIT weights in the css2 URL) */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />

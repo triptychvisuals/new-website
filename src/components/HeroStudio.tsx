@@ -21,9 +21,7 @@ export default function HeroStudio({
   tagline?: string;
 }) {
   return (
-    // Black section so the gutters blend once the panel hits the site's
-    // 1760px cap on very wide windows.
-    <section className="bg-[#0e0e10]">
+    <section className="bg-background">
       {/* Full-bleed panel — square on phones, 16:9 on desktop, capped wide */}
       <div className="relative isolate mx-auto flex aspect-square min-h-0 w-full max-w-[1760px] flex-col overflow-hidden bg-[#0e0e10] text-white md:aspect-video">
         {/* Background: horizontal reel carousel (clips cycle every 2.5s with
