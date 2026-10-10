@@ -2,6 +2,35 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { AUTH_COOKIE, AUTH_TOKEN } from "@/lib/siteAuth";
 
+// EDIT: the Triptych Portal's origins. A page the portal frames on its
+// Website tab (Live site) comes through the wall without the password: the
+// portal is the studio's own tool, and a browser that blocks third-party
+// cookies could never keep a sign-in inside that frame.
+const PORTAL_ORIGINS = [
+  "https://portal.triptychstudios.co",
+  "https://triptych-portal.vercel.app",
+];
+
+/** A document the portal is framing: fetched for an iframe, sent from a portal page. */
+function framedByPortal(request: NextRequest): boolean {
+  if (request.headers.get("sec-fetch-dest") !== "iframe") return false;
+  const referer = request.headers.get("referer") ?? "";
+  return PORTAL_ORIGINS.some((o) => referer === o || referer.startsWith(`${o}/`));
+}
+
+/**
+ * A navigation inside a frame of this site (a link clicked in the portal's
+ * frame), or a same-origin asset a page already on screen is loading. The
+ * site never frames anything itself (frame-src 'none'), so a same-origin
+ * iframe request can only come from a frame an allowed ancestor opened.
+ */
+function fromAnOpenFrame(request: NextRequest): boolean {
+  const dest = request.headers.get("sec-fetch-dest") ?? "";
+  const site = request.headers.get("sec-fetch-site") ?? "";
+  if (site !== "same-origin") return false;
+  return dest === "iframe" || ["image", "media", "video", "audio", "font", "style", "script", "manifest"].includes(dest);
+}
+
 // ---------------------------------------------------------------------------
 // Password wall for the LIVE site while it's being built. Unauthenticated
 // visitors are redirected to an in-page /login screen (no browser popup).
@@ -33,6 +62,23 @@ export function proxy(request: NextRequest) {
 
   // Signed in? (cookie is set by the /api/login route)
   if (request.cookies.get(AUTH_COOKIE)?.value === AUTH_TOKEN) {
+    return NextResponse.next();
+  }
+
+  // The portal's Live site tab: through, with the cookie set for the frame
+  // so the links inside it keep working where the browser keeps it.
+  if (framedByPortal(request)) {
+    const res = NextResponse.next();
+    res.cookies.set(AUTH_COOKIE, AUTH_TOKEN, {
+      httpOnly: true,
+      sameSite: "none",
+      secure: true,
+      path: "/",
+      maxAge: 60 * 60 * 24 * 30,
+    });
+    return res;
+  }
+  if (fromAnOpenFrame(request)) {
     return NextResponse.next();
   }
 

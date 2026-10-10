@@ -8,10 +8,12 @@
 // re-renders would overwrite whatever it rewrote in the DOM.
 // ---------------------------------------------------------------------------
 
-/** EDIT: portal feed URL (override with PORTAL_FEED_URL in Vercel). */
+/** EDIT: portal feed URL (override with PORTAL_FEED_URL in Vercel). The
+ *  portal lives at portal.triptychstudios.co; its Vercel address still
+ *  answers, but this is the one that stays. */
 export const FEED_URL =
   process.env.PORTAL_FEED_URL ||
-  "https://triptych-portal.vercel.app/api/site-content";
+  "https://portal.triptychstudios.co/api/site-content";
 
 /** EDIT: seconds before the feed is re-fetched. The portal caches for ~60s. */
 const REVALIDATE = 60;

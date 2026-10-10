@@ -27,8 +27,9 @@ const csp = [
   `font-src 'self' https://fonts.gstatic.com`,
   `connect-src 'self'${isDev ? " ws:" : ""}`,
   // EDIT: origins allowed to embed this site in an iframe — the Triptych
-  // Portal's Live Site tab. Everyone else stays blocked.
-  `frame-ancestors 'self' https://triptych-portal.vercel.app`,
+  // Portal's Live Site tab, at its own domain and at its Vercel address.
+  // Everyone else stays blocked.
+  `frame-ancestors 'self' https://portal.triptychstudios.co https://triptych-portal.vercel.app`,
   `frame-src 'none'`,
   `base-uri 'self'`,
   `form-action 'self'`,
