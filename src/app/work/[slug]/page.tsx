@@ -13,6 +13,7 @@ import {
 import Header from "@/components/Header";
 import ProjectDetail from "@/components/ProjectDetail";
 import { getSiteContent, type PortalWork } from "@/lib/siteContent";
+import { site } from "@/lib/site";
 
 // The portal adds and removes projects: re-read its feed every minute,
 // and render slugs that weren't known at build time on demand.
@@ -23,6 +24,8 @@ export const dynamicParams = true;
  * Finished frames for a project: every still in /public/work/<slug>/
  * (jpg / png / webp). `camera.png` was the old equipment shot — skipped.
  * EDIT: drop stills in that folder and they appear on the page, pinnable.
+ * Frames published from the portal's Delivery tab come through the feed
+ * (work.frames, public addresses) and are shown first.
  */
 function framesFor(slug: string): string[] {
   const dir = path.join(process.cwd(), "public", "work", slug);
@@ -40,6 +43,11 @@ function workSlug(w: PortalWork): string {
   return w.slug || slugify(w.title ?? "");
 }
 
+/** An absolute address for a frame, whether it lives here or on the portal's bucket. */
+function absolute(src: string): string {
+  return /^https?:\/\//.test(src) ? src : `${site.url}${src}`;
+}
+
 export function generateStaticParams() {
   return projects.map((p) => ({ slug: p.slug }));
 }
@@ -54,7 +62,33 @@ export async function generateMetadata({
   const work = content.works.find((w) => workSlug(w) === slug);
   const found = projectBySlug(slug);
   const title = work?.title ?? found?.project.title;
-  return { title: title ? `${title} — Triptych` : "Project — Triptych" };
+  const description =
+    work?.synopsis ?? `${title ?? "A project"} by ${site.name} ${site.suffix}.`;
+  // The first frame is the picture Pinterest, iMessage and the rest show
+  // for the page: a portal-published frame first, else one on disk, else
+  // the clip's poster.
+  const frames = [...(work?.frames ?? []), ...framesFor(slug)];
+  const image = frames[0] ?? work?.clipPoster;
+  const pageUrl = `${site.url}/work/${slug}`;
+  return {
+    title: title ? `${title} — Triptych` : "Project — Triptych",
+    description,
+    alternates: { canonical: pageUrl },
+    openGraph: {
+      type: "article",
+      title: title ?? "Project",
+      description,
+      url: pageUrl,
+      siteName: `${site.name} ${site.suffix}`,
+      ...(image ? { images: [{ url: absolute(image) }] } : {}),
+    },
+    twitter: {
+      card: image ? "summary_large_image" : "summary",
+      title: title ?? "Project",
+      description,
+      ...(image ? { images: [absolute(image)] } : {}),
+    },
+  };
 }
 
 export default async function ProjectPage({
@@ -82,8 +116,8 @@ export default async function ProjectPage({
         project={project}
         work={work}
         gradient={placeholderGradient(index)}
-        media={work?.thumb ?? projectMedia(index)}
-        frames={framesFor(slug)}
+        media={work?.thumb ?? work?.clipPoster ?? projectMedia(index)}
+        frames={[...(work?.frames ?? []), ...framesFor(slug)]}
       />
     </div>
   );

@@ -152,6 +152,8 @@ type WorkLike = {
   category?: string;
   year?: string;
   reel?: string;
+  /** A clip published from the portal's delivery: the player when no reel is set. */
+  clip?: string;
 };
 
 /** A feed work as a gallery/detail Project, with authored-style defaults. */
@@ -163,7 +165,7 @@ export function projectFromWork(w: WorkLike, index: number): Project {
     category: w.category || "Music Video",
     artist: w.client,
     year: w.year ?? YEARS[index % YEARS.length],
-    video: w.reel,
+    video: w.reel || w.clip,
     logo: PLACEHOLDER_LOGOS[index % PLACEHOLDER_LOGOS.length],
   };
 }

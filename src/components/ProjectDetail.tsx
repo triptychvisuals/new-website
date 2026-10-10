@@ -12,22 +12,35 @@ import { site } from "@/lib/site";
  * if it ever comes back.
  *
  * Frames: drop stills into /public/work/<slug>/ (jpg / png / webp — any name,
- * `camera.png` excluded) and they appear here automatically, each with a
- * Pin-it button so visitors save them to Pinterest. The pin's media is the
- * frame; its link is this project's page — pins carry people back to the
- * video.
+ * `camera.png` excluded) and they appear here automatically, as do the
+ * frames published from the portal's Delivery tab (public addresses on
+ * the portal's bucket, through the feed). Each has a Pin-it button so
+ * visitors save them to Pinterest. The pin's media is the frame; its link
+ * is this project's page — pins carry people back to the video. The same
+ * frame and link ride on data-pin-* attributes, so the Pinterest browser
+ * button picks the right picture and link too.
  */
 
 // EDIT: placeholder tiles shown until a project has real frames uploaded.
 const PLACEHOLDER_COUNT = 6;
 
+/** A frame's absolute address: on this site, or already on the portal's bucket. */
+function absolute(src: string): string {
+  return /^https?:\/\//.test(src) ? src : `${site.url}${src}`;
+}
+
+/** The words Pinterest pre-fills on a pin of a frame. */
+function pinDescription(title: string): string {
+  // EDIT: the description Pinterest pre-fills on the pin
+  return `${title} — ${site.name} ${site.suffix} · ${site.url}`;
+}
+
 /** Pinterest save URL for one frame. */
 function pinUrl(slug: string, frameSrc: string, title: string): string {
   const params = new URLSearchParams({
     url: `${site.url}/work/${slug}`,
-    media: `${site.url}${frameSrc}`,
-    // EDIT: the description Pinterest pre-fills on the pin
-    description: `${title} — ${site.name} ${site.suffix} · ${site.url}`,
+    media: absolute(frameSrc),
+    description: pinDescription(title),
   });
   return `https://www.pinterest.com/pin/create/button/?${params.toString()}`;
 }
@@ -85,8 +98,11 @@ export default function ProjectDetail({
 
   const reel = project.video;
   // GIF (or any non-mp4/webm) reels render as a plain looping <img> — no player.
-  const reelIsVideo = !!reel && /\.(mp4|webm)$/i.test(reel);
-  const poster = media && /\.(png|jpe?g|webp|svg)$/i.test(media) ? media : undefined;
+  // A clip from the portal keeps its extension on a bucket address (…/clip.mp4).
+  const reelIsVideo = !!reel && /\.(mp4|webm|mov|m4v)(\?.*)?$/i.test(reel);
+  const poster = media && /\.(png|jpe?g|webp|svg)(\?.*)?$/i.test(media) ? media : undefined;
+  // The clip's own poster frame shows in the player before play.
+  const videoPoster = work?.clipPoster && reel === work?.clip ? work.clipPoster : undefined;
 
   function togglePlay() {
     const v = videoRef.current;
@@ -209,6 +225,7 @@ export default function ProjectDetail({
             <video
               ref={videoRef}
               src={reel}
+              poster={videoPoster}
               loop
               muted
               playsInline
@@ -340,6 +357,9 @@ export default function ProjectDetail({
                     alt={`${project.title} — finished frame`}
                     loading="lazy"
                     decoding="async"
+                    data-pin-media={absolute(src)}
+                    data-pin-url={`${site.url}/work/${project.slug}`}
+                    data-pin-description={pinDescription(project.title)}
                     style={{
                       position: "absolute",
                       inset: 0,

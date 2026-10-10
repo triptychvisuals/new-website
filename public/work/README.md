@@ -21,5 +21,16 @@ If a file isn't present, the page falls back to its built-in placeholder
   `public/work/<slug>/camera.png` as the path (GitHub creates the folder),
   and commit.
 
+Any other jpg / png / webp in the folder is a Finished Frame on the project
+page, each with a Pin-it button.
+
+## From the portal
+
+The portal publishes frames and a clip straight to a project's page from
+the project's Delivery tab (Publish to triptychstudios.co): the files land
+in the portal's public bucket and the page reads them from the feed within
+a minute. Nothing needs committing here for those; this folder is for
+frames added by hand.
+
 More slots (BTS stills, poster, platform logos, doc covers) can be wired the
 same way on request.

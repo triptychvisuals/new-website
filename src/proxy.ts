@@ -31,6 +31,20 @@ function fromAnOpenFrame(request: NextRequest): boolean {
   return dest === "iframe" || ["image", "media", "video", "audio", "font", "style", "script", "manifest"].includes(dest);
 }
 
+// EDIT: crawlers that may read the project pages (/work/<slug>) through the
+// wall, so a pin's link resolves to the page's title and picture (Pinterest
+// reads the Open Graph tags when a frame is pinned, and for Rich Pins).
+// The pages are a preview of public work, not a secret; everything else on
+// the site stays behind the wall for them too.
+const CRAWLERS_THROUGH_THE_WALL = [/Pinterest/i];
+
+/** A known crawler fetching a project page. */
+function crawlerOnAProjectPage(request: NextRequest): boolean {
+  if (!/^\/work\/[^/]+\/?$/.test(request.nextUrl.pathname)) return false;
+  const ua = request.headers.get("user-agent") ?? "";
+  return CRAWLERS_THROUGH_THE_WALL.some((re) => re.test(ua));
+}
+
 // ---------------------------------------------------------------------------
 // Password wall for the LIVE site while it's being built. Unauthenticated
 // visitors are redirected to an in-page /login screen (no browser popup).
@@ -78,7 +92,7 @@ export function proxy(request: NextRequest) {
     });
     return res;
   }
-  if (fromAnOpenFrame(request)) {
+  if (fromAnOpenFrame(request) || crawlerOnAProjectPage(request)) {
     return NextResponse.next();
   }
 

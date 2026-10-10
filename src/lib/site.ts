@@ -9,6 +9,14 @@ export const site = {
   registered: true, // EDIT: show the ® mark next to the wordmark
   /** EDIT: canonical production URL — Pinterest pin links resolve against it. */
   url: "https://triptychstudios.co",
+  /**
+   * EDIT: the value Pinterest gives you when you claim this website
+   * (Pinterest > Settings > Claimed accounts > Websites > "Add HTML tag",
+   * the content="…" part). Claiming puts the studio's name and profile on
+   * every pin saved from here and unlocks Pinterest's analytics for them.
+   * Leave empty until then and nothing is rendered.
+   */
+  pinterestVerify: "",
   email: "hello@triptychvisuals.com", // EDIT: contact email (also confirm law@…)
   sectionNumber: "001", // EDIT: hero index label
   sectionLabel: "SELECTED WORKS", // EDIT: hero bracket label

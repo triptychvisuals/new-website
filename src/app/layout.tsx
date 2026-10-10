@@ -1,11 +1,17 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import SmoothScroll from "@/components/SmoothScroll";
+import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Triptych Studios® - Imagination in Motion", // EDIT: browser-tab / search-result title
   description:
     "Triptych Studios — cinematic storytelling, film, and motion for brands.", // EDIT
+  metadataBase: new URL(site.url),
+  // The Pinterest website claim, once site.pinterestVerify is filled in.
+  ...(site.pinterestVerify
+    ? { verification: { other: { "p:domain_verify": site.pinterestVerify } } }
+    : {}),
 };
 
 export default function RootLayout({

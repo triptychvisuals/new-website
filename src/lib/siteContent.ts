@@ -58,6 +58,15 @@ export type PortalWork = {
   crew?: PortalCrewRow[];
   /** BTS stills — data-URLs from the portal. */
   stills?: string[];
+  /**
+   * Published from a delivery on the portal (Delivery tab, Publish to the
+   * website): public https addresses. The frames join the page's Finished
+   * Frames, each pinnable; the clip is the page's player when no reel is
+   * set, with its poster.
+   */
+  frames?: string[];
+  clip?: string;
+  clipPoster?: string;
 };
 
 export type SiteContent = {
@@ -162,6 +171,11 @@ function toWork(raw: unknown): PortalWork | undefined {
     stills: Array.isArray(raw.stills)
       ? raw.stills.map(str).filter((s): s is string => !!s)
       : undefined,
+    frames: Array.isArray(raw.frames)
+      ? raw.frames.map(str).filter((s): s is string => !!s && /^https:\/\//.test(s))
+      : undefined,
+    clip: pick(raw, "clip"),
+    clipPoster: pick(raw, "clipPoster", "clip_poster"),
   };
   return work.title || work.client || work.thumb || work.link ? work : undefined;
 }

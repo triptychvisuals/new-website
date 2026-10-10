@@ -17,13 +17,19 @@ import type { NextConfig } from "next";
 // ---------------------------------------------------------------------------
 const isDev = process.env.NODE_ENV === "development";
 
+// EDIT: where the portal keeps what it publishes to this site (the frames
+// and clips sent from a project's Delivery tab): the portal's Supabase
+// storage, public bucket. Pictures and video from here are allowed below.
+const PORTAL_ASSETS_HOST =
+  process.env.PORTAL_ASSETS_HOST || "https://zrjynlpcdxnujwsvihaq.supabase.co";
+
 const csp = [
   `default-src 'self'`,
   `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
   // Google Sans loads from Google Fonts (see layout.tsx)
   `style-src 'self' 'unsafe-inline' https://fonts.googleapis.com`,
-  `img-src 'self' data: blob:`,
-  `media-src 'self'`,
+  `img-src 'self' data: blob: ${PORTAL_ASSETS_HOST}`,
+  `media-src 'self' ${PORTAL_ASSETS_HOST}`,
   `font-src 'self' https://fonts.gstatic.com`,
   `connect-src 'self'${isDev ? " ws:" : ""}`,
   // EDIT: origins allowed to embed this site in an iframe — the Triptych
