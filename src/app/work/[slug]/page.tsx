@@ -30,7 +30,8 @@ function framesFor(slug: string): string[] {
   return fs
     .readdirSync(dir)
     .filter((f) => /\.(jpe?g|png|webp)$/i.test(f) && f.toLowerCase() !== "camera.png")
-    .sort()
+    // Numeric-aware order so frame-2 comes before frame-10.
+    .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }))
     // Encode the filename — "frame #3.jpg" would otherwise truncate at '#'.
     .map((f) => `/work/${slug}/${encodeURIComponent(f)}`);
 }
