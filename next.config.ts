@@ -83,6 +83,15 @@ const nextConfig: NextConfig = {
         source: "/(.*)",
         headers: securityHeaders,
       },
+      {
+        // Finished frames must be embeddable on pinterest.com (pins render
+        // our media cross-origin), so loosen CORP for /work stills only —
+        // the site-wide same-origin rule above still covers everything else.
+        source: "/work/:path*",
+        headers: [
+          { key: "Cross-Origin-Resource-Policy", value: "cross-origin" },
+        ],
+      },
     ];
   },
 };

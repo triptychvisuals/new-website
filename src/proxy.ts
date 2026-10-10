@@ -19,14 +19,14 @@ export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Always let the sign-in screen, its submit endpoint, the logo it shows,
-  // and media assets through (everything else stays gated). Media stays open
-  // so Pinterest can fetch pinned frames and link previews render — the
-  // images aren't secret, the pages are.
+  // and the /work stills through (everything else stays gated). The stills
+  // stay open so Pinterest can fetch pinned frames while the wall is up —
+  // the frames aren't secret, the pages are.
   if (
     pathname === "/login" ||
     pathname === "/api/login" ||
     pathname === "/triptych-logo.png" ||
-    /\.(jpe?g|png|webp|gif|svg|mp4|webm)$/i.test(pathname)
+    (/^\/work\//.test(pathname) && /\.(jpe?g|png|webp)$/i.test(pathname))
   ) {
     return NextResponse.next();
   }
