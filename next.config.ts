@@ -69,6 +69,13 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   // Don't advertise the framework/version in responses.
   poweredByHeader: false,
+  // Ship the finished-frames stills inside the /work/[slug] function bundle —
+  // framesFor() reads them with fs at revalidation time, and output tracing
+  // can't see through its dynamic path. Keys are picomatch route globs, so
+  // the [slug] brackets are escaped.
+  outputFileTracingIncludes: {
+    "/work/\\[slug\\]": ["./public/work/**/*"],
+  },
   async headers() {
     return [
       {

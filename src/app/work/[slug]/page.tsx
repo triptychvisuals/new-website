@@ -24,7 +24,8 @@ function framesFor(slug: string): string[] {
     .readdirSync(dir)
     .filter((f) => /\.(jpe?g|png|webp)$/i.test(f) && f.toLowerCase() !== "camera.png")
     .sort()
-    .map((f) => `/work/${slug}/${f}`);
+    // Encode the filename — "frame #3.jpg" would otherwise truncate at '#'.
+    .map((f) => `/work/${slug}/${encodeURIComponent(f)}`);
 }
 
 export function generateStaticParams() {
