@@ -5,6 +5,7 @@ import HeroStudio from "@/components/HeroStudio";
 import PartnerCard from "@/components/PartnerCard";
 import SelectedWorks from "@/components/SelectedWorks";
 import WalletStack from "@/components/WalletStack";
+import WorkGrid from "@/components/WorkGrid";
 import AboutResult from "@/components/about/AboutResult";
 import AboutStatement from "@/components/about/AboutStatement";
 import AboutAwards from "@/components/about/AboutAwards";
@@ -26,6 +27,8 @@ export default async function Home() {
         <PartnerCard />
         <SelectedWorks />
         <WalletStack works={content.works} />
+        {/* Where the project scroll ends: the 6×6 "500+ projects" bubble grid */}
+        <WorkGrid />
 
         {/* Phones only: the About page inline, right under the third reel, so
             the mobile menu can scroll here instead of loading another page.
@@ -37,6 +40,7 @@ export default async function Home() {
           <AboutTestimonial />
           <AboutCTA />
         </div>
+
       </main>
       <Footer />
     </>

@@ -82,6 +82,8 @@ const nextConfig: NextConfig = {
   // the [slug] brackets are escaped.
   outputFileTracingIncludes: {
     "/work/\\[slug\\]": ["./public/work/**/*"],
+    // Home page: partner logos + work-grid thumbnails are read with fs too.
+    "/": ["./public/partners/**/*", "./public/grid/**/*"],
   },
   async headers() {
     return [

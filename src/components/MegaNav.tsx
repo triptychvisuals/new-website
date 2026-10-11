@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { projects } from "@/lib/projects";
+import { projects, placeholderGradient, projectMedia } from "@/lib/projects";
 
 /**
  * Desktop nav: pill-shaped triggers with an up/down chevron that open a
@@ -10,16 +10,39 @@ import { projects } from "@/lib/projects";
  * optional column headings, icons, and a footer row). Opens on hover with a
  * short grace period, toggles on click, closes on Escape / outside click.
  * Panel colors run on theme tokens so it follows light/dark mode.
+ *
+ * The Projects panel's last column is a live preview: hovering (or
+ * focusing) a project name plays that project's clip in a small player.
  */
 
-type Item = { title: string; desc: string; href: string; icon?: IconName; external?: boolean };
-type Column = { heading?: string; items: Item[] };
+/** What the preview player shows for a project. */
+type Preview = {
+  title: string;
+  meta: string;
+  href: string;
+  /** mp4/webm clip — plays muted on loop. */
+  video?: string;
+  /** Fallback while a project has no clip: animated reel art over a gradient. */
+  still: string;
+  gradient: string;
+};
+type Item = {
+  title: string;
+  desc: string;
+  href: string;
+  icon?: IconName;
+  external?: boolean;
+  preview?: Preview;
+};
+type Column = { heading?: string; items: Item[]; kind?: "preview" };
 type Menu = {
   label: string;
   columns: Column[];
   footer?: { cta: { label: string; href: string }; links: { label: string; href: string }[] };
   /** EDIT: panel width — wide for the projects grid, narrower for the rest. */
   width: string;
+  /** Optional CSS grid-template-columns (defaults to equal columns). */
+  template?: string;
 };
 
 // EDIT: the Chicago Reader feature (also linked from the About press card).
@@ -29,10 +52,20 @@ const PRESS_URL =
 const projectItem = (i: number): Item | null => {
   const p = projects[i];
   if (!p) return null;
+  const desc = [p.artist ?? p.category, p.year].filter(Boolean).join(" · ");
+  const href = `/work/${p.slug}`;
   return {
     title: p.title,
-    desc: [p.artist ?? p.category, p.year].filter(Boolean).join(" · "),
-    href: `/work/${p.slug}`,
+    desc,
+    href,
+    preview: {
+      title: p.title,
+      meta: desc,
+      href,
+      video: p.video && /\.(mp4|webm)$/i.test(p.video) ? p.video : undefined,
+      still: projectMedia(i),
+      gradient: placeholderGradient(i),
+    },
   };
 };
 const projectRange = (from: number, to: number) =>
@@ -46,17 +79,12 @@ const MENUS: Record<string, Menu> = {
   Projects: {
     label: "Projects",
     width: "w-[min(1080px,calc(100vw-48px))]",
+    // EDIT: the preview column runs a touch wider than the name lists.
+    template: "minmax(0,1fr) minmax(0,1fr) minmax(0,1.25fr)",
     columns: [
       { heading: "Featured", items: projectRange(0, 4) },
       { heading: "Recent", items: projectRange(4, 8) },
-      {
-        heading: "Browse",
-        items: [
-          { title: "All projects", desc: "Every film, filterable by type", href: "/projects" },
-          { title: "Music videos", desc: "Performance & narrative work", href: "/projects" },
-          { title: "Finished frames", desc: "Stills you can pin to Pinterest", href: "/projects" },
-        ],
-      },
+      { heading: "Preview", items: [], kind: "preview" },
     ],
     footer: {
       cta: { label: "See all projects", href: "/projects" },
@@ -156,7 +184,18 @@ function Chevrons() {
 const triggerCls =
   "inline-flex items-center gap-2 whitespace-nowrap rounded-xl border px-3.5 py-2 text-[15px] font-medium tracking-tight text-foreground transition-colors";
 
-function MenuItem({ item, onPick }: { item: Item; onPick: () => void }) {
+function MenuItem({
+  item,
+  onPick,
+  onPreview,
+  previewing = false,
+}: {
+  item: Item;
+  onPick: () => void;
+  onPreview?: (p: Preview) => void;
+  /** This item's clip is the one playing — keep its row lit. */
+  previewing?: boolean;
+}) {
   const body = (
     <>
       {item.icon && <Icon name={item.icon} />}
@@ -168,21 +207,84 @@ function MenuItem({ item, onPick }: { item: Item; onPick: () => void }) {
       </span>
     </>
   );
-  const cls =
-    "-mx-3 flex gap-3 rounded-xl px-3 py-3 transition-colors hover:bg-foreground/[0.05] focus-visible:bg-foreground/[0.05] focus-visible:outline-none";
+  const cls = `-mx-3 flex gap-3 rounded-xl px-3 py-3 transition-colors hover:bg-foreground/[0.05] focus-visible:bg-foreground/[0.05] focus-visible:outline-none ${
+    previewing ? "bg-foreground/[0.05]" : ""
+  }`;
+  // Hover or keyboard focus swaps the preview player to this project.
+  const show = item.preview && onPreview ? () => onPreview(item.preview!) : undefined;
   return item.external ? (
     <a href={item.href} target="_blank" rel="noopener noreferrer" onClick={onPick} className={cls}>
       {body}
     </a>
   ) : (
-    <Link href={item.href} onClick={onPick} className={cls}>
+    <Link href={item.href} onClick={onPick} onMouseEnter={show} onFocus={show} className={cls}>
       {body}
+    </Link>
+  );
+}
+
+/**
+ * The preview column: a small 16:9 player that plays whichever project is
+ * hovered. Projects with a clip play it muted on loop; the rest show their
+ * animated reel art over the project gradient until a clip is added. Each
+ * swap fades in (keyed remount).
+ */
+function PreviewPlayer({ preview, onPick }: { preview?: Preview; onPick: () => void }) {
+  if (!preview) return null;
+  return (
+    <Link href={preview.href} onClick={onPick} className="group/pv block">
+      <div
+        key={preview.href}
+        className="relative aspect-video w-full overflow-hidden rounded-xl border border-hairline bg-black [animation:pvfade_.35s_ease-out]"
+        style={{ background: preview.gradient }}
+      >
+        {preview.video ? (
+          <video
+            src={preview.video}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            aria-hidden
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+        ) : (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={preview.still}
+            alt=""
+            aria-hidden
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+        )}
+        {/* Lower scrim + "playing" pip */}
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/60 to-transparent" />
+        <span className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-black/45 px-2 py-0.5 text-[11px] font-medium text-white backdrop-blur-sm">
+          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[color:var(--accent)]" />
+          {preview.video ? "Now playing" : "Preview"}
+        </span>
+      </div>
+      <div className="mt-3 flex items-baseline justify-between gap-3">
+        <span className="min-w-0">
+          <span className="block truncate text-[15px] font-medium tracking-tight text-foreground">
+            {preview.title}
+          </span>
+          <span className="mt-0.5 block text-[13px] text-muted">{preview.meta}</span>
+        </span>
+        <span className="shrink-0 text-[13px] font-medium text-foreground/70 transition-colors group-hover/pv:text-foreground">
+          Watch <span aria-hidden>→</span>
+        </span>
+      </div>
     </Link>
   );
 }
 
 export default function MegaNav({ nav }: { nav: { label: string; href: string }[] }) {
   const [open, setOpen] = useState<string | null>(null);
+  const [preview, setPreview] = useState<Preview | undefined>(undefined);
+  // Each time a panel opens (or closes), the player restarts on its default.
+  useEffect(() => setPreview(undefined), [open]);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const root = useRef<HTMLDivElement>(null);
 
@@ -215,6 +317,9 @@ export default function MegaNav({ nav }: { nav: { label: string; href: string }[
   }, [close]);
 
   const active = open ? MENUS[open] : undefined;
+  // Until something is hovered, the player shows the panel's first project.
+  const shown =
+    preview ?? active?.columns.flatMap((c) => c.items).find((it) => it.preview)?.preview;
 
   return (
     <div ref={root} className="relative" onMouseLeave={scheduleClose} onMouseEnter={cancelClose}>
@@ -275,15 +380,25 @@ export default function MegaNav({ nav }: { nav: { label: string; href: string }[
           >
             <div
               className="grid divide-x divide-hairline rounded-xl border border-hairline"
-              style={{ gridTemplateColumns: `repeat(${active.columns.length}, minmax(0,1fr))` }}
+              style={{
+                gridTemplateColumns:
+                  active.template ?? `repeat(${active.columns.length}, minmax(0,1fr))`,
+              }}
             >
               {active.columns.map((col, ci) => (
                 <div key={ci} className="flex flex-col gap-1 px-7 py-6">
                   {col.heading && (
                     <p className="mb-2 text-[13px] font-medium text-muted">{col.heading}</p>
                   )}
+                  {col.kind === "preview" && <PreviewPlayer preview={shown} onPick={close} />}
                   {col.items.map((it) => (
-                    <MenuItem key={it.title + it.href} item={it} onPick={close} />
+                    <MenuItem
+                      key={it.title + it.href}
+                      item={it}
+                      onPick={close}
+                      onPreview={setPreview}
+                      previewing={!!it.preview && shown?.href === it.preview.href}
+                    />
                   ))}
                 </div>
               ))}

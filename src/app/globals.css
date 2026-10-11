@@ -77,6 +77,42 @@
   }
 }
 
+/* Work grid bubbles — each drifts on its own rhythm (delay/duration set inline). */
+@keyframes wg-drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -5px, 0);
+  }
+}
+.wg-drift {
+  animation-name: wg-drift;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+.group:hover .wg-drift {
+  animation-play-state: paused;
+}
+@media (prefers-reduced-motion: reduce) {
+  .wg-drift {
+    animation: none;
+  }
+}
+
+/* Projects dropdown preview player — each swap fades in. */
+@keyframes pvfade {
+  from {
+    opacity: 0;
+    transform: scale(1.015);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
 /* Track holds two identical copies; -50% lands on the seam so it loops clean. */
 @keyframes marquee-up {
   from {
