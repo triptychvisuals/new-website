@@ -7,12 +7,12 @@ import WorkGridClient, { type Bubble } from "./WorkGridClient";
 const COUNT_LABEL = "500+";
 const CAPTION = "Projects completed";
 
-// 6×6 grid; the middle 2×2 is the counter, so 32 bubbles surround it.
+// 6×6 grid; the middle 2×2 is the counter, so 32 tiles surround it.
 const BUBBLES = 32;
 
 /**
- * Thumbnails for the bubbles: every image in /public/grid/ (jpg / png /
- * webp), in numeric filename order — 01.jpg fills the first bubble, and so
+ * Thumbnails for the tiles: every image in /public/grid/ (jpg / png /
+ * webp), in numeric filename order — 01.jpg fills the first tile, and so
  * on. EDIT: drop stills there; bubbles without one stay a color swatch.
  */
 function gridThumbs(): string[] {
@@ -26,7 +26,7 @@ function gridThumbs(): string[] {
 }
 
 /**
- * "Body of work" — a big, colorful 6×6 grid of video bubbles with the
+ * "Body of work" — a big, colorful 6×6 grid of rounded video tiles with the
  * project count in the middle, to make the sheer volume of work land.
  */
 export default function WorkGrid() {

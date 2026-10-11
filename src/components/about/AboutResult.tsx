@@ -16,7 +16,7 @@ const hasPressPhoto = fs.existsSync(
 
 // Phones: the three bento blocks stack into the top wallet-style while
 // scrolling, matching the homepage reel cards. EDIT: same numbers as
-// WalletStack — where block 1 parks, and the peek strip each next one leaves.
+// header — where block 1 parks, and the peek strip each next one leaves.
 const STACK_TOP = 84;
 const STACK_PEEK = 26;
 

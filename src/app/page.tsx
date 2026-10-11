@@ -4,7 +4,6 @@ import Header from "@/components/Header";
 import HeroStudio from "@/components/HeroStudio";
 import PartnerCard from "@/components/PartnerCard";
 import SelectedWorks from "@/components/SelectedWorks";
-import WalletStack from "@/components/WalletStack";
 import WorkGrid from "@/components/WorkGrid";
 import AboutResult from "@/components/about/AboutResult";
 import AboutStatement from "@/components/about/AboutStatement";
@@ -26,8 +25,7 @@ export default async function Home() {
         <HeroStudio tagline={content.tagline} />
         <PartnerCard />
         <SelectedWorks />
-        <WalletStack works={content.works} />
-        {/* Where the project scroll ends: the 6×6 "500+ projects" bubble grid */}
+        {/* The 6×6 "500+ projects" grid follows the Featured Work band */}
         <WorkGrid />
 
         {/* Phones only: the About page inline, right under the third reel, so
