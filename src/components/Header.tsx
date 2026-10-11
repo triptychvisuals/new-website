@@ -131,18 +131,18 @@ function Logo({
   // (it's white artwork that has to invert on the light background).
   const isDefault = src === DEFAULT_LOGO;
   return (
-    <Link href="/" onClick={onClick} aria-label="Triptych Studios — home" className={`inline-flex items-center gap-2 ${className}`}>
+    <Link href="/" onClick={onClick} aria-label="Triptych Studios — home" className={`inline-flex items-center gap-2 lg:gap-2.5 ${className}`}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       {/* Mark height matches the wordmark's cap height; w-auto keeps its scale */}
       <img
         src={src}
         alt=""
-        className={`h-4 w-auto ${isDefault ? "[filter:brightness(0)] dark:[filter:none]" : ""}`}
+        className={`h-4 w-auto lg:h-5 ${isDefault ? "[filter:brightness(0)] dark:[filter:none]" : ""}`}
       />
       {/* EDIT: wordmark — sits right of the mark, ® floated above its end */}
-      <span className="relative whitespace-nowrap pr-2 text-[15px] font-medium leading-none tracking-tight text-foreground">
+      <span className="relative whitespace-nowrap pr-2 text-[15px] font-medium leading-none tracking-tight text-foreground lg:pr-2.5 lg:text-[19px]">
         Triptych Studios
-        <span aria-hidden className="absolute -top-1.5 right-0 text-[8px] leading-none">
+        <span aria-hidden className="absolute -top-1.5 right-0 text-[8px] leading-none lg:-top-2 lg:text-[10px]">
           ®
         </span>
       </span>
