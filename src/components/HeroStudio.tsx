@@ -21,9 +21,12 @@ export default function HeroStudio({
   tagline?: string;
 }) {
   return (
-    <section className="bg-background">
-      {/* Full-bleed panel — square on phones, 16:9 on desktop, capped wide */}
-      <div className="relative isolate mx-auto flex aspect-square min-h-0 w-full max-w-[1760px] flex-col overflow-hidden bg-[#0e0e10] text-white md:aspect-video">
+    // Inset in a container: dashed rules above/below, a small gutter, and a
+    // rounded, beveled panel (see the bevel overlay at the end).
+    <section className="border-b border-dashed border-hairline bg-background px-2 py-2 sm:px-3 sm:py-3">
+      {/* Panel — square on phones, 16:9 on desktop, capped wide.
+          EDIT: rounded-[22px] = corner radius. */}
+      <div className="relative isolate mx-auto flex aspect-square min-h-0 w-full max-w-[1760px] flex-col overflow-hidden rounded-[22px] bg-[#0e0e10] text-white shadow-[0_1px_0_rgba(255,255,255,0.06),0_18px_40px_-18px_rgba(0,0,0,0.55)] md:aspect-video">
         {/* Background: horizontal reel carousel (clips cycle every 2.5s with
             dots), a legibility overlay, and film grain. EDIT clips in HeroReel. */}
         <HeroReel />
@@ -64,6 +67,19 @@ export default function HeroStudio({
 
         {/* Bottom band — kept empty so the carousel dots clear the frame edge. */}
         <div className="relative p-6 sm:p-8 md:p-10" />
+
+        {/* Bevel — sits above the video: a hairline inner border, a lit top
+            edge, and a soft inner shadow so the footage reads as set into a
+            container. Inset shadows on the panel itself would be painted
+            under the video, hence the overlay. */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 z-20 rounded-[22px]"
+          style={{
+            boxShadow:
+              "inset 0 0 0 1px rgba(255,255,255,0.10), inset 0 1px 0 rgba(255,255,255,0.22), inset 0 -1px 0 rgba(0,0,0,0.5), inset 0 0 40px rgba(0,0,0,0.35)",
+          }}
+        />
       </div>
     </section>
   );

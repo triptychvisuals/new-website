@@ -4,11 +4,12 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { site } from "@/lib/site";
 import ThemeToggle from "@/components/ThemeToggle";
+import MegaNav from "@/components/MegaNav";
 
 /**
  * Sticky header:
- *   [switch] .... NAV ◬logo NAV .... TIME  icons
- * On mobile it collapses to a hamburger that drops a compact panel from the top.
+ *   ◬ Triptych Studios® .... [Projects ⇕][About ⇕][Press ⇕][Store ↗] .... ☀ Listen TIME icons
+ * Below lg it collapses to a hamburger that drops a compact panel from the top.
  */
 /** EDIT: the authored wordmark, used whenever the portal has no logo set. */
 const DEFAULT_LOGO = "/triptych-logo.png";
@@ -26,9 +27,6 @@ function mobileHref(href: string) {
   if (href.startsWith("/about#")) return `/#${href.split("#")[1]}`;
   return href;
 }
-
-const linkCls =
-  "inline-flex items-center gap-1 text-[13px] font-medium tracking-tight text-foreground transition-opacity hover:opacity-60 whitespace-nowrap";
 
 function useClock() {
   const [time, setTime] = useState("");
@@ -120,15 +118,6 @@ function MusicLink({ className = "" }: { className?: string }) {
   );
 }
 
-function NavLink({ item }: { item: { label: string; href: string } }) {
-  return (
-    <Link href={item.href} className={linkCls}>
-      {item.label}
-      {hasArrow(item.label) && <span aria-hidden>↗</span>}
-    </Link>
-  );
-}
-
 function Logo({
   onClick,
   className = "",
@@ -166,36 +155,30 @@ export default function Header({ logo }: { logo?: string }) {
   const close = () => setMenuOpen(false);
   const time = useClock();
 
-  const mid = Math.ceil(site.nav.length / 2);
-  const left = site.nav.slice(0, mid);
-  const right = site.nav.slice(mid);
-
   return (
-    <header className="sticky top-0 z-40 flex items-center justify-between border-b border-hairline bg-background/85 px-5 py-3.5 backdrop-blur-md sm:px-6">
+    <header className="sticky top-0 z-40 flex items-center justify-between border-b border-dashed border-hairline bg-background/85 px-5 py-3.5 backdrop-blur-md sm:px-6 lg:min-h-16 lg:py-2.5">
       {/* Left: logo + wordmark */}
-      <div className="hidden items-center gap-3 md:flex">
+      <div className="hidden items-center gap-3 lg:flex">
         <Logo src={logo} />
       </div>
 
-      {/* Center: nav links */}
-      <nav className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-6 md:flex">
-        {[...left, ...right].map((item) => (
-          <NavLink key={item.label} item={item} />
-        ))}
-      </nav>
+      {/* Center: pill triggers + dropdown panels */}
+      <div className="absolute left-1/2 hidden -translate-x-1/2 lg:block">
+        <MegaNav nav={site.nav} />
+      </div>
 
       {/* Right: theme toggle + listen + clock + social icons */}
-      <div className="hidden items-center gap-5 md:flex">
+      <div className="hidden items-center gap-5 lg:flex">
         <ThemeToggle />
         <MusicLink />
-        <span className="hidden text-[13px] font-medium tabular-nums tracking-tight text-foreground/70 lg:inline" suppressHydrationWarning>
+        <span className="hidden text-[13px] font-medium tabular-nums tracking-tight text-foreground/70 xl:inline" suppressHydrationWarning>
           {time || "--:--:-- --"}
         </span>
         <SocialRow />
       </div>
 
       {/* Mobile: logo + clock right beside the theme toggle + hamburger */}
-      <div className="relative flex w-full items-center justify-between md:hidden">
+      <div className="relative flex w-full items-center justify-between lg:hidden">
         <Logo src={logo} />
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
@@ -230,7 +213,7 @@ export default function Header({ logo }: { logo?: string }) {
 
       {/* Mobile dropdown — drops from the top, sized to content */}
       <div
-        className={`absolute inset-x-0 top-full origin-top overflow-hidden border-b border-hairline bg-background shadow-xl transition-all duration-300 ease-out md:hidden ${
+        className={`absolute inset-x-0 top-full origin-top overflow-hidden border-b border-hairline bg-background shadow-xl transition-all duration-300 ease-out lg:hidden ${
           menuOpen
             ? "visible translate-y-0 opacity-100"
             : "pointer-events-none invisible -translate-y-3 opacity-0"

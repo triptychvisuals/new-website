@@ -4,7 +4,7 @@ import { intro } from "@/lib/about";
 /** Mission statement + body copy that fills grey→white on scroll. */
 export default function AboutStatement() {
   return (
-    <section className="px-5 pt-24 sm:px-8 sm:pt-32">
+    <section id="philosophy" className="scroll-mt-20 px-5 pt-24 sm:px-8 sm:pt-32">
       <ScrollFill className="max-w-4xl" stagger={1}>
         <h2
           data-fill

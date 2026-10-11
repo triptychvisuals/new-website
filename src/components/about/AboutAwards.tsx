@@ -5,7 +5,7 @@ import { awards } from "@/lib/about";
 /** Left: giant "Awards (N)" headline. Right: "Selected Awards / Year" table. */
 export default function AboutAwards() {
   return (
-    <section id="awards" className="px-5 pt-32 sm:px-8 sm:pt-44">
+    <section id="awards" className="scroll-mt-20 px-5 pt-32 sm:px-8 sm:pt-44">
       <div className="grid grid-cols-1 gap-x-12 gap-y-10 md:grid-cols-2">
         {/* Left: label + oversized count headline */}
         <Reveal>
