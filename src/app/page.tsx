@@ -5,6 +5,7 @@ import HeroStudio from "@/components/HeroStudio";
 import PartnerCard from "@/components/PartnerCard";
 import SelectedWorks from "@/components/SelectedWorks";
 import WorkGrid from "@/components/WorkGrid";
+import Decade from "@/components/Decade";
 import AboutResult from "@/components/about/AboutResult";
 import AboutStatement from "@/components/about/AboutStatement";
 import AboutAwards from "@/components/about/AboutAwards";
@@ -27,6 +28,8 @@ export default async function Home() {
         <SelectedWorks />
         {/* The 6×6 "500+ projects" grid follows the Featured Work band */}
         <WorkGrid />
+        {/* Scrolling on: the page dims into the 2016 → 2026 timeline */}
+        <Decade />
 
         {/* Phones only: the About page inline, right under the third reel, so
             the mobile menu can scroll here instead of loading another page.

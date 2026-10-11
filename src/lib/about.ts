@@ -139,3 +139,23 @@ export function aboutGradient(index: number): string {
   const [a, b] = A_GRADIENTS[index % A_GRADIENTS.length];
   return `linear-gradient(135deg, ${a} 0%, ${b} 100%)`;
 }
+
+/**
+ * "10 years in business" scroll timeline on the home page, 2016 → 2026.
+ * Only the first and last entries are stated elsewhere on the site
+ * (Est. 2016 in Chicago; 500+ projects) — EDIT every middle year with the
+ * real milestones; the copy there is placeholder.
+ */
+export const decade: { year: string; title: string; body: string }[] = [
+  { year: "2016", title: "Triptych is founded", body: "A small crew in Chicago with one camera and a lot of ideas." }, // EDIT
+  { year: "2017", title: "First music videos", body: "Early shoots for local artists sharpen the look and the workflow." }, // EDIT: placeholder
+  { year: "2018", title: "Building the crew", body: "Directors, DPs, and editors join — the studio takes shape." }, // EDIT: placeholder
+  { year: "2019", title: "Bigger stages", body: "Productions scale up: larger sets, longer days, sharper craft." }, // EDIT: placeholder
+  { year: "2020", title: "Adapting the process", body: "New ways of producing — leaner teams, smarter pipelines." }, // EDIT: placeholder
+  { year: "2021", title: "Commercial & brand film", body: "The work expands beyond music into brands and campaigns." }, // EDIT: placeholder
+  { year: "2022", title: "Label partnerships", body: "Work alongside the major labels becomes part of the roster." }, // EDIT: placeholder
+  { year: "2023", title: "A signature look", body: "Color, movement, and rhythm cohere into the Triptych aesthetic." }, // EDIT: placeholder
+  { year: "2024", title: "In the press", body: "The studio's story gets told — and the audience grows." }, // EDIT: placeholder
+  { year: "2025", title: "Pushing the format", body: "New tools, new formats, the same obsession with the frame." }, // EDIT: placeholder
+  { year: "2026", title: "Ten years, 500+ projects", body: "A decade of imagination in motion — and we're just getting started." }, // EDIT
+];
