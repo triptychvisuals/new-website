@@ -10,20 +10,27 @@ const PARTNERS = clients;
  * automatically — file name = the partner's name, lowercased, spaces → "-"
  * (e.g. "Universal Music Group" → universal-music-group.png). Also checks a
  * short alias (first word: universal.png, rca.png, …). png / svg / webp work.
- * Black-on-white or black-on-transparent artwork is fine: it's inverted and
- * screen-blended, so the mark renders white and any background melts into the
- * black strip — clearly visible in both site themes (the strip stays black).
+ * Use transparent artwork: dark marks render as-is on the light theme and
+ * invert to white on the dark theme ("-white" files do the opposite).
  */
 // EDIT: per-logo height (Tailwind class) so dense or portrait marks read at
 // the same visual weight as wide wordmarks. Anything not listed uses DEFAULT.
 const LOGO_SIZES: Record<string, string> = {
-  capitol: "h-10", // detail-heavy oval lockup
-  interscope: "h-10", // tall portrait crop
-  universal: "h-9", // globe lockup with small sub-line
-  atlantic: "h-8",
-  warner: "h-8",
+  capitol: "h-14", // detail-heavy oval lockup
+  interscope: "h-14", // tall portrait crop
+  universal: "h-14", // globe lockup with small sub-line
+  atlantic: "h-12",
+  warner: "h-11",
 };
-const DEFAULT_LOGO_SIZE = "h-6";
+const DEFAULT_LOGO_SIZE = "h-9";
+
+// EDIT: copies of the partner list inside one loop segment. One segment must
+// be wider than the widest screen, or the end of the track shows as a gap
+// before it wraps; 5 copies ≈ 4600px, wider than ultrawide monitors.
+const REPEAT = 5;
+// EDIT: seconds for one logo to pass — higher is slower. Duration scales with
+// the logo count so the speed stays the same however many partners there are.
+const SECONDS_PER_LOGO = 2.6;
 
 function logoFor(
   name: string
@@ -58,32 +65,39 @@ function logoFor(
  */
 export default function PartnerCard() {
   const items = PARTNERS.map((name) => ({ name, logo: logoFor(name) }));
+  const segment = Array.from({ length: REPEAT }, () => items).flat();
+  const duration = segment.length * SECONDS_PER_LOGO;
 
   return (
-    <section aria-label="Partners" className="overflow-hidden bg-background py-4 text-foreground">
-      {/* Two identical copies; the -50% loop lands on the seam invisibly. */}
-      {/* bg on the track too: the transform creates a stacking context, so the
-          screen blend needs its black inside that context to melt logo boxes. */}
-      <div className="flex w-max animate-marquee-l items-center bg-background">
-        {[...items, ...items].map(({ name, logo }, i) => (
+    <section aria-label="Partners" className="overflow-hidden bg-background py-6 text-foreground">
+      {/* Two identical segments; translating -50% lands exactly on the seam,
+          so the loop never shows a join or an empty stretch. translate3d +
+          will-change keep it on the GPU for a smooth, constant-speed glide. */}
+      <div
+        className="flex w-max items-center"
+        style={{
+          animation: `marquee-l ${duration}s linear infinite`,
+          willChange: "transform",
+        }}
+      >
+        {[...segment, ...segment].map(({ name, logo }, i) => (
           <span
             key={i}
             aria-hidden={i >= items.length}
-            className="flex items-center whitespace-nowrap pr-14"
+            className="flex shrink-0 items-center whitespace-nowrap pr-16"
           >
             {logo ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={logo.src}
                 alt={name}
-                className={`${logo.size} w-auto mix-blend-multiply dark:mix-blend-screen ${
-                  logo.white
-                    ? "[filter:invert(1)] dark:[filter:none]"
-                    : "dark:[filter:invert(1)]"
+                draggable={false}
+                className={`${logo.size} w-auto ${
+                  logo.white ? "[filter:invert(1)] dark:[filter:none]" : "dark:[filter:invert(1)]"
                 }`}
               />
             ) : (
-              <span className="text-sm font-medium text-foreground/85">{name}</span>
+              <span className="text-base font-medium text-foreground/85">{name}</span>
             )}
           </span>
         ))}
