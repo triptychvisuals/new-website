@@ -5,7 +5,7 @@ import { cta, aboutGradient } from "@/lib/about";
 /** Full-bleed black closing section with the big invitation + CONTACT. */
 export default function AboutCTA() {
   return (
-    <section className="relative mt-32 overflow-hidden bg-[#050505] text-white sm:mt-44">
+    <section id="contact" className="relative mt-32 scroll-mt-20 overflow-hidden bg-[#050505] text-white sm:mt-44">
       {/* Collage of stills, bottom-right — EDIT: swap gradients for real frames */}
       <div className="pointer-events-none absolute bottom-0 right-0 hidden items-end gap-2 opacity-90 md:flex">
         <div

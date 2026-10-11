@@ -43,7 +43,7 @@ function StackItem({
 /** "Production Experience & Press" — a stats bento. */
 export default function AboutResult() {
   return (
-    <section className="px-5 pt-20 sm:px-8 sm:pt-28">
+    <section id="press" className="scroll-mt-20 px-5 pt-20 sm:px-8 sm:pt-28">
       {/* Centered header */}
       <Reveal className="text-center">
         <RuleLabel className="justify-center">Press</RuleLabel>

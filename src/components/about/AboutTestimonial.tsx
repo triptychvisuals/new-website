@@ -39,7 +39,7 @@ export default function AboutTestimonial() {
   const t = testimonials[i];
 
   return (
-    <section className="px-5 pt-32 sm:px-8 sm:pt-44">
+    <section id="testimonials" className="scroll-mt-20 px-5 pt-32 sm:px-8 sm:pt-44">
       <div className="mx-auto max-w-2xl">
         {/* Founder's note above the client testimonials */}
         <div className="mb-10 text-center sm:mb-14">

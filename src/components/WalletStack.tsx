@@ -11,7 +11,7 @@ import ProjectCard from "./ProjectCard";
 const COUNT = 5;
 
 // EDIT: where the first card parks below the header (px)…
-const TOP = 56;
+const TOP = 72;
 // EDIT: …and the strip of each card left peeking when the next stacks onto it.
 const PEEK = 26;
 
