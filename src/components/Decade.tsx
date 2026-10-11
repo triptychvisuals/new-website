@@ -10,25 +10,28 @@ const HEADLINE_TOP = "10 years";
 const HEADLINE_BOTTOM = "in business";
 // EDIT: how dark the rest of the page gets while the timeline is on screen.
 const DIM = 0.88;
+// EDIT: where on screen the "now" line sits (the spine fills to here and
+// each year's node lights as it crosses it). "60%" = 60% down the viewport.
+const NOW_LINE = "60%";
 
 /**
  * "10 years in business" — as it approaches, a fixed black layer fades over
- * the page (the header stays above it, usable), then the headline rises in
- * and a pinned timeline takes over: vertical scroll drives a horizontal
- * track of year cards, 2016 → 2026. The active card sits dead center; each
- * card sharpens and lifts into focus as it arrives, a giant year counter
- * ticks behind them, and a progress rail fills along the bottom.
+ * the page (the header stays above it, usable), the headline rises in, then
+ * a vertical timeline runs straight down the page — no pinning, no sideways
+ * motion. A glowing spine draws itself as you scroll with a comet riding its
+ * tip; each year's node ignites as the tip reaches it, its card slides in
+ * from its side out of a blur, and the big year on the opposite side lights
+ * up. Desktop alternates cards left/right of a centered spine; phones run
+ * one column with the spine on the left.
  *
  * Layering: dim layer z-38 < this section z-39 < header z-40.
  */
 export default function Decade() {
   const root = useRef<HTMLElement>(null);
   const dim = useRef<HTMLDivElement>(null);
-  const pin = useRef<HTMLDivElement>(null);
-  const track = useRef<HTMLDivElement>(null);
-  const year = useRef<HTMLSpanElement>(null);
+  const line = useRef<HTMLDivElement>(null);
   const fill = useRef<HTMLDivElement>(null);
-  const lastIndex = useRef(-1);
+  const comet = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -42,6 +45,12 @@ export default function Decade() {
           scrollTrigger: { trigger: root.current, start: "top bottom", end: "top 35%", scrub: true },
         }
       );
+      gsap.to(dim.current, {
+        opacity: 0,
+        ease: "none",
+        immediateRender: false,
+        scrollTrigger: { trigger: root.current, start: "bottom 80%", end: "bottom 20%", scrub: true },
+      });
 
       // Headline: words rise in.
       gsap.from("[data-dc-word]", {
@@ -60,62 +69,41 @@ export default function Decade() {
         scrollTrigger: { trigger: "[data-dc-head]", start: "top 75%" },
       });
 
-      // Pinned horizontal timeline.
-      const t = track.current!;
-      const distance = () => t.scrollWidth - window.innerWidth;
-      const steps = decade.length - 1;
+      // The spine draws itself down to the "now" line, comet riding the tip.
+      const spine = {
+        trigger: line.current,
+        start: `top ${NOW_LINE}`,
+        end: `bottom ${NOW_LINE}`,
+        scrub: 0.6,
+      };
+      gsap.fromTo(fill.current, { scaleY: 0 }, { scaleY: 1, ease: "none", scrollTrigger: spine });
+      gsap.fromTo(comet.current, { top: "0%" }, { top: "100%", ease: "none", scrollTrigger: spine });
 
-      const slide = gsap.to(t, {
-        x: () => -distance(),
-        ease: "none",
-        scrollTrigger: {
-          trigger: pin.current,
-          pin: true,
-          scrub: 0.8,
-          start: "top top",
-          end: () => `+=${distance()}`,
-          invalidateOnRefresh: true,
-          onUpdate: (self) => {
-            const i = Math.round(self.progress * steps);
-            if (fill.current) fill.current.style.transform = `scaleX(${self.progress})`;
-            if (i === lastIndex.current) return;
-            lastIndex.current = i;
-            if (year.current) year.current.textContent = decade[i].year;
-            root.current
-              ?.querySelectorAll<HTMLElement>("[data-dc-tick]")
-              .forEach((el, k) => el.toggleAttribute("data-on", k <= i));
+      gsap.utils.toArray<HTMLElement>("[data-dc-row]").forEach((row) => {
+        // Node + big year ignite as the tip crosses this row's node.
+        const node = row.querySelector<HTMLElement>("[data-dc-node]");
+        gsap.timeline({
+          scrollTrigger: {
+            trigger: node,
+            start: `center ${NOW_LINE}`,
+            onEnter: () => row.toggleAttribute("data-on", true),
+            onLeaveBack: () => row.toggleAttribute("data-on", false),
           },
-        },
-      });
+        });
 
-      // Dim back out as the section leaves. Created AFTER the pin so its
-      // positions include the pinned scroll distance (ScrollTrigger measures
-      // in creation order; made earlier, it fires ~a track-length too soon).
-      gsap.to(dim.current, {
-        opacity: 0,
-        ease: "none",
-        immediateRender: false,
-        scrollTrigger: { trigger: root.current, start: "bottom 80%", end: "bottom 20%", scrub: true },
-      });
-
-      // Each card sharpens into focus as it reaches the center…
-      gsap.utils.toArray<HTMLElement>("[data-dc-card]").forEach((card) => {
+        // Card slides in from its side, out of a blur.
+        const card = row.querySelector<HTMLElement>("[data-dc-card]");
+        const fromLeft = row.dataset.side === "left";
         gsap.fromTo(
           card,
-          { opacity: 0.18, scale: 0.9, y: 40, filter: "blur(6px)" },
+          { opacity: 0, x: fromLeft ? -60 : 60, y: 30, filter: "blur(8px)" },
           {
             opacity: 1,
-            scale: 1,
+            x: 0,
             y: 0,
             filter: "blur(0px)",
-            ease: "none",
-            scrollTrigger: {
-              trigger: card,
-              containerAnimation: slide,
-              start: "left 85%",
-              end: "center 50%",
-              scrub: true,
-            },
+            ease: "power2.out",
+            scrollTrigger: { trigger: row, start: "top 88%", end: "top 55%", scrub: 0.6 },
           }
         );
       });
@@ -135,10 +123,10 @@ export default function Decade() {
       <section
         ref={root}
         aria-label="Ten years in business, 2016 to 2026"
-        className="relative z-[39] bg-[#0a0a0a] text-white"
+        className="relative z-[39] bg-[#0a0a0a] pb-32 text-white sm:pb-44"
       >
         {/* Header */}
-        <div data-dc-head className="mx-auto max-w-[1760px] px-5 pb-10 pt-28 text-center sm:px-8 sm:pt-40">
+        <div data-dc-head className="mx-auto max-w-[1760px] px-5 pb-16 pt-28 text-center sm:px-8 sm:pb-24 sm:pt-40">
           <p
             data-dc-eyebrow
             className="text-[11px] font-bold uppercase tracking-[0.18em] text-white/55 sm:text-[12px]"
@@ -159,79 +147,86 @@ export default function Decade() {
           </h2>
         </div>
 
-        {/* Pinned timeline */}
-        <div ref={pin} className="relative h-screen overflow-hidden">
-          {/* Giant year counter, behind the cards */}
-          <span
-            ref={year}
-            aria-hidden
-            className="pointer-events-none absolute left-1/2 top-[44%] -translate-x-1/2 -translate-y-1/2 select-none text-[clamp(8rem,34vw,30rem)] font-medium leading-none tracking-[-0.06em] text-white/[0.05] tabular-nums"
-          >
-            {decade[0].year}
-          </span>
-
-          {/* Track — padded so the first and last cards can sit dead center */}
+        {/* Timeline */}
+        <div className="relative mx-auto max-w-[1100px] px-5 sm:px-8">
+          {/* Spine: faint track, accent fill that draws down, comet at the tip.
+              Left gutter on phones, centered from md. */}
           <div
-            ref={track}
-            className="absolute inset-y-0 left-0 flex w-max items-center gap-6 sm:gap-10"
-            style={{ paddingInline: "calc(50vw - min(39vw, 210px))" }}
+            ref={line}
+            aria-hidden
+            className="absolute bottom-0 left-[31.5px] top-0 w-px bg-white/12 sm:left-[43.5px] md:left-1/2"
           >
+            <div
+              ref={fill}
+              className="absolute inset-0 origin-top bg-gradient-to-b from-[color:var(--accent)] via-[color:var(--accent)] to-white"
+              style={{ transform: "scaleY(0)" }}
+            />
+            <div
+              ref={comet}
+              className="absolute left-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white shadow-[0_0_0_4px_rgba(229,54,31,0.35),0_0_24px_6px_rgba(229,54,31,0.55)]"
+            />
+          </div>
+
+          <ol className="relative">
             {decade.map((d, i) => {
+              const side = i % 2 === 0 ? "left" : "right";
               // Same golden-angle hues as the 500+ grid.
               const hue = Math.round((i * 137.508) % 360);
               return (
-                <article
+                <li
                   key={d.year}
-                  data-dc-card
-                  className="w-[min(78vw,420px)] shrink-0 overflow-hidden rounded-[22px] border border-white/10 bg-white/[0.035] shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
+                  data-dc-row
+                  data-side={side}
+                  className="group/row relative grid grid-cols-[24px_1fr] items-center gap-x-5 py-8 sm:gap-x-8 md:grid-cols-[1fr_24px_1fr] md:gap-x-14 md:py-14"
                 >
-                  <div
-                    className="relative aspect-[16/10] w-full"
-                    style={{
-                      background: `radial-gradient(circle at 30% 25%, hsl(${hue} 92% 66%), hsl(${(hue + 38) % 360} 85% 48%) 55%, hsl(${(hue + 70) % 360} 80% 26%))`,
-                    }}
+                  {/* Node on the spine */}
+                  <span
+                    data-dc-node
+                    aria-hidden
+                    className="relative z-10 col-start-1 row-start-1 mx-auto h-[14px] w-[14px] rounded-full border border-white/30 bg-[#0a0a0a] transition-all duration-500 group-data-[on]/row:scale-125 group-data-[on]/row:border-[color:var(--accent)] group-data-[on]/row:bg-[color:var(--accent)] group-data-[on]/row:shadow-[0_0_0_6px_rgba(229,54,31,0.18),0_0_22px_rgba(229,54,31,0.6)] md:col-start-2"
+                  />
+
+                  {/* Big year — the side opposite the card (desktop only) */}
+                  <span
+                    aria-hidden
+                    className={`hidden row-start-1 select-none text-[clamp(4rem,9vw,8.5rem)] font-medium leading-none tracking-[-0.05em] text-white/[0.07] tabular-nums transition-colors duration-700 group-data-[on]/row:text-white md:block ${
+                      side === "left" ? "md:col-start-3 md:text-left" : "md:col-start-1 md:text-right"
+                    }`}
                   >
-                    <span className="absolute bottom-3 left-4 text-[clamp(2.5rem,6vw,3.75rem)] font-medium leading-none tracking-[-0.04em] text-white mix-blend-overlay">
-                      {d.year}
-                    </span>
-                  </div>
-                  <div className="p-6 sm:p-7">
-                    <p className="text-[12px] font-bold uppercase tracking-[0.16em] text-[color:var(--accent)]">
-                      {d.year}
-                    </p>
-                    <h3 className="mt-3 text-[clamp(1.25rem,2vw,1.6rem)] font-medium leading-tight tracking-tight">
-                      {d.title}
-                    </h3>
-                    <p className="mt-3 text-[15px] leading-relaxed text-white/60">{d.body}</p>
-                  </div>
-                </article>
+                    {d.year}
+                  </span>
+
+                  {/* Card */}
+                  <article
+                    data-dc-card
+                    className={`col-start-2 row-start-1 overflow-hidden rounded-[22px] border border-white/10 bg-white/[0.035] shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] ${
+                      side === "left" ? "md:col-start-1" : "md:col-start-3"
+                    }`}
+                  >
+                    <div
+                      className="relative aspect-[16/8] w-full"
+                      style={{
+                        background: `radial-gradient(circle at 30% 25%, hsl(${hue} 92% 66%), hsl(${(hue + 38) % 360} 85% 48%) 55%, hsl(${(hue + 70) % 360} 80% 26%))`,
+                      }}
+                    >
+                      <span className="absolute bottom-3 left-4 text-[clamp(2.25rem,5vw,3.25rem)] font-medium leading-none tracking-[-0.04em] text-white mix-blend-overlay">
+                        {d.year}
+                      </span>
+                    </div>
+                    <div className="p-6 sm:p-7">
+                      <p className="text-[12px] font-bold uppercase tracking-[0.16em] text-[color:var(--accent)]">
+                        {d.year}
+                      </p>
+                      <h3 className="mt-3 text-[clamp(1.2rem,2vw,1.55rem)] font-medium leading-tight tracking-tight">
+                        {d.title}
+                      </h3>
+                      <p className="mt-3 text-[15px] leading-relaxed text-white/60">{d.body}</p>
+                    </div>
+                  </article>
+                </li>
               );
             })}
-          </div>
-
-          {/* Progress rail + year ticks */}
-          <div className="absolute inset-x-5 bottom-8 mx-auto max-w-[1100px] sm:inset-x-8 sm:bottom-10">
-            <div className="relative h-px w-full bg-white/15">
-              <div
-                ref={fill}
-                className="absolute inset-0 origin-left bg-[color:var(--accent)]"
-                style={{ transform: "scaleX(0)" }}
-              />
-            </div>
-            <div className="mt-3 flex justify-between">
-              {decade.map((d, i) => (
-                <span
-                  key={d.year}
-                  data-dc-tick
-                  data-on={i === 0 ? "" : undefined}
-                  className="text-[10px] font-medium tabular-nums text-white/30 transition-colors duration-300 data-[on]:text-white sm:text-[12px]"
-                >
-                  {/* Phones: show every other year so labels never collide */}
-                  <span className={i % 2 ? "hidden sm:inline" : ""}>{d.year}</span>
-                </span>
-              ))}
-            </div>
-          </div>
+          </ol>
         </div>
       </section>
     </>
