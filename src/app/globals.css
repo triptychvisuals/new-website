@@ -90,6 +90,71 @@
   }
 }
 
+/* "10 years strong" spiral timeline (Decade.tsx). Default = a plain column
+   (no JS / reduced motion); [data-3d] = the pinned 3D helix. */
+.dc-stage {
+  position: relative;
+}
+.dc-helix {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 0 1.25rem;
+}
+.dc-dot,
+.dc-3d-only {
+  display: none;
+}
+.dc-stage[data-3d] {
+  height: 100svh;
+  overflow: hidden;
+}
+.dc-stage[data-3d] .dc-3d-only {
+  display: block;
+}
+.dc-stage[data-3d] .dc-helix {
+  /* zero-size anchor at the stage centre; cards/beads hang off it in 3D */
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  display: block;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+.dc-stage[data-3d] .dc-card,
+.dc-stage[data-3d] .dc-dot {
+  /* transforms pivot on the helix's axis, not each item's own centre */
+  transform-origin: 0 0;
+}
+.dc-stage[data-3d] .dc-card {
+  position: absolute;
+  left: 0;
+  top: 0;
+  /* EDIT: card width on the spiral (the spiral's size scales with it) */
+  width: min(400px, 70vw);
+  backface-visibility: hidden;
+  will-change: opacity;
+}
+.dc-stage[data-3d] .dc-dot {
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  background: rgb(255 255 255 / 0.3);
+}
+/* solid, no glow — a blurred shadow on every bead was costly per frame */
+.dc-stage[data-3d] .dc-dot[data-lit] {
+  background: var(--accent);
+}
+
 /* NEW badge (Projects dropdown) — a copy of the pill swells out and fades.
    EDIT: duration = pulse speed, scale = how far it swells. */
 @keyframes badge-pulse {
