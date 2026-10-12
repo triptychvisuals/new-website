@@ -33,25 +33,27 @@ function gridThumbs(): string[] {
 export default function WorkGrid() {
   const thumbs = gridThumbs();
 
-  // Tiles fill in order: the YouTube music videos (lib/youtube.ts) first,
-  // then stills from /public/grid/, then color swatches for the rest.
+  // Tiles fill in order: each YouTube music video (lib/youtube.ts) once,
+  // then any stills from /public/grid/, then the videos again on repeat so
+  // the grid stays full. Color swatches only show if there are no videos.
   const bubbles: Bubble[] = Array.from({ length: BUBBLES }, (_, i) => {
     // Golden-angle hue steps: neighbors never share a color, so the whole
     // grid reads as a spread of the spectrum.
     const hue = Math.round((i * 137.508) % 360);
-    const video = musicVideos[i];
-    if (video) {
-      const [thumb, thumbFallback] = youtubeThumbs(video.id);
-      return { href: youtubeUrl(video.id), title: video.title, thumb, thumbFallback, external: true, hue };
-    }
     const k = i - musicVideos.length;
-    const p = projects[k];
-    return {
-      href: p ? `/work/${p.slug}` : "/projects",
-      title: p?.title ?? "All projects",
-      thumb: thumbs[k],
-      hue,
-    };
+    if (k >= 0 && (k < thumbs.length || musicVideos.length === 0)) {
+      const p = projects[k];
+      return {
+        href: p ? `/work/${p.slug}` : "/projects",
+        title: p?.title ?? "All projects",
+        thumb: thumbs[k],
+        hue,
+      };
+    }
+    const n = i < musicVideos.length ? i : (k - thumbs.length) % musicVideos.length;
+    const video = musicVideos[n];
+    const [thumb, thumbFallback] = youtubeThumbs(video.id);
+    return { href: youtubeUrl(video.id), title: video.title, thumb, thumbFallback, external: true, hue };
   });
 
   return (

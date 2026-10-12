@@ -1,9 +1,10 @@
 // -------------------------------------------------------------------------
 // EDIT: official music videos from Lawrence Mahone's YouTube — each one's
 // thumbnail fills a tile on the 500+ work grid (in this order, first tile
-// first) and the tile opens the video. Add a video: copy the id after
-// "watch?v=" in its URL and add a line. Thumbnails load straight from
-// YouTube, so nothing needs downloading.
+// first) and the tile opens the video. With fewer videos than tiles the list
+// repeats to keep the grid full, so every video added here replaces a
+// repeat. Add a video: copy the id after "watch?v=" in its URL and add a
+// line. Thumbnails load straight from YouTube, so nothing needs downloading.
 // -------------------------------------------------------------------------
 
 export type YouTubeVideo = { id: string; title: string };
@@ -21,6 +22,9 @@ export const musicVideos: YouTubeVideo[] = [
   { id: "SC_VS1pLwKo", title: "Chulo ft. Rodie — 2DB (Official Music Video)" },
   { id: "d48ptwLKnng", title: "Jay Wood — Food for Thought (Official Music Video)" },
   { id: "zwa5UybNXpk", title: "Bali Baby — Coupe (Official Music Video)" },
+  { id: "bYbFS0aDm4I", title: "Sumo — Hip Hopper (Remix) (Official Music Video)" },
+  { id: "FmhTALb6JTc", title: "Solly Bandz — NIGHTMARES (Official Video)" },
+  { id: "4LQP9E6W-3w", title: "FEEL THE LOVE (Official Video)" },
 ];
 
 /**
