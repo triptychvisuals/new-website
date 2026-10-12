@@ -9,9 +9,8 @@ const HEADLINE_TOP = "10 years";
 const HEADLINE_BOTTOM = "strong";
 // EDIT: how dark the rest of the page gets while the timeline is on screen.
 const DIM = 0.88;
-// EDIT: how lit a card is when it's furthest round the spiral (0–1). The
-// card at the front is fully lit; the rest fade toward this as they turn
-// away, so the spiral reads in depth but nothing is ever too dim to read.
+// EDIT: how lit a card is when it's furthest from "now" (0–1). The current
+// card is fully lit; the rest fade toward this, never too dim to read.
 const CARD_MIN_LIGHT = 0.4;
 // EDIT: the header (and its menus) flips to dark mode between these two
 // points — section top crossing HEADER_DARK_START on the way in, section
@@ -19,46 +18,52 @@ const CARD_MIN_LIGHT = 0.4;
 const HEADER_DARK_START = "top 65%";
 const HEADER_DARK_END = "bottom 50%";
 
-// EDIT: spiral shape.
+// EDIT: spiral shape (iPad / desktop).
 const STEP_DEG = 45; // turn between one year's card and the next
 const SCROLL_PER_YEAR = 420; // px of scrolling to bring the next year round
 const TILT_DEG = 7; // camera looks slightly down onto the spiral
-// Each bead is its own 3D layer, so keep the count modest.
-const DOTS_PER_YEAR = 4; // beads on the spiral thread between two cards
-/**
- * Radius / rise / perspective scale with the card width (phones → tighter).
- * The radius keeps neighbouring cards from slicing through each other: the
- * gap between two cards (2·r·sin(STEP/2)) must stay wider than a card.
- */
-const shape = (cardW: number) => ({
-  radius: cardW * 1.45,
-  rise: cardW * 0.4,
-  perspective: Math.max(900, cardW * 3.6),
-});
+const GAP = 0.32; // empty space between one card and the next, × card height
+const NODE_ABOVE = 22; // px the line + year dots run above each card's top
+// Each line segment is its own 3D layer, so keep the count modest.
+const SEGS_PER_YEAR = 6;
+
+// EDIT: phone timeline — where on screen the "now" line sits (the spine
+// fills to here and each year's node lights as it crosses it).
+const NOW_LINE = "60%";
 
 /**
  * "10 years strong" — as it approaches, a fixed black layer fades over the
- * page (the header stays above it, usable and switched to dark), the
- * headline rises in, then the timeline pins and becomes a 3D spiral: one
- * card per year wound round a helix, threaded on a dotted spiral. Scrolling
- * turns and lifts the helix so each year swings round to the front in turn,
- * the thread lighting up behind you. Cards light by how close to the front
- * they are. All CSS 3D — the browser moves one GPU layer per frame.
+ * page (the header stays above it, switched to dark), the headline rises in,
+ * then the timeline:
  *
- * Reduced motion: no pin, no 3D — the cards sit in a plain column.
+ *  • iPad / desktop — a 3D spiral. One card per year, spaced well apart,
+ *    wound round a helix with a line running round it through a dot above
+ *    every card. The stage pins and scrolling turns + lifts the helix so
+ *    each year swings round to the front in turn; the line lights up behind
+ *    you and each year's dot ignites as you reach it. CSS 3D throughout —
+ *    the browser moves one GPU layer per frame.
+ *  • Phones — a straight vertical timeline: a spine on the left draws
+ *    itself down with a comet at its tip, nodes ignite as it reaches them,
+ *    cards slide in and brighten as they rise toward "now".
+ *  • Reduced motion — the phone layout, static, at every size.
  *
  * Layering: dim layer z-38 < this section z-39 < header z-40.
  */
 export default function Decade() {
   const root = useRef<HTMLElement>(null);
   const dim = useRef<HTMLDivElement>(null);
+  // spiral
   const stage = useRef<HTMLDivElement>(null);
   const helix = useRef<HTMLDivElement>(null);
   const bigYear = useRef<HTMLSpanElement>(null);
   const counter = useRef<HTMLSpanElement>(null);
+  // phone list
+  const line = useRef<HTMLDivElement>(null);
+  const fill = useRef<HTMLDivElement>(null);
+  const comet = useRef<HTMLDivElement>(null);
 
   const last = decade.length - 1;
-  const dots = Array.from({ length: last * DOTS_PER_YEAR + 1 }, (_, k) => k / DOTS_PER_YEAR);
+  const segs = Array.from({ length: last * SEGS_PER_YEAR }, (_, k) => k);
 
   useEffect(() => {
     const header = document.querySelector<HTMLElement>("[data-site-header]");
@@ -70,40 +75,73 @@ export default function Decade() {
     const ctx = gsap.context(() => {
       const mm = gsap.matchMedia();
 
-      mm.add("(prefers-reduced-motion: no-preference)", () => {
+      // ── iPad / desktop: the 3D spiral ────────────────────────────────
+      mm.add("(min-width: 768px) and (prefers-reduced-motion: no-preference)", () => {
         const st = stage.current!;
         const hx = helix.current!;
         const cards = gsap.utils.toArray<HTMLElement>("[data-dc-card]", st);
-        const beads = gsap.utils.toArray<HTMLElement>("[data-dc-dot]", st);
+        const segEls = gsap.utils.toArray<HTMLElement>("[data-dc-seg]", st);
+        const nodes = gsap.utils.toArray<HTMLElement>("[data-dc-node]", st);
+        const shades = cards.map((c) => c.querySelector<HTMLElement>("[data-dc-shade]")!);
         st.setAttribute("data-3d", "");
 
-        let geo = shape(cards[0]?.offsetWidth || 400);
-        // Wind every card and bead round the helix: rise, turn, push out to
-        // the radius, then centre on its anchor (read right-to-left).
-        const place = (el: HTMLElement, t: number) => {
-          el.style.transform = `translateY(${t * geo.rise}px) rotateY(${t * STEP_DEG}deg) translateZ(${geo.radius}px) translate(-50%, -50%)`;
-        };
+        const geo = { radius: 0, rise: 0, lift: 0 };
+        // Read right-to-left: centre on the anchor, push out to the radius,
+        // turn round the axis, drop to its height.
+        const at = (t: number) =>
+          `translateY(${t * geo.rise - geo.lift}px) rotateY(${t * STEP_DEG}deg) translateZ(${geo.radius}px) translate(-50%, -50%)`;
+
         const layout = () => {
-          geo = shape(cards[0]?.offsetWidth || 400);
-          st.style.perspective = `${geo.perspective}px`;
-          cards.forEach((c, i) => place(c, i));
-          beads.forEach((b) => place(b, +b.dataset.t!));
+          const w = cards[0]?.offsetWidth || 400;
+          const h = Math.max(...cards.map((c) => c.offsetHeight)) || 360;
+          geo.radius = w * 1.2;
+          geo.rise = h * (1 + GAP); // a card height plus the gap — never touching
+          geo.lift = 0;
+          st.style.perspective = `${Math.max(1200, w * 3.6)}px`;
+          cards.forEach((c, i) => (c.style.transform = at(i)));
+
+          // The line + dots ride NODE_ABOVE px over the cards' top edges.
+          geo.lift = h / 2 + NODE_ABOVE;
+          nodes.forEach((n, i) => (n.style.transform = at(i)));
+          // Each segment is the straight chord between two points on the
+          // helix: centred between them (just inside the radius), turned to
+          // face out, tilted down the slope, and as long as the chord.
+          const dA = (STEP_DEG / SEGS_PER_YEAR) * (Math.PI / 180);
+          const across = 2 * geo.radius * Math.sin(dA / 2);
+          const down = geo.rise / SEGS_PER_YEAR;
+          const len = Math.hypot(across, down);
+          const slope = (Math.atan2(down, across) * 180) / Math.PI;
+          const inset = geo.radius * (1 - Math.cos(dA / 2));
+          segEls.forEach((s, k) => {
+            const t = (k + 0.5) / SEGS_PER_YEAR;
+            s.style.width = `${len + 1}px`;
+            s.style.transform = `translateY(${t * geo.rise - geo.lift}px) rotateY(${t * STEP_DEG}deg) translateZ(${geo.radius - inset}px) rotateZ(${slope}deg) translate(-50%, -50%)`;
+          });
         };
         layout();
 
         let shownYear = -1;
-        let litBeads = -1;
+        let litSegs = -1;
+        let litNodes = -1;
         const render = (p: number) => {
           // Turn + lift the helix so year p faces the camera, front and centre.
           hx.style.transform = `rotateX(${-TILT_DEG}deg) translateZ(${-geo.radius}px) translateY(${-p * geo.rise}px) rotateY(${-p * STEP_DEG}deg)`;
-          cards.forEach((c, i) => {
-            c.style.opacity = String(Math.max(CARD_MIN_LIGHT, 1 - Math.abs(i - p) * 0.3));
+          // Cards dim with a dark layer inside them (not opacity), so they
+          // stay solid and the line behind never shows through.
+          shades.forEach((s, i) => {
+            s.style.opacity = String(1 - Math.max(CARD_MIN_LIGHT, 1 - Math.abs(i - p) * 0.35));
           });
-          // Light the thread up to where we are (only touch beads that change).
-          const lit = Math.floor(p * DOTS_PER_YEAR + 1e-6);
-          if (lit !== litBeads) {
-            beads.forEach((b, k) => b.toggleAttribute("data-lit", k <= lit));
-            litBeads = lit;
+          // Light the line up to where we are, and every dot we've reached
+          // (only touching the ones that change).
+          const segsOn = Math.floor(p * SEGS_PER_YEAR + 1e-4);
+          if (segsOn !== litSegs) {
+            segEls.forEach((s, k) => s.toggleAttribute("data-lit", k < segsOn));
+            litSegs = segsOn;
+          }
+          const nodesOn = Math.floor(p + 0.02);
+          if (nodesOn !== litNodes) {
+            nodes.forEach((n, i) => n.toggleAttribute("data-lit", i <= nodesOn));
+            litNodes = nodesOn;
           }
           const year = Math.round(p);
           if (year !== shownYear) {
@@ -125,7 +163,9 @@ export default function Decade() {
             start: "top top",
             end: () => `+=${last * SCROLL_PER_YEAR}`,
             pin: true,
-            scrub: 0.6,
+            // EDIT: catch-up time (s). Tiny — just enough to round off a
+            // mouse wheel's notches — so the spiral never lags the scroll.
+            scrub: 0.15,
             // Refresh before the dim / header triggers below so their
             // positions include the pin's extra scroll length.
             refreshPriority: 1,
@@ -138,12 +178,49 @@ export default function Decade() {
           st.removeAttribute("data-3d");
           st.style.perspective = "";
           hx.style.transform = "";
-          [...cards, ...beads].forEach((el) => {
+          [...cards, ...segEls, ...nodes, ...shades].forEach((el) => {
             el.style.transform = "";
             el.style.opacity = "";
+            el.style.width = "";
             el.removeAttribute("data-lit");
           });
         };
+      });
+
+      // ── Phones: the straight timeline ────────────────────────────────
+      mm.add("(max-width: 767px) and (prefers-reduced-motion: no-preference)", () => {
+        // The spine draws itself down to the "now" line, comet riding the tip.
+        const spine = { trigger: line.current, start: `top ${NOW_LINE}`, end: `bottom ${NOW_LINE}`, scrub: true };
+        gsap.fromTo(fill.current, { scaleY: 0 }, { scaleY: 1, ease: "none", scrollTrigger: spine });
+        // Transform, not `top`, so the comet never triggers a layout pass.
+        gsap.fromTo(
+          comet.current,
+          { y: 0 },
+          { y: () => line.current?.offsetHeight ?? 0, ease: "none", scrollTrigger: { ...spine, invalidateOnRefresh: true } }
+        );
+
+        gsap.utils.toArray<HTMLElement>("[data-dc-row]").forEach((row) => {
+          // Node ignites as the tip crosses it.
+          ScrollTrigger.create({
+            trigger: row.querySelector("[data-dc-dot]"),
+            start: `center ${NOW_LINE}`,
+            onEnter: () => row.toggleAttribute("data-on", true),
+            onLeaveBack: () => row.toggleAttribute("data-on", false),
+          });
+          // Card slides in, and brightens from CARD_MIN_LIGHT as it rises
+          // to "now" (opacity + transform only — no repaints).
+          const card = row.querySelector<HTMLElement>("[data-dc-card]");
+          gsap.fromTo(
+            card,
+            { x: 40, y: 24 },
+            { x: 0, y: 0, ease: "power2.out", scrollTrigger: { trigger: row, start: "top 95%", end: "top 60%", scrub: true } }
+          );
+          gsap.fromTo(
+            card,
+            { opacity: CARD_MIN_LIGHT },
+            { opacity: 1, ease: "none", scrollTrigger: { trigger: card, start: "top bottom", end: `center ${NOW_LINE}`, scrub: true } }
+          );
+        });
       });
 
       // Header goes dark for the timeline, back to the page's theme after.
@@ -223,8 +300,8 @@ export default function Decade() {
           </h2>
         </div>
 
-        {/* The spiral stage — pinned while the helix turns (see .dc-stage in
-            globals.css for the 3D layout; without data-3d it's a column). */}
+        {/* ── iPad / desktop: the spiral stage — pinned while the helix
+            turns (.dc-stage in globals.css; hidden on phones) ── */}
         <div ref={stage} className="dc-stage">
           {/* Current year, huge and faint, behind the spiral */}
           <span
@@ -236,55 +313,106 @@ export default function Decade() {
           </span>
 
           <div ref={helix} className="dc-helix">
-            {/* The spiral thread */}
-            {dots.map((t) => (
-              <span key={t} data-dc-dot data-t={t} aria-hidden className="dc-dot" />
+            {/* The line round the spiral, and a dot above every year */}
+            {segs.map((k) => (
+              <span key={`s${k}`} data-dc-seg aria-hidden className="dc-seg" />
+            ))}
+            {decade.map((d) => (
+              <span key={`n${d.year}`} data-dc-node aria-hidden className="dc-node" />
             ))}
 
-            {decade.map((d, i) => {
-              // Same golden-angle hues as the 500+ grid. (No drop shadow on
-              // the cards: on 11 moving 3D layers it doubled each frame's cost.)
-              const hue = Math.round((i * 137.508) % 360);
-              return (
-                <article
-                  key={d.year}
-                  data-dc-card
-                  className="dc-card overflow-hidden rounded-[22px] border border-white/10 bg-[#141414] shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
-                >
-                  <div
-                    className="relative aspect-[16/8] w-full"
-                    style={{
-                      background: `radial-gradient(circle at 30% 25%, hsl(${hue} 92% 66%), hsl(${(hue + 38) % 360} 85% 48%) 55%, hsl(${(hue + 70) % 360} 80% 26%))`,
-                    }}
-                  >
-                    <span className="absolute bottom-3 left-4 text-[clamp(2.25rem,5vw,3.25rem)] font-medium leading-none tracking-[-0.04em] text-white/60">
-                      {d.year}
-                    </span>
-                  </div>
-                  <div className="p-6 sm:p-7">
-                    <p className="text-[12px] font-bold uppercase tracking-[0.16em] text-[color:var(--accent)]">
-                      {d.year}
-                    </p>
-                    <h3 className="mt-3 text-[clamp(1.2rem,2vw,1.55rem)] font-medium leading-tight tracking-tight">
-                      {d.title}
-                    </h3>
-                    <p className="mt-3 text-[15px] leading-relaxed text-white/60">{d.body}</p>
-                  </div>
-                </article>
-              );
-            })}
+            {decade.map((d, i) => (
+              <Card key={d.year} d={d} i={i} className="dc-card" shade />
+            ))}
           </div>
 
           {/* Progress — which year of how many */}
           <span
             ref={counter}
             aria-hidden
-            className="dc-3d-only absolute bottom-8 left-5 text-[13px] sm:left-8 font-medium tabular-nums tracking-[0.2em] text-white/50"
+            className="dc-3d-only absolute bottom-8 left-5 text-[13px] font-medium tabular-nums tracking-[0.2em] text-white/50 sm:left-8"
           >
             01 / {String(decade.length).padStart(2, "0")}
           </span>
         </div>
+
+        {/* ── Phones (and reduced motion): the straight timeline ── */}
+        <div className="dc-list relative mx-auto max-w-[640px] px-5 sm:px-8">
+          {/* Spine: faint track, accent fill that draws down, comet at the tip */}
+          <div ref={line} aria-hidden className="absolute bottom-0 left-[31.5px] top-0 w-px bg-white/12 sm:left-[43.5px]">
+            <div
+              ref={fill}
+              className="dc-fill absolute inset-0 origin-top bg-gradient-to-b from-[color:var(--accent)] via-[color:var(--accent)] to-white"
+              style={{ transform: "scaleY(0)" }}
+            />
+            <div
+              ref={comet}
+              className="absolute left-1/2 top-0 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white shadow-[0_0_0_4px_rgba(229,54,31,0.35),0_0_24px_6px_rgba(229,54,31,0.55)] will-change-transform"
+            />
+          </div>
+
+          <ol className="relative">
+            {decade.map((d, i) => (
+              <li
+                key={d.year}
+                data-dc-row
+                className="group/row relative grid grid-cols-[24px_1fr] items-center gap-x-5 py-8 sm:gap-x-8"
+              >
+                {/* Node on the spine */}
+                <span
+                  data-dc-dot
+                  aria-hidden
+                  className="relative z-10 col-start-1 row-start-1 mx-auto h-[14px] w-[14px] rounded-full border border-white/30 bg-[#0a0a0a] transition-all duration-500 group-data-[on]/row:scale-125 group-data-[on]/row:border-[color:var(--accent)] group-data-[on]/row:bg-[color:var(--accent)] group-data-[on]/row:shadow-[0_0_0_6px_rgba(229,54,31,0.18),0_0_22px_rgba(229,54,31,0.6)]"
+                />
+                <Card d={d} i={i} className="col-start-2 row-start-1 will-change-[opacity,transform]" />
+              </li>
+            ))}
+          </ol>
+        </div>
       </section>
     </>
+  );
+}
+
+/** One year's card — same in the spiral and the phone list. */
+function Card({
+  d,
+  i,
+  className = "",
+  shade = false,
+}: {
+  d: (typeof decade)[number];
+  i: number;
+  className?: string;
+  /** Spiral cards dim via this dark layer (set from JS) instead of opacity. */
+  shade?: boolean;
+}) {
+  // Same golden-angle hues as the 500+ grid. (No drop shadow: on 11 moving
+  // 3D layers it doubled each frame's cost.)
+  const hue = Math.round((i * 137.508) % 360);
+  return (
+    <article
+      data-dc-card
+      className={`relative overflow-hidden rounded-[22px] border border-white/10 bg-[#141414] shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] ${className}`}
+    >
+      <div
+        className="relative aspect-[16/8] w-full"
+        style={{
+          background: `radial-gradient(circle at 30% 25%, hsl(${hue} 92% 66%), hsl(${(hue + 38) % 360} 85% 48%) 55%, hsl(${(hue + 70) % 360} 80% 26%))`,
+        }}
+      >
+        <span className="absolute bottom-3 left-4 text-[clamp(2.25rem,5vw,3.25rem)] font-medium leading-none tracking-[-0.04em] text-white/60">
+          {d.year}
+        </span>
+      </div>
+      <div className="p-6 sm:p-7">
+        <p className="text-[12px] font-bold uppercase tracking-[0.16em] text-[color:var(--accent)]">{d.year}</p>
+        <h3 className="mt-3 text-[clamp(1.2rem,2vw,1.55rem)] font-medium leading-tight tracking-tight">{d.title}</h3>
+        <p className="mt-3 text-[15px] leading-relaxed text-white/60">{d.body}</p>
+      </div>
+      {shade && (
+        <span data-dc-shade aria-hidden className="pointer-events-none absolute inset-0 bg-[#050505] opacity-0 will-change-[opacity]" />
+      )}
+    </article>
   );
 }

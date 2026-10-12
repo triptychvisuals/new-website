@@ -90,10 +90,25 @@
   }
 }
 
-/* "10 years strong" spiral timeline (Decade.tsx). Default = a plain column
-   (no JS / reduced motion); [data-3d] = the pinned 3D helix. */
+/* "10 years strong" timeline (Decade.tsx). Phones (and reduced motion at
+   any size) get the straight list; iPad / desktop get the spiral stage.
+   Without JS the stage is a plain column; [data-3d] = the pinned helix. */
 .dc-stage {
+  display: none;
   position: relative;
+}
+@media (min-width: 768px) and (prefers-reduced-motion: no-preference) {
+  .dc-stage {
+    display: block;
+  }
+  .dc-list {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dc-fill {
+    transform: none !important; /* static spine, fully drawn */
+  }
 }
 .dc-helix {
   display: flex;
@@ -103,7 +118,8 @@
   margin: 0 auto;
   padding: 0 1.25rem;
 }
-.dc-dot,
+.dc-seg,
+.dc-node,
 .dc-3d-only {
   display: none;
 }
@@ -115,7 +131,7 @@
   display: block;
 }
 .dc-stage[data-3d] .dc-helix {
-  /* zero-size anchor at the stage centre; cards/beads hang off it in 3D */
+  /* zero-size anchor at the stage centre; everything hangs off it in 3D */
   position: absolute;
   left: 50%;
   top: 50%;
@@ -127,32 +143,42 @@
   will-change: transform;
 }
 .dc-stage[data-3d] .dc-card,
-.dc-stage[data-3d] .dc-dot {
+.dc-stage[data-3d] .dc-seg,
+.dc-stage[data-3d] .dc-node {
+  position: absolute;
+  left: 0;
+  top: 0;
   /* transforms pivot on the helix's axis, not each item's own centre */
   transform-origin: 0 0;
 }
 .dc-stage[data-3d] .dc-card {
-  position: absolute;
-  left: 0;
-  top: 0;
   /* EDIT: card width on the spiral (the spiral's size scales with it) */
-  width: min(400px, 70vw);
+  width: min(400px, 52vw);
   backface-visibility: hidden;
-  will-change: opacity;
 }
-.dc-stage[data-3d] .dc-dot {
+/* The line round the spiral — straight segments (width set in JS) */
+.dc-stage[data-3d] .dc-seg {
   display: block;
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 8px;
-  height: 8px;
-  border-radius: 9999px;
+  height: 3px;
   background: rgb(255 255 255 / 0.3);
 }
-/* solid, no glow — a blurred shadow on every bead was costly per frame */
-.dc-stage[data-3d] .dc-dot[data-lit] {
+.dc-stage[data-3d] .dc-seg[data-lit] {
   background: var(--accent);
+}
+/* A dot on the line above every year; ignites once reached.
+   (Ring is a hard spread, no blur — blurred shadows cost every frame.) */
+.dc-stage[data-3d] .dc-node {
+  display: block;
+  width: 14px;
+  height: 14px;
+  border-radius: 9999px;
+  border: 1px solid rgb(255 255 255 / 0.35);
+  background: #0a0a0a;
+}
+.dc-stage[data-3d] .dc-node[data-lit] {
+  border-color: var(--accent);
+  background: var(--accent);
+  box-shadow: 0 0 0 5px rgb(229 54 31 / 0.22);
 }
 
 /* NEW badge (Projects dropdown) — a copy of the pill swells out and fades.

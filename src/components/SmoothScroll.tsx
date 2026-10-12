@@ -4,12 +4,18 @@ import { useEffect } from "react";
 import Lenis from "lenis";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
 
+// EDIT: false = the browser's own native scrolling (fastest possible: zero
+// added latency, and it runs off the main thread so it never hitches).
+// true = Lenis glides the wheel/trackpad (smoother on notchy mouse wheels,
+// but it trails the hand slightly and runs on the main thread).
+const SMOOTH_WHEEL = false;
+
 /**
- * Global smooth-scroll provider.
+ * Global scroll provider.
  *
- * Wires Lenis into GSAP's single RAF loop and keeps ScrollTrigger in sync with
- * Lenis' virtual scroll position. Every scroll-driven section in the site reads
- * from this same scroll, so pinning/scrubbing stays buttery.
+ * Wires Lenis into GSAP's single RAF loop and keeps ScrollTrigger in sync.
+ * With SMOOTH_WHEEL off, wheel/touch scrolling is fully native and Lenis
+ * only smooths in-page #hash links (mobile menu → About section).
  */
 export default function SmoothScroll({
   children,
@@ -18,11 +24,10 @@ export default function SmoothScroll({
 }) {
   useEffect(() => {
     const lenis = new Lenis({
-      // EDIT: how fast the page catches up to the wheel each frame (0–1).
-      // Higher = snappier, less glide; 0.1 is Lenis' floaty default. At 0.18
-      // a flick settles in ~0.3s — smooth, but it never trails the hand.
+      // EDIT: only used when SMOOTH_WHEEL is on — how fast the page catches
+      // up to the wheel each frame (0–1). Higher = snappier, less glide.
       lerp: 0.18,
-      smoothWheel: true,
+      smoothWheel: SMOOTH_WHEEL,
       // Smoothly scroll in-page #hash links (mobile menu → About section)
       // instead of letting the browser jump.
       anchors: true,
