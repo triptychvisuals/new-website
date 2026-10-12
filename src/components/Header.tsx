@@ -148,7 +148,7 @@ export default function Header({ logo }: { logo?: string }) {
       {/* Right: theme toggle + clock + social icons */}
       <div className="hidden items-center gap-5 lg:flex">
         <ThemeToggle />
-        <span className="hidden text-[13px] font-medium tabular-nums tracking-tight text-foreground/70 xl:inline" suppressHydrationWarning>
+        <span className="hidden text-[15px] font-medium tabular-nums tracking-tight text-foreground/70 xl:inline" suppressHydrationWarning>
           {time || "--:--:-- --"}
         </span>
         <SocialRow />
@@ -160,7 +160,7 @@ export default function Header({ logo }: { logo?: string }) {
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
             <span
-              className="text-[13px] font-medium tabular-nums tracking-tight text-foreground/70"
+              className="text-[15px] font-medium tabular-nums tracking-tight text-foreground/70"
               suppressHydrationWarning
             >
               {time || "--:--:-- --"}
