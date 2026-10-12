@@ -16,10 +16,10 @@ const PARTNERS = clients;
 // EDIT: per-logo height (Tailwind class) so dense or portrait marks read at
 // the same visual weight as wide wordmarks. Anything not listed uses DEFAULT.
 const LOGO_SIZES: Record<string, string> = {
-  capitol: "h-14", // detail-heavy oval lockup
+  capitol: "h-12", // oval lockup — PNG cropped tight to the artwork
   interscope: "h-14", // tall portrait crop
   universal: "h-14", // globe lockup with small sub-line
-  atlantic: "h-12",
+  atlantic: "h-12", // PNG cropped tight to the artwork
   warner: "h-11",
 };
 const DEFAULT_LOGO_SIZE = "h-9";
