@@ -5,9 +5,8 @@ import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { decade } from "@/lib/about";
 
 // EDIT: header copy.
-const EYEBROW = "2016 — 2026 · Chicago";
 const HEADLINE_TOP = "10 years";
-const HEADLINE_BOTTOM = "in business";
+const HEADLINE_BOTTOM = "strong";
 // EDIT: how dark the rest of the page gets while the timeline is on screen.
 const DIM = 0.88;
 // EDIT: where on screen the "now" line sits (the spine fills to here and
@@ -21,7 +20,7 @@ const HEADER_DARK_START = "top 65%";
 const HEADER_DARK_END = "bottom 50%";
 
 /**
- * "10 years in business" — as it approaches, a fixed black layer fades over
+ * "10 years strong" — as it approaches, a fixed black layer fades over
  * the page (the header stays above it, usable), the headline rises in, then
  * a vertical timeline runs straight down the page — no pinning, no sideways
  * motion. A glowing spine draws itself as you scroll with a comet riding its
@@ -84,13 +83,6 @@ export default function Decade() {
         stagger: 0.08,
         scrollTrigger: { trigger: "[data-dc-head]", start: "top 75%" },
       });
-      gsap.from("[data-dc-eyebrow]", {
-        opacity: 0,
-        y: 16,
-        duration: 0.8,
-        ease: "power2.out",
-        scrollTrigger: { trigger: "[data-dc-head]", start: "top 75%" },
-      });
 
       // The spine draws itself down to the "now" line, comet riding the tip.
       const spine = {
@@ -148,24 +140,19 @@ export default function Decade() {
 
       <section
         ref={root}
-        aria-label="Ten years in business, 2016 to 2026"
+        aria-label="Ten years strong, 2016 to 2026"
         className="relative z-[39] bg-[#0a0a0a] pb-32 text-white sm:pb-44"
       >
         {/* Header */}
         <div data-dc-head className="mx-auto max-w-[1760px] px-5 pb-16 pt-28 text-center sm:px-8 sm:pb-24 sm:pt-40">
-          <p
-            data-dc-eyebrow
-            className="text-[11px] font-bold uppercase tracking-[0.18em] text-white/55 sm:text-[12px]"
-          >
-            {EYEBROW}
-          </p>
-          <h2 className="mt-6 text-[clamp(3.5rem,13vw,13rem)] font-medium leading-[0.88] tracking-[-0.045em]">
+          {/* pb on each line leaves room for descenders (the g in "strong") */}
+          <h2 className="text-[clamp(3.5rem,13vw,13rem)] font-medium leading-[0.88] tracking-[-0.045em]">
             <span className="block overflow-hidden pb-[0.04em]">
               <span data-dc-word className="inline-block">
                 {HEADLINE_TOP}
               </span>
             </span>
-            <span className="block overflow-hidden pb-[0.06em] text-white/45">
+            <span className="block overflow-hidden pb-[0.16em] text-white/45">
               <span data-dc-word className="inline-block">
                 {HEADLINE_BOTTOM}
               </span>
