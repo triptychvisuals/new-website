@@ -12,6 +12,10 @@ const DIM = 0.88;
 // EDIT: where on screen the "now" line sits (the spine fills to here and
 // each year's node lights as it crosses it). "60%" = 60% down the viewport.
 const NOW_LINE = "60%";
+// EDIT: how lit a card is while it's still low on screen (0–1). It brightens
+// with scroll from here to fully lit as it reaches the "now" line, so cards
+// fade up as you move down the timeline but are never too dim to read.
+const CARD_MIN_LIGHT = 0.4;
 // EDIT: the header (and its menus) flips to dark mode between these two
 // points — section top crossing HEADER_DARK_START on the way in, section
 // bottom crossing HEADER_DARK_END on the way out. Matched to the dimmer's
@@ -25,8 +29,8 @@ const HEADER_DARK_END = "bottom 50%";
  * a vertical timeline runs straight down the page — no pinning, no sideways
  * motion. A glowing spine draws itself as you scroll with a comet riding its
  * tip; each year's node ignites as the tip reaches it, its card slides in
- * from its side out of a blur, and the big year on the opposite side lights
- * up. Desktop alternates cards left/right of a centered spine; phones run
+ * from its side and brightens with scroll (never fully dark), and the big
+ * year on the opposite side lights up. Desktop alternates cards left/right of a centered spine; phones run
  * one column with the spine on the left.
  *
  * While it's on screen the header flips to dark mode too.
@@ -106,19 +110,29 @@ export default function Decade() {
           },
         });
 
-        // Card slides in from its side, out of a blur.
+        // Card slides in from its side…
         const card = row.querySelector<HTMLElement>("[data-dc-card]");
         const fromLeft = row.dataset.side === "left";
         gsap.fromTo(
           card,
-          { opacity: 0, x: fromLeft ? -60 : 60, y: 30, filter: "blur(8px)" },
+          { x: fromLeft ? -60 : 60, y: 30 },
           {
-            opacity: 1,
             x: 0,
             y: 0,
-            filter: "blur(0px)",
             ease: "power2.out",
-            scrollTrigger: { trigger: row, start: "top 88%", end: "top 55%", scrub: 0.6 },
+            scrollTrigger: { trigger: row, start: "top 95%", end: "top 60%", scrub: 0.6 },
+          }
+        );
+        // …and its light tracks scroll: CARD_MIN_LIGHT as it enters at the
+        // bottom of the screen, fully lit once it reaches the "now" line.
+        gsap.fromTo(
+          card,
+          { opacity: CARD_MIN_LIGHT, filter: `brightness(${CARD_MIN_LIGHT + 0.25})` },
+          {
+            opacity: 1,
+            filter: "brightness(1)",
+            ease: "none",
+            scrollTrigger: { trigger: card, start: "top bottom", end: `center ${NOW_LINE}`, scrub: 0.4 },
           }
         );
       });
