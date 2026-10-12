@@ -28,7 +28,8 @@ const csp = [
   `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
   // Google Sans loads from Google Fonts (see layout.tsx)
   `style-src 'self' 'unsafe-inline' https://fonts.googleapis.com`,
-  `img-src 'self' data: blob: ${PORTAL_ASSETS_HOST}`,
+  // i.ytimg.com — YouTube thumbnails on the 500+ work grid (lib/youtube.ts)
+  `img-src 'self' data: blob: ${PORTAL_ASSETS_HOST} https://i.ytimg.com`,
   `media-src 'self' ${PORTAL_ASSETS_HOST}`,
   `font-src 'self' https://fonts.gstatic.com`,
   `connect-src 'self'${isDev ? " ws:" : ""}`,

@@ -9,9 +9,45 @@ export type Bubble = {
   title: string;
   /** Still for the bubble; absent → a color swatch. */
   thumb?: string;
+  /** Used if `thumb` fails (YouTube has no maxres still for some uploads). */
+  thumbFallback?: string;
+  /** Opens off-site (a YouTube video) in a new tab. */
+  external?: boolean;
   /** Base hue (0–360) for the swatch gradient / thumbnail tint. */
   hue: number;
 };
+
+/**
+ * Tile image. Swaps to the fallback on a load error, or when YouTube answers
+ * a missing maxres still with its 120×90 grey placeholder instead of a 404.
+ */
+function Thumb({ src, fallback }: { src: string; fallback?: string }) {
+  const ref = useRef<HTMLImageElement>(null);
+  const swap = (img: HTMLImageElement) => {
+    if (fallback && img.src !== fallback) img.src = fallback;
+  };
+  // An image that finished before hydration never fires React's handlers.
+  useEffect(() => {
+    const img = ref.current;
+    if (img?.complete && img.naturalWidth <= 120) swap(img);
+  });
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      ref={ref}
+      src={src}
+      alt=""
+      loading="lazy"
+      decoding="async"
+      referrerPolicy="no-referrer"
+      onError={(e) => swap(e.currentTarget)}
+      onLoad={(e) => {
+        if (e.currentTarget.naturalWidth <= 120) swap(e.currentTarget);
+      }}
+      className="absolute inset-0 h-full w-full object-cover"
+    />
+  );
+}
 
 /**
  * Renders the 6×6 grid. The counter tile is placed explicitly in the middle
@@ -106,6 +142,7 @@ export default function WorkGridClient({
           <Link
             key={i}
             href={b.href}
+            {...(b.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
             data-bubble
             aria-label={b.title}
             title={b.title}
@@ -120,16 +157,7 @@ export default function WorkGridClient({
                 animationDuration: `${6 + (i % 5)}s`,
               }}
             >
-              {b.thumb && (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={b.thumb}
-                  alt=""
-                  loading="lazy"
-                  decoding="async"
-                  className="absolute inset-0 h-full w-full object-cover"
-                />
-              )}
+              {b.thumb && <Thumb src={b.thumb} fallback={b.thumbFallback} />}
               {/* Play glyph on hover */}
               <span className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-all duration-300 group-hover:bg-black/25 group-hover:opacity-100">
                 <svg width="22%" viewBox="0 0 24 24" fill="#fff" aria-hidden>
