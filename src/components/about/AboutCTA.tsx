@@ -29,7 +29,7 @@ export default function AboutCTA() {
         <p className="mt-8 max-w-xl font-mono text-[12px] uppercase leading-relaxed tracking-wide text-white/60">
           {cta.body}
         </p>
-        <a href={`mailto:${site.email}`} className="inline-block">
+        <a href={site.contactUrl} className="inline-block">
           <BracketBox
             light
             className="mt-12 flex w-56 items-center justify-between px-4 py-3.5"

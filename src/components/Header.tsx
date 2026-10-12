@@ -8,7 +8,7 @@ import MegaNav from "@/components/MegaNav";
 
 /**
  * Sticky header:
- *   ◬ Triptych Studios® .... [Projects ⇕][About ⇕][Press ⇕][Store ↗] .... ☀ Listen TIME icons
+ *   ◬ Triptych Studios® .... [Projects ⇕][About ⇕][Press ⇕][Store ↗] .... ☀ TIME icons
  * Below lg it collapses to a hamburger that drops a compact panel from the top.
  */
 /** EDIT: the authored wordmark, used whenever the portal has no logo set. */
@@ -45,10 +45,10 @@ function useClock() {
   return time;
 }
 
-/* Social icons */
+/* Social icons — EDIT: sizes are the width/height on each svg */
 function IgIcon() {
   return (
-    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
       <rect x="2.6" y="2.6" width="18.8" height="18.8" rx="5" />
       <circle cx="12" cy="12" r="4.2" />
       <circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none" />
@@ -57,21 +57,21 @@ function IgIcon() {
 }
 function TkIcon() {
   return (
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
       <path d="M16.44 0c.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07L16.44 0z" />
     </svg>
   );
 }
 function YtIcon() {
   return (
-    <svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor">
+    <svg width="25" height="25" viewBox="0 0 24 24" fill="currentColor">
       <path d="M23 7.5a3 3 0 0 0-2.1-2.1C19 5 12 5 12 5s-7 0-8.9.4A3 3 0 0 0 1 7.5 31 31 0 0 0 .6 12 31 31 0 0 0 1 16.5a3 3 0 0 0 2.1 2.1C5 19 12 19 12 19s7 0 8.9-.4a3 3 0 0 0 2.1-2.1A31 31 0 0 0 23.4 12 31 31 0 0 0 23 7.5zM9.8 15.5v-7l6 3.5z" />
     </svg>
   );
 }
 function LiIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+    <svg width="21" height="21" viewBox="0 0 24 24" fill="currentColor">
       <path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9 9h3.8v1.65h.05c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.78 2.65 4.78 6.1V21h-4v-5.4c0-1.3 0-2.95-1.8-2.95s-2.08 1.4-2.08 2.86V21H9z" />
     </svg>
   );
@@ -84,37 +84,13 @@ const socials = [
 ];
 function SocialRow() {
   return (
-    <div className="flex items-center gap-3 text-foreground">
+    <div className="flex items-center gap-4 text-foreground">
       {socials.map((s) => (
         <a key={s.label} href={s.href} aria-label={s.label} className="transition-opacity hover:opacity-60">
           <s.Icon />
         </a>
       ))}
     </div>
-  );
-}
-
-// EDIT: your monetizable playlist — paste the Spotify / Apple Music / YouTube
-// Music playlist URL here. Streams there earn royalties; opens in a new tab.
-const PLAYLIST_URL = "https://open.spotify.com/"; // EDIT
-
-/** "Listen" link with an animated equalizer — points at the playlist. */
-function MusicLink({ className = "" }: { className?: string }) {
-  return (
-    <a
-      href={PLAYLIST_URL}
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label="Listen to our playlist"
-      className={`inline-flex items-center gap-2 text-[13px] font-medium tracking-tight text-foreground transition-opacity hover:opacity-60 ${className}`}
-    >
-      <span className="flex h-3.5 items-end gap-[2px]" aria-hidden>
-        <span className="w-[2px] animate-eq bg-current" />
-        <span className="w-[2px] animate-eq bg-current [animation-delay:0.2s]" />
-        <span className="w-[2px] animate-eq bg-current [animation-delay:0.45s]" />
-      </span>
-      Listen
-    </a>
   );
 }
 
@@ -156,7 +132,9 @@ export default function Header({ logo }: { logo?: string }) {
   const time = useClock();
 
   return (
-    <header className="sticky top-0 z-40 flex items-center justify-between border-b border-dashed border-hairline bg-background/85 px-5 py-3.5 backdrop-blur-md sm:px-6 lg:min-h-16 lg:py-2.5">
+    // data-site-header: Decade sets data-theme="dark" here while the
+    // timeline is on screen, re-theming everything inside (menus included).
+    <header data-site-header className="sticky top-0 z-40 flex items-center justify-between border-b border-dashed border-hairline bg-background/85 px-5 py-3.5 backdrop-blur-md sm:px-6 lg:min-h-16 lg:py-2.5">
       {/* Left: logo + wordmark */}
       <div className="hidden items-center gap-3 lg:flex">
         <Logo src={logo} />
@@ -167,10 +145,9 @@ export default function Header({ logo }: { logo?: string }) {
         <MegaNav nav={site.nav} />
       </div>
 
-      {/* Right: theme toggle + listen + clock + social icons */}
+      {/* Right: theme toggle + clock + social icons */}
       <div className="hidden items-center gap-5 lg:flex">
         <ThemeToggle />
-        <MusicLink />
         <span className="hidden text-[13px] font-medium tabular-nums tracking-tight text-foreground/70 xl:inline" suppressHydrationWarning>
           {time || "--:--:-- --"}
         </span>
@@ -234,7 +211,6 @@ export default function Header({ logo }: { logo?: string }) {
         </nav>
         <div className="flex items-center justify-between px-5 pb-4 pt-1">
           <SocialRow />
-          <MusicLink />
         </div>
       </div>
     </header>

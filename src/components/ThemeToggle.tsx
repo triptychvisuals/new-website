@@ -1,17 +1,29 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 /**
  * Light-switch toggle — a pill track with a sliding knob. Sets data-theme on
  * <html> (persisted); the page fades between themes via the global transition.
  */
 export default function ThemeToggle() {
+  const btn = useRef<HTMLButtonElement>(null);
   const [dark, setDark] = useState(false);
+  // The header is forced dark while the timeline section is on screen —
+  // the knob follows it there, without touching the saved preference.
+  const [forced, setForced] = useState(false);
 
   useEffect(() => {
     setDark(document.documentElement.getAttribute("data-theme") === "dark");
+    const header = btn.current?.closest<HTMLElement>("[data-site-header]");
+    if (!header) return;
+    const sync = () => setForced(header.getAttribute("data-theme") === "dark");
+    sync();
+    const mo = new MutationObserver(sync);
+    mo.observe(header, { attributes: true, attributeFilter: ["data-theme"] });
+    return () => mo.disconnect();
   }, []);
+  const shown = dark || forced;
 
   const toggle = () => {
     const next = !dark;
@@ -34,6 +46,7 @@ export default function ThemeToggle() {
 
   return (
     <button
+      ref={btn}
       type="button"
       role="switch"
       aria-checked={dark}
@@ -44,10 +57,10 @@ export default function ThemeToggle() {
     >
       <span
         className={`grid h-3.5 w-3.5 place-items-center rounded-full bg-foreground text-background shadow transition-transform duration-300 ease-out ${
-          dark ? "translate-x-[18px]" : "translate-x-0.5"
+          shown ? "translate-x-[18px]" : "translate-x-0.5"
         }`}
       >
-        {dark ? (
+        {shown ? (
           <svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor">
             <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
           </svg>

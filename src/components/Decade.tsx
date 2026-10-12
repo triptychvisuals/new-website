@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { gsap } from "@/lib/gsap";
+import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { decade } from "@/lib/about";
 
 // EDIT: header copy.
@@ -13,6 +13,12 @@ const DIM = 0.88;
 // EDIT: where on screen the "now" line sits (the spine fills to here and
 // each year's node lights as it crosses it). "60%" = 60% down the viewport.
 const NOW_LINE = "60%";
+// EDIT: the header (and its menus) flips to dark mode between these two
+// points — section top crossing HEADER_DARK_START on the way in, section
+// bottom crossing HEADER_DARK_END on the way out. Matched to the dimmer's
+// halfway marks so the header turns with the page.
+const HEADER_DARK_START = "top 65%";
+const HEADER_DARK_END = "bottom 50%";
 
 /**
  * "10 years in business" — as it approaches, a fixed black layer fades over
@@ -24,6 +30,8 @@ const NOW_LINE = "60%";
  * up. Desktop alternates cards left/right of a centered spine; phones run
  * one column with the spine on the left.
  *
+ * While it's on screen the header flips to dark mode too.
+ *
  * Layering: dim layer z-38 < this section z-39 < header z-40.
  */
 export default function Decade() {
@@ -34,7 +42,22 @@ export default function Decade() {
   const comet = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const header = document.querySelector<HTMLElement>("[data-site-header]");
+    const setHeaderDark = (on: boolean) => {
+      if (on) header?.setAttribute("data-theme", "dark");
+      else header?.removeAttribute("data-theme");
+    };
+
     const ctx = gsap.context(() => {
+      // Header goes dark for the timeline, back to the page's theme after.
+      // (If the whole site is already dark this is a no-op visually.)
+      ScrollTrigger.create({
+        trigger: root.current,
+        start: HEADER_DARK_START,
+        end: HEADER_DARK_END,
+        onToggle: (self) => setHeaderDark(self.isActive),
+      });
+
       // Dim the page in as the section arrives, back out as it leaves.
       gsap.fromTo(
         dim.current,
@@ -108,7 +131,10 @@ export default function Decade() {
         );
       });
     }, root);
-    return () => ctx.revert();
+    return () => {
+      ctx.revert();
+      setHeaderDark(false);
+    };
   }, []);
 
   return (

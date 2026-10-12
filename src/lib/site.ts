@@ -18,6 +18,8 @@ export const site = {
    */
   pinterestVerify: "",
   email: "hello@triptychvisuals.com", // EDIT: contact email (also confirm law@…)
+  /** EDIT: where every Contact button goes — the portal's project intake. */
+  contactUrl: "https://portal.triptychstudios.co/start",
   sectionNumber: "001", // EDIT: hero index label
   sectionLabel: "SELECTED WORKS", // EDIT: hero bracket label
   nav: [

@@ -41,22 +41,10 @@
     "Liberation Sans", "Arimo", system-ui, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
     "Liberation Mono", monospace;
-  /* Equalizer bars (header Listen link) */
-  --animate-eq: eq 0.7s ease-in-out infinite;
   /* Partner logo marquee (scrolls left → right) */
   --animate-marquee-r: marquee-r 30s linear infinite;
   /* EDIT: Featured© Work title marquee — raise the duration to slow it. */
   --animate-marquee-l: marquee-l 22s linear infinite;
-}
-
-@keyframes eq {
-  0%,
-  100% {
-    height: 30%;
-  }
-  50% {
-    height: 100%;
-  }
 }
 
 @keyframes marquee-r {

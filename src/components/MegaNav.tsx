@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { projects, placeholderGradient, projectMedia } from "@/lib/projects";
+import { site } from "@/lib/site";
 
 /**
  * Desktop nav: pill-shaped triggers with an up/down chevron that open a
@@ -91,7 +92,7 @@ const MENUS: Record<string, Menu> = {
       links: [
         { label: "Press", href: "/about#press" },
         { label: "Awards", href: "/about#awards" },
-        { label: "Contact", href: "/about#contact" },
+        { label: "Contact", href: site.contactUrl },
       ],
     },
   },
@@ -113,7 +114,7 @@ const MENUS: Record<string, Menu> = {
       },
       {
         items: [
-          { title: "Contact", desc: "Start a project with Triptych Studios", href: "/about#contact", icon: "mail" },
+          { title: "Contact", desc: "Start a project with Triptych Studios", href: site.contactUrl, icon: "mail" },
         ],
       },
     ],
