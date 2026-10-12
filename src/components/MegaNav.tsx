@@ -56,16 +56,20 @@ const PRESS_URL =
 // EDIT: the newest video — its slug (the end of its /work/… link) gets the
 // NEW badge in the Projects dropdown and on the preview player. Set it to
 // the next release when it drops; "" hides the badge.
-const NEWEST_SLUG = "dramatic";
+const NEWEST_SLUG = "overthinking";
 
-/** The ✦ NEW badge. `onMedia` = sitting over the preview video. */
+/**
+ * The ✦ NEW badge — pulses: a copy of the pill swells out behind it and
+ * fades (badge-pulse in globals.css). `onMedia` = over the preview video.
+ */
 function NewBadge({ onMedia = false }: { onMedia?: boolean }) {
   return (
     <span
-      className={`inline-flex shrink-0 items-center gap-1 rounded-full bg-[color:var(--accent)] px-2 py-[3px] text-[10px] font-bold uppercase leading-none tracking-[0.1em] text-white ${
-        onMedia ? "shadow-[0_2px_10px_rgba(229,54,31,0.55)]" : "shadow-[0_0_0_3px_rgba(229,54,31,0.14)]"
+      className={`relative isolate inline-flex shrink-0 items-center gap-1 rounded-full bg-[color:var(--accent)] px-2 py-[3px] text-[10px] font-bold uppercase leading-none tracking-[0.1em] text-white ${
+        onMedia ? "shadow-[0_2px_10px_rgba(229,54,31,0.55)]" : ""
       }`}
     >
+      <span aria-hidden className="badge-pulse absolute inset-0 -z-10 rounded-full bg-[color:var(--accent)]" />
       <svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
         <path d="M12 0c.6 5.6 6.4 11.4 12 12-5.6.6-11.4 6.4-12 12-.6-5.6-6.4-11.4-12-12C5.6 11.4 11.4 5.6 12 0z" />
       </svg>
