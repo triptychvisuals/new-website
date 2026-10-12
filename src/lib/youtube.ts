@@ -28,13 +28,15 @@ export const musicVideos: YouTubeVideo[] = [
 ];
 
 /**
- * Thumbnail URLs, best first. maxresdefault (1280×720) isn't generated for
- * every upload; mqdefault (320×180) always is. Both are 16:9 with no
- * letterbox bars, so they crop cleanly to a square tile.
+ * Thumbnail URLs, best first. sddefault (640×480) is plenty for a ~170px
+ * tile on a retina screen and a fifth of maxres' weight to download and
+ * decode — but it's 4:3 with the 16:9 frame letterboxed inside, so the tile
+ * zooms it 4/3 to crop the bars off (see Thumb in WorkGridClient). mqdefault
+ * (320×180, no bars) is the fallback for the odd upload without an SD still.
  */
 export function youtubeThumbs(id: string): [string, string] {
   return [
-    `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`,
+    `https://i.ytimg.com/vi/${id}/sddefault.jpg`,
     `https://i.ytimg.com/vi/${id}/mqdefault.jpg`,
   ];
 }

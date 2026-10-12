@@ -80,7 +80,8 @@
   animation-timing-function: ease-in-out;
   animation-iteration-count: infinite;
 }
-.group:hover .wg-drift {
+.group:hover .wg-drift,
+[data-idle] .wg-drift {
   animation-play-state: paused;
 }
 @media (prefers-reduced-motion: reduce) {

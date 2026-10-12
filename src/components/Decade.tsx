@@ -96,7 +96,12 @@ export default function Decade() {
         scrub: 0.6,
       };
       gsap.fromTo(fill.current, { scaleY: 0 }, { scaleY: 1, ease: "none", scrollTrigger: spine });
-      gsap.fromTo(comet.current, { top: "0%" }, { top: "100%", ease: "none", scrollTrigger: spine });
+      // Transform, not `top`, so the comet never triggers a layout pass.
+      gsap.fromTo(
+        comet.current,
+        { y: 0 },
+        { y: () => line.current?.offsetHeight ?? 0, ease: "none", scrollTrigger: { ...spine, invalidateOnRefresh: true } }
+      );
 
       gsap.utils.toArray<HTMLElement>("[data-dc-row]").forEach((row) => {
         // Node + big year ignite as the tip crosses this row's node.
@@ -125,12 +130,12 @@ export default function Decade() {
         );
         // …and its light tracks scroll: CARD_MIN_LIGHT as it enters at the
         // bottom of the screen, fully lit once it reaches the "now" line.
+        // Opacity only — the compositor handles it without repainting.
         gsap.fromTo(
           card,
-          { opacity: CARD_MIN_LIGHT, filter: `brightness(${CARD_MIN_LIGHT + 0.25})` },
+          { opacity: CARD_MIN_LIGHT },
           {
             opacity: 1,
-            filter: "brightness(1)",
             ease: "none",
             scrollTrigger: { trigger: card, start: "top bottom", end: `center ${NOW_LINE}`, scrub: 0.4 },
           }
@@ -149,7 +154,7 @@ export default function Decade() {
       <div
         ref={dim}
         aria-hidden
-        className="pointer-events-none fixed inset-0 z-[38] bg-black opacity-0"
+        className="pointer-events-none fixed inset-0 z-[38] bg-black opacity-0 will-change-[opacity]"
       />
 
       <section
@@ -190,7 +195,7 @@ export default function Decade() {
             />
             <div
               ref={comet}
-              className="absolute left-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white shadow-[0_0_0_4px_rgba(229,54,31,0.35),0_0_24px_6px_rgba(229,54,31,0.55)]"
+              className="absolute left-1/2 top-0 h-3 w-3 will-change-transform -translate-x-1/2 -translate-y-1/2 rounded-full bg-white shadow-[0_0_0_4px_rgba(229,54,31,0.35),0_0_24px_6px_rgba(229,54,31,0.55)]"
             />
           </div>
 
@@ -226,7 +231,7 @@ export default function Decade() {
                   {/* Card */}
                   <article
                     data-dc-card
-                    className={`col-start-2 row-start-1 overflow-hidden rounded-[22px] border border-white/10 bg-white/[0.035] shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] ${
+                    className={`col-start-2 row-start-1 overflow-hidden rounded-[22px] will-change-[opacity,transform] border border-white/10 bg-white/[0.035] shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] ${
                       side === "left" ? "md:col-start-1" : "md:col-start-3"
                     }`}
                   >
@@ -236,7 +241,7 @@ export default function Decade() {
                         background: `radial-gradient(circle at 30% 25%, hsl(${hue} 92% 66%), hsl(${(hue + 38) % 360} 85% 48%) 55%, hsl(${(hue + 70) % 360} 80% 26%))`,
                       }}
                     >
-                      <span className="absolute bottom-3 left-4 text-[clamp(2.25rem,5vw,3.25rem)] font-medium leading-none tracking-[-0.04em] text-white mix-blend-overlay">
+                      <span className="absolute bottom-3 left-4 text-[clamp(2.25rem,5vw,3.25rem)] font-medium leading-none tracking-[-0.04em] text-white/60">
                         {d.year}
                       </span>
                     </div>

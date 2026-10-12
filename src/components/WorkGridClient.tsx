@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { gsap } from "@/lib/gsap";
 
 export type Bubble = {
@@ -9,7 +9,7 @@ export type Bubble = {
   title: string;
   /** Still for the bubble; absent → a color swatch. */
   thumb?: string;
-  /** Used if `thumb` fails (YouTube has no maxres still for some uploads). */
+  /** Used if `thumb` fails (YouTube has no SD still for some uploads). */
   thumbFallback?: string;
   /** Opens off-site (a YouTube video) in a new tab. */
   external?: boolean;
@@ -19,12 +19,19 @@ export type Bubble = {
 
 /**
  * Tile image. Swaps to the fallback on a load error, or when YouTube answers
- * a missing maxres still with its 120×90 grey placeholder instead of a 404.
+ * a missing still with its 120×90 grey placeholder instead of a 404. A
+ * YouTube SD still is letterboxed 4:3, so it's zoomed 4/3 to crop the bars;
+ * the fallback (already 16:9) isn't.
  */
 function Thumb({ src, fallback }: { src: string; fallback?: string }) {
   const ref = useRef<HTMLImageElement>(null);
+  const [onFallback, setOnFallback] = useState(false);
+  const letterboxed = !onFallback && src.includes("/sddefault.");
   const swap = (img: HTMLImageElement) => {
-    if (fallback && img.src !== fallback) img.src = fallback;
+    if (fallback && img.src !== fallback) {
+      img.src = fallback;
+      setOnFallback(true);
+    }
   };
   // An image that finished before hydration never fires React's handlers.
   useEffect(() => {
@@ -44,7 +51,7 @@ function Thumb({ src, fallback }: { src: string; fallback?: string }) {
       onLoad={(e) => {
         if (e.currentTarget.naturalWidth <= 120) swap(e.currentTarget);
       }}
-      className="absolute inset-0 h-full w-full object-cover"
+      className={`absolute inset-0 h-full w-full object-cover ${letterboxed ? "scale-[1.34]" : ""}`}
     />
   );
 }
@@ -110,7 +117,16 @@ export default function WorkGridClient({
         scrollTrigger: { trigger: root.current, start: "top 75%" },
       });
     }, root);
-    return () => ctx.revert();
+
+    // The tiles' idle drift only runs while the grid is on screen.
+    const el = root.current;
+    const io = new IntersectionObserver(([e]) => el?.toggleAttribute("data-idle", !e.isIntersecting));
+    if (el) io.observe(el);
+
+    return () => {
+      ctx.revert();
+      io.disconnect();
+    };
   }, [target, suffix]);
 
   return (

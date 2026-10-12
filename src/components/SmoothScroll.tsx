@@ -18,7 +18,10 @@ export default function SmoothScroll({
 }) {
   useEffect(() => {
     const lenis = new Lenis({
-      duration: 1.1, // EDIT: higher = more inertia/glide
+      // EDIT: how fast the page catches up to the wheel each frame (0–1).
+      // Higher = snappier, less glide; 0.1 is Lenis' floaty default. At 0.18
+      // a flick settles in ~0.3s — smooth, but it never trails the hand.
+      lerp: 0.18,
       smoothWheel: true,
       // Smoothly scroll in-page #hash links (mobile menu → About section)
       // instead of letting the browser jump.

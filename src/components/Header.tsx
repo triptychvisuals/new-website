@@ -134,7 +134,7 @@ export default function Header({ logo }: { logo?: string }) {
   return (
     // data-site-header: Decade sets data-theme="dark" here while the
     // timeline is on screen, re-theming everything inside (menus included).
-    <header data-site-header className="sticky top-0 z-40 flex items-center justify-between border-b border-dashed border-hairline bg-background/85 px-5 py-3.5 backdrop-blur-md sm:px-6 lg:min-h-16 lg:py-2.5">
+    <header data-site-header className="sticky top-0 z-40 flex items-center justify-between border-b border-dashed border-hairline bg-background/95 px-5 py-3.5 sm:px-6 lg:min-h-16 lg:py-2.5">
       {/* Left: logo + wordmark */}
       <div className="hidden items-center gap-3 lg:flex">
         <Logo src={logo} />
