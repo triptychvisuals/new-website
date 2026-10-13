@@ -66,6 +66,9 @@ function Thumb({ src, fallback }: { src: string; fallback?: string }) {
 
 // EDIT: how long the count-up takes (seconds).
 const COUNT_SECONDS = 2.4;
+// EDIT: the blurred thumbnails behind the grid — how many, how strong.
+const BG_COUNT = 5;
+const BG_STRENGTH = 0.55;
 export default function WorkGridClient({
   bubbles,
   countLabel,
@@ -77,6 +80,9 @@ export default function WorkGridClient({
 }) {
   const root = useRef<HTMLElement>(null);
   const num = useRef<HTMLSpanElement>(null);
+  // Thumbnails for the backdrop: the small (320×180) version of the first
+  // few distinct tiles — blurred and scaled up, so no one can tell.
+  const bgs = Array.from(new Set(bubbles.map((b) => b.thumbFallback ?? b.thumb).filter((s): s is string => !!s))).slice(0, BG_COUNT);
 
   // "500+" → 500 and "+": the number counts, the suffix rides along.
   const match = countLabel.match(/^([\d,]+)(.*)$/);
@@ -116,7 +122,39 @@ export default function WorkGridClient({
         ease: "power3.out",
         scrollTrigger: { trigger: root.current, start: "top 75%" },
       });
+
+      // Backdrop: as the grid scrolls through, one blurred thumbnail fades
+      // into the next (opacity only — compositor work, nothing repaints).
+      const layers = gsap.utils.toArray<HTMLElement>("[data-wg-bg]");
+      if (layers.length > 1) {
+        const state = { p: 0 };
+        const paint = () => {
+          const i0 = Math.min(Math.floor(state.p), layers.length - 2);
+          const f = state.p - i0;
+          layers.forEach((l, i) => {
+            l.style.opacity = String(i === i0 ? (1 - f) * BG_STRENGTH : i === i0 + 1 ? f * BG_STRENGTH : 0);
+          });
+        };
+        paint();
+        gsap.to(state, {
+          p: layers.length - 1,
+          ease: "none",
+          onUpdate: paint,
+          scrollTrigger: { trigger: root.current, start: "top 85%", end: "bottom 15%", scrub: true },
+        });
+      }
     }, root);
+
+    // The backdrop images are tiny; scale them to cover the section.
+    const sec = root.current;
+    const fit = () => {
+      if (!sec) return;
+      const s = Math.max(sec.offsetWidth / 320, sec.offsetHeight / 180) * 1.08;
+      sec.style.setProperty("--wg-bg-scale", s.toFixed(2));
+    };
+    fit();
+    const ro = new ResizeObserver(fit);
+    if (sec) ro.observe(sec);
 
     // The tiles' idle drift only runs while the grid is on screen.
     const el = root.current;
@@ -126,6 +164,7 @@ export default function WorkGridClient({
     return () => {
       ctx.revert();
       io.disconnect();
+      ro.disconnect();
     };
   }, [target, suffix]);
 
@@ -134,9 +173,19 @@ export default function WorkGridClient({
       ref={root}
       id="work"
       aria-label={`${countLabel} ${caption}`}
-      className="bg-background px-4 py-20 sm:px-8 sm:py-28"
+      className="relative overflow-hidden bg-background px-4 py-20 sm:px-8 sm:py-28"
     >
-      <div className="mx-auto grid w-full max-w-[1100px] grid-cols-6 gap-2.5 sm:gap-4">
+      {/* Backdrop — blurred thumbnails crossfading with scroll, under a
+          tint of the page colour so the tiles stay the focus */}
+      <div aria-hidden className="pointer-events-none absolute inset-0">
+        {bgs.map((src) => (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img key={src} data-wg-bg src={src} alt="" loading="lazy" decoding="async" referrerPolicy="no-referrer" className="wg-bg" />
+        ))}
+        <div className="absolute inset-0 bg-background/55" />
+      </div>
+
+      <div className="relative mx-auto grid w-full max-w-[1100px] grid-cols-6 gap-2.5 sm:gap-4">
         {/* Counter — middle 2×2 */}
         <div
           data-count

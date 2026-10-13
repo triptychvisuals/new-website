@@ -157,6 +157,72 @@
   width: min(470px, 60vw);
   backface-visibility: hidden;
 }
+/* The timeline headline: one line sized to the full margin width (the
+   divisor is the line's width in em — tune it if the copy changes), in
+   liquid chrome: a metallic gradient clipped to the text, its highlight
+   drifting back and forth while the headline is on screen. */
+.dc-headline {
+  font-size: min(calc((100vw - 2.5rem) / 8.2), 200px);
+}
+@media (min-width: 640px) {
+  .dc-headline {
+    font-size: min(calc((100vw - 4rem) / 8.2), 200px);
+  }
+}
+.dc-chrome {
+  /* EDIT: the metal — light and dark bands at a steep angle */
+  background-image: linear-gradient(
+    104deg,
+    #4a4a4f 0%,
+    #d9d9de 12%,
+    #ffffff 20%,
+    #8a8a90 30%,
+    #5a5a5f 38%,
+    #f2f2f5 50%,
+    #9c9ca2 60%,
+    #ffffff 70%,
+    #6a6a70 80%,
+    #e4e4e8 90%,
+    #45454a 100%
+  );
+  background-size: 240% 100%;
+  background-position: 0% 50%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  animation: dc-chrome 9s ease-in-out infinite alternate paused;
+}
+.dc-chrome[data-on] {
+  animation-play-state: running;
+}
+@keyframes dc-chrome {
+  to {
+    background-position: 100% 50%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dc-chrome {
+    animation: none;
+  }
+}
+
+/* Blurred thumbnails behind the 500+ grid (WorkGridClient): tiny 320×180
+   images blurred a little and scaled up to cover the section — the
+   upscale does most of the blurring for free. Opacity is set from JS. */
+.wg-bg {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 320px;
+  height: 180px;
+  object-fit: cover;
+  opacity: 0;
+  filter: blur(6px);
+  transform: translate(-50%, -50%) scale(var(--wg-bg-scale, 6));
+  will-change: opacity;
+}
+
 /* The wash sits under everything in the stage; the big year, line and
    cards paint over it. The base is part of the stage's own paint (no
    layer of its own); the fade layer only exists while a year fades out. */

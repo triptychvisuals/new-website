@@ -5,9 +5,8 @@ import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { decade } from "@/lib/about";
 import VideoGearIcon from "@/components/VideoGearIcon";
 
-// EDIT: header copy.
-const HEADLINE_TOP = "10 years";
-const HEADLINE_BOTTOM = "strong";
+// EDIT: header copy (set in caps by CSS; sized to the full margin width).
+const HEADLINE = "10 years strong";
 // EDIT: how dark the rest of the page gets while the timeline is on screen.
 const DIM = 0.88;
 // EDIT: how lit a card is when it's furthest from "now" (0–1). The current
@@ -38,7 +37,7 @@ const SEGS_PER_YEAR = 6;
 const NOW_LINE = "60%";
 
 /**
- * "10 years strong" — as it approaches, a fixed black layer fades over the
+ * "10 YEARS STRONG" — as it approaches, a fixed black layer fades over the
  * page (the header stays above it, switched to dark), the headline rises in,
  * then the timeline:
  *
@@ -69,6 +68,7 @@ export default function Decade({ stills = {} }: { stills?: Record<string, string
   const helix = useRef<HTMLDivElement>(null);
   const bigYear = useRef<HTMLSpanElement>(null);
   const counter = useRef<HTMLSpanElement>(null);
+  const chrome = useRef<HTMLSpanElement>(null);
   // phone list
   const line = useRef<HTMLDivElement>(null);
   const fill = useRef<HTMLDivElement>(null);
@@ -83,6 +83,13 @@ export default function Decade({ stills = {} }: { stills?: Record<string, string
       if (on) header?.setAttribute("data-theme", "dark");
       else header?.removeAttribute("data-theme");
     };
+
+    // The chrome sheen only animates while the headline is on screen.
+    const chromeEl = chrome.current;
+    const sheen = chromeEl
+      ? new IntersectionObserver(([e]) => chromeEl.toggleAttribute("data-on", e.isIntersecting))
+      : null;
+    if (chromeEl) sheen!.observe(chromeEl);
 
     const ctx = gsap.context(() => {
       const mm = gsap.matchMedia();
@@ -312,6 +319,7 @@ export default function Decade({ stills = {} }: { stills?: Record<string, string
 
     return () => {
       ctx.revert();
+      sheen?.disconnect();
       setHeaderDark(false);
     };
   }, [last]);
@@ -330,18 +338,17 @@ export default function Decade({ stills = {} }: { stills?: Record<string, string
         aria-label="Ten years strong, 2016 to 2026"
         className="relative z-[39] bg-[#0a0a0a] pb-24 text-white sm:pb-32"
       >
-        {/* Headline */}
+        {/* Fade from the dimmed page into this section's black (the section
+            edge was a hard line) */}
+        <div aria-hidden className="pointer-events-none absolute inset-x-0 -top-[40vh] h-[40vh] bg-gradient-to-b from-transparent to-[#0a0a0a]" />
+
+        {/* Headline — one line across the margins, all caps, liquid chrome
+            (.dc-headline / .dc-chrome in globals.css) */}
         <div data-dc-head className="mx-auto max-w-[1760px] px-5 pb-10 pt-28 text-center sm:px-8 sm:pt-40">
-          {/* pb on each line leaves room for descenders (the g in "strong") */}
-          <h2 className="text-[clamp(3.5rem,13vw,13rem)] font-medium leading-[0.88] tracking-[-0.045em]">
-            <span className="block overflow-hidden pb-[0.04em]">
-              <span data-dc-word className="inline-block">
-                {HEADLINE_TOP}
-              </span>
-            </span>
-            <span className="block overflow-hidden pb-[0.16em] text-white/45">
-              <span data-dc-word className="inline-block">
-                {HEADLINE_BOTTOM}
+          <h2 className="dc-headline whitespace-nowrap font-medium uppercase leading-[0.9] tracking-[-0.04em]">
+            <span className="block overflow-hidden pb-[0.1em]">
+              <span data-dc-word ref={chrome} className="dc-chrome inline-block">
+                {HEADLINE}
               </span>
             </span>
           </h2>
@@ -355,6 +362,8 @@ export default function Decade({ stills = {} }: { stills?: Record<string, string
               Both set from JS. */}
           <span data-dc-wash-base aria-hidden className="dc-wash-base pointer-events-none absolute inset-0" />
           <span data-dc-wash-fade aria-hidden className="dc-wash pointer-events-none absolute opacity-0" style={{ display: "none" }} />
+          {/* …fading up into the black above, so the colour has no hard top edge */}
+          <span aria-hidden className="dc-wash-top pointer-events-none absolute inset-x-0 top-0 h-[42%] bg-gradient-to-b from-[#0a0a0a] to-transparent" />
 
           {/* Current year, huge and faint, behind the spiral */}
           <span
