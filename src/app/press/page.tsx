@@ -1,29 +1,26 @@
-// Press — features, who has covered the work, every award by year, and a
-// press kit (bios you can copy, facts, logo downloads). Index 007.
+// Press — features, who has covered the work, and a press kit (bios you
+// can copy, facts, logo downloads). Index 007.
 import type { Metadata } from "next";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import RuleLabel from "@/components/RuleLabel";
 import Reveal from "@/components/Reveal";
 import CopyButton from "@/components/press/CopyButton";
-import AwardsByYear from "@/components/press/AwardsByYear";
 import { features, mentions, bios, facts, logoFiles } from "@/lib/press";
-import { awards } from "@/lib/about";
 import { site } from "@/lib/site";
 import { getSiteContent } from "@/lib/siteContent";
 
 export const metadata: Metadata = {
   title: "Press — Triptych", // EDIT
-  description: "Features, awards and the press kit for Triptych Studios.", // EDIT
+  description: "Features, coverage and the press kit for Triptych Studios.", // EDIT
 };
 
 export default async function PressPage() {
   const content = await getSiteContent();
-  const years = awards.map((a) => Number(a.year));
   const stats = [
     ["Features", `${features.length}`],
-    ["Awards", `${awards.length}`],
-    ["Years", `${Math.min(...years)} — ${Math.max(...years)}`],
+    ["Covered by", `${mentions.length} outlets`],
+    ["Since", "2016"], // EDIT
     ["Press contact", site.email],
   ] as const;
 
@@ -38,7 +35,7 @@ export default async function PressPage() {
             <h1 className="text-[min(13vw,150px)] font-normal leading-[0.9] tracking-[-0.03em] sm:text-[min(12.5vw,170px)]">Press</h1>
             <div className="mb-[1.2vw] flex shrink-0 flex-col self-end whitespace-nowrap border-l border-foreground/30 pl-1 leading-tight sm:pl-2">
               <span className="text-[6px] text-muted sm:text-[10px] lg:text-[11px]">007</span>
-              <span className="text-[6px] font-semibold tracking-wide text-foreground sm:text-[10px] lg:text-[11px]">[PRESS &amp; AWARDS]</span>
+              <span className="text-[6px] font-semibold tracking-wide text-foreground sm:text-[10px] lg:text-[11px]">[PRESS]</span>
             </div>
           </div>
           <div className="mt-6 grid grid-cols-2 gap-x-8 sm:mt-8 md:grid-cols-4">
@@ -101,23 +98,6 @@ export default async function PressPage() {
                   ))}
                 </ul>
               </div>
-            </Reveal>
-          </div>
-        </section>
-
-        {/* Awards */}
-        <section id="awards" className="mx-auto w-full max-w-[1760px] scroll-mt-20 px-5 pt-24 sm:px-8 sm:pt-32" aria-label="Awards">
-          <div className="grid grid-cols-1 gap-x-12 gap-y-10 lg:grid-cols-[1fr_1.4fr]">
-            <Reveal>
-              <RuleLabel>Selected Honors</RuleLabel>
-              <h2 className="mt-8 text-[clamp(3.25rem,10vw,7.5rem)] font-medium leading-[0.95] tracking-[-0.03em]">
-                Awards
-                <sup className="ml-[0.15em] align-[1em] text-[0.26em] font-normal tracking-normal text-muted">({awards.length})</sup>
-              </h2>
-              <p className="mt-6 max-w-[36ch] text-[15px] text-muted">Filter by year. EDIT: the list lives in lib/about.ts.</p>
-            </Reveal>
-            <Reveal delay={0.05}>
-              <AwardsByYear />
             </Reveal>
           </div>
         </section>

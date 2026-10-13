@@ -144,7 +144,7 @@ export const legalDocs: LegalDoc[] = [
         heading: "Credits and attribution",
         body: [
           `Work shown here was produced, directed, shot or edited by ${studio} as credited on each project. Where a project was a collaboration, the other companies involved are named on the project page or in the video's own credits.`,
-          "Project counts, years and awards reflect our records at the date at the top of this page.",
+          "Project counts and years reflect our records at the date at the top of this page.",
         ],
       },
       {

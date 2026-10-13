@@ -123,7 +123,6 @@ const MENUS: Record<string, Menu> = {
       cta: { label: "See all projects", href: "/projects" },
       links: [
         { label: "Press", href: "/press" },
-        { label: "Awards", href: "/press#awards" },
         { label: "Contact", href: site.contactUrl },
       ],
     },
@@ -157,7 +156,7 @@ const MENUS: Record<string, Menu> = {
     columns: [
       {
         items: [
-          { title: "Press & awards", desc: "Features, honors, and the press kit", href: "/press", icon: "bolt" },
+          { title: "Press", desc: "Features, coverage, and the press kit", href: "/press", icon: "bolt" },
         ],
       },
       {
@@ -165,17 +164,12 @@ const MENUS: Record<string, Menu> = {
           { title: "Chicago Reader", desc: "Featured: Lawrence “Law” Mahone of Triptych", href: PRESS_URL, icon: "news", external: true },
         ],
       },
-      {
-        items: [
-          { title: "Awards", desc: "Selected honors from festivals and the industry", href: "/press#awards", icon: "award" },
-        ],
-      },
     ],
   },
 };
 
 /* ── icons (stroke, currentColor) ───────────────────────────────────────── */
-type IconName = "spark" | "globe" | "bolt" | "film" | "quote" | "mail" | "news" | "award";
+type IconName = "spark" | "globe" | "bolt" | "film" | "quote" | "mail" | "news";
 const ICON_PATHS: Record<IconName, string> = {
   spark: "M12 3v4M12 17v4M3 12h4M17 12h4M12 8l1.5 2.5L16 12l-2.5 1.5L12 16l-1.5-2.5L8 12l2.5-1.5z",
   globe: "M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM3.5 9h17M3.5 15h17M12 3c2.5 2.5 2.5 15.5 0 18M12 3c-2.5 2.5-2.5 15.5 0 18",
@@ -184,7 +178,6 @@ const ICON_PATHS: Record<IconName, string> = {
   quote: "M7 7h4v4c0 3-1.5 5-4 6M14 7h4v4c0 3-1.5 5-4 6",
   mail: "M3 6h18v12H3zM3 7l9 6 9-6",
   news: "M4 5h13v14H6a2 2 0 0 1-2-2zM17 9h3v8a2 2 0 0 1-2 2M8 9h5M8 13h5",
-  award: "M12 3a5 5 0 1 0 0 10 5 5 0 0 0 0-10zM8.5 12 7 21l5-3 5 3-1.5-9",
 };
 function Icon({ name }: { name: IconName }) {
   return (

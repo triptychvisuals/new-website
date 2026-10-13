@@ -8,7 +8,6 @@ import WorkGrid from "@/components/WorkGrid";
 import Decade from "@/components/Decade";
 import AboutResult from "@/components/about/AboutResult";
 import AboutStatement from "@/components/about/AboutStatement";
-import AboutAwards from "@/components/about/AboutAwards";
 import AboutTestimonial from "@/components/about/AboutTestimonial";
 import AboutCTA from "@/components/about/AboutCTA";
 import Footer from "@/components/Footer";
@@ -54,7 +53,6 @@ export default async function Home() {
         <div id="about" className="scroll-mt-24 sm:hidden">
           <AboutResult />
           <AboutStatement />
-          <AboutAwards />
           <AboutTestimonial />
           <AboutCTA />
         </div>

@@ -1,6 +1,6 @@
 // -------------------------------------------------------------------------
 // EDIT: All About-page copy lives here. Rebranded to Triptych from the
-// reference; swap in real clients, services, history, awards and testimonials.
+// reference; swap in real clients, services, history and testimonials.
 // -------------------------------------------------------------------------
 
 export { clients as recentClients } from "./projects"; // EDIT: real clients
@@ -54,40 +54,7 @@ export const timeline: { year: string; title: string; body: string }[] = [
   }, // EDIT
 ];
 
-export const awardsStatement =
-  "Honored by international festivals and industry leaders for exceptional visual storytelling"; // EDIT
-
-export const awards: { name: string; year: string }[] = [
-  { name: "Best Cinematic Storytelling Award", year: "2017" },
-  { name: "International Film Production Excellence Award", year: "2018" },
-  { name: "Creative Visual Direction Award", year: "2019" },
-  { name: "Best Brand Film Production Award", year: "2019" },
-  { name: "Global Cinematic Craft Award", year: "2020" },
-  { name: "Best Commercial Film Award", year: "2020" },
-  { name: "Visual Innovation Award", year: "2020" },
-  { name: "Creative Production Excellence Award", year: "2021" },
-  { name: "International Storytelling Award", year: "2021" },
-  { name: "Best Cinematography Achievement", year: "2021" },
-  { name: "Global Visual Design Award", year: "2022" },
-  { name: "Best Digital Film Production Award", year: "2022" },
-  { name: "Excellence in Motion Picture Production", year: "2022" },
-  { name: "Outstanding Visual Narrative Award", year: "2022" },
-  { name: "Global Production Leadership Award", year: "2023" },
-  { name: "Artistic Cinematic Achievement Award", year: "2023" },
-  { name: "International Creative Production Award", year: "2023" },
-  { name: "Best Visual Composition Award", year: "2023" },
-  { name: "Outstanding Film Craft Award", year: "2024" },
-  { name: "Creative Innovation in Film Award", year: "2024" },
-  { name: "Global Creative Vision Award", year: "2024" },
-  { name: "Best Cinematic Editing Award", year: "2024" },
-  { name: "Best Motion Story Award", year: "2025" },
-  { name: "Global Storytelling Innovation Award", year: "2025" },
-  { name: "Cinematic Artistry Award", year: "2026" },
-  { name: "Creative Production Leaders", year: "2026" },
-]; // EDIT: add/trim as needed
-
 export const stats = {
-  awards: { value: "35+", label: "Industry Awards & Recognitions" }, // EDIT
   partners: {
     value: "80+",
     label: "Creative Partners",

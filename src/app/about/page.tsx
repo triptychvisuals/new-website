@@ -5,7 +5,6 @@ import Hero from "@/components/Hero";
 import AboutIntro from "@/components/about/AboutIntro";
 import AboutResult from "@/components/about/AboutResult";
 import AboutStatement from "@/components/about/AboutStatement";
-import AboutAwards from "@/components/about/AboutAwards";
 import AboutTestimonial from "@/components/about/AboutTestimonial";
 import AboutCTA from "@/components/about/AboutCTA";
 import Footer from "@/components/Footer";
@@ -29,7 +28,6 @@ export default async function AboutPage() {
           <AboutIntro />
           <AboutResult />
           <AboutStatement />
-          <AboutAwards />
           <AboutTestimonial />
           <AboutCTA />
         </div>
