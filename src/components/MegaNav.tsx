@@ -314,9 +314,9 @@ function PreviewPlayer({ preview, onPick }: { preview?: Preview; onPick: () => v
 
 export default function MegaNav({ nav }: { nav: { label: string; href: string }[] }) {
   const [open, setOpen] = useState<string | null>(null);
-  const [preview, setPreview] = useState<Preview | undefined>(undefined);
-  // Each time a panel opens (or closes), the player restarts on its default.
-  useEffect(() => setPreview(undefined), [open]);
+  // The hovered project, remembered with the panel it was hovered in — so a
+  // panel that opens again starts the player on its default.
+  const [preview, setPreview] = useState<{ panel: string; p: Preview } | undefined>(undefined);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const root = useRef<HTMLDivElement>(null);
 
@@ -351,7 +351,8 @@ export default function MegaNav({ nav }: { nav: { label: string; href: string }[
   const active = open ? MENUS[open] : undefined;
   // Until something is hovered, the player shows the panel's first project.
   const shown =
-    preview ?? active?.columns.flatMap((c) => c.items).find((it) => it.preview)?.preview;
+    (preview?.panel === open ? preview.p : undefined) ??
+    active?.columns.flatMap((c) => c.items).find((it) => it.preview)?.preview;
 
   return (
     <div ref={root} className="relative" onMouseLeave={scheduleClose} onMouseEnter={cancelClose}>
@@ -428,7 +429,7 @@ export default function MegaNav({ nav }: { nav: { label: string; href: string }[
                       key={it.title + it.href}
                       item={it}
                       onPick={close}
-                      onPreview={setPreview}
+                      onPreview={(p) => open && setPreview({ panel: open, p })}
                       previewing={!!it.preview && shown?.href === it.preview.href}
                     />
                   ))}
