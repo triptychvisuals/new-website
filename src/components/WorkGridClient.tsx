@@ -149,7 +149,9 @@ export default function WorkGridClient({
     const sec = root.current;
     const fit = () => {
       if (!sec) return;
-      const s = Math.max(sec.offsetWidth / 320, sec.offsetHeight / 180) * 1.08;
+      // Overscaled so the blur's soft edges sit off-screen — the colour
+      // always reaches both sides of the window.
+      const s = Math.max(sec.offsetWidth / 320, sec.offsetHeight / 180) * 1.3;
       sec.style.setProperty("--wg-bg-scale", s.toFixed(2));
     };
     fit();

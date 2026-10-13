@@ -343,10 +343,19 @@
   }
 }
 
+/* Vertical scrolling only. Marquees and 3D scenes reach past the screen
+   edges on purpose; `clip` cuts them off without making a scroll box (so the
+   sticky header and pinned sections keep working), and the page can't be
+   dragged or rubber-banded sideways. Pinch-zoom stays for accessibility. */
+html,
+body {
+  overflow-x: hidden;
+  overflow-x: clip;
+  overscroll-behavior-x: none;
+}
 body {
   font-family: var(--font-sans), system-ui, sans-serif;
-  /* Editorial type wants crisp rendering + no accidental horizontal scroll */
-  overflow-x: hidden;
+  touch-action: pan-y pinch-zoom;
 }
 
 /* Smooth fade when toggling light / dark */
