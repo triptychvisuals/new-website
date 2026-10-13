@@ -167,7 +167,7 @@ export default function Decade() {
               washFade.style.transition = "none";
               washFade.style.display = "";
               washFade.style.background = washFor(shownYear);
-              washFade.style.opacity = String(WASH);
+              washFade.style.opacity = "1";
               void washFade.offsetWidth; // commit the start state
               washFade.style.transition = "";
               washFade.style.opacity = "0";
@@ -340,7 +340,7 @@ export default function Decade() {
           {/* The wash: the current card's colours blown up soft across the
               whole stage (base), and the previous year's fading out (fade).
               Both set from JS. */}
-          <span data-dc-wash-base aria-hidden className="dc-wash-base pointer-events-none absolute inset-0" style={{ opacity: WASH }} />
+          <span data-dc-wash-base aria-hidden className="dc-wash-base pointer-events-none absolute inset-0" />
           <span data-dc-wash-fade aria-hidden className="dc-wash pointer-events-none absolute opacity-0" style={{ display: "none" }} />
 
           {/* Current year, huge and faint, behind the spiral */}
@@ -431,10 +431,14 @@ const artFor = (i: number) => {
  */
 const washFor = (i: number) => {
   const h = hueFor(i);
+  // WASH is baked into the colours (not an opacity on the layer) so the
+  // result is opaque — an opaque backdrop is cheaper for the browser to
+  // composite the spiral over than a translucent one.
+  const pct = Math.round(WASH * 100);
   return [
-    `radial-gradient(ellipse 70% 75% at 32% 30%, hsl(${h} 92% 62%) 0%, hsl(${h} 92% 62% / 0) 70%)`,
-    `radial-gradient(ellipse 80% 80% at 78% 72%, hsl(${(h + 38) % 360} 85% 46%) 0%, hsl(${(h + 38) % 360} 85% 46% / 0) 72%)`,
-    `radial-gradient(ellipse 120% 100% at 50% 50%, hsl(${(h + 70) % 360} 80% 28%) 0%, #0a0a0a 100%)`,
+    `radial-gradient(ellipse 70% 75% at 32% 30%, hsl(${h} 92% 62% / ${WASH}) 0%, hsl(${h} 92% 62% / 0) 70%)`,
+    `radial-gradient(ellipse 80% 80% at 78% 72%, hsl(${(h + 38) % 360} 85% 46% / ${WASH}) 0%, hsl(${(h + 38) % 360} 85% 46% / 0) 72%)`,
+    `radial-gradient(ellipse 120% 100% at 50% 50%, color-mix(in srgb, hsl(${(h + 70) % 360} 80% 28%) ${pct}%, #0a0a0a) 0%, #0a0a0a 100%)`,
   ].join(", ");
 };
 
