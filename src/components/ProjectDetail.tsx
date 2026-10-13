@@ -1,5 +1,6 @@
 "use client";
 
+import { youtubeEmbed } from "@/lib/youtube";
 import { useRef, useState } from "react";
 import type { Project } from "@/lib/projects";
 import type { PortalWork } from "@/lib/siteContent";
@@ -221,7 +222,18 @@ export default function ProjectDetail({
             background: "#000",
           }}
         >
-          {reel && reelIsVideo ? (
+          {project.youtube ? (
+            // The video itself, in YouTube's player (privacy-enhanced domain)
+            <iframe
+              src={youtubeEmbed(project.youtube)}
+              title={project.title}
+              loading="lazy"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+              referrerPolicy="strict-origin-when-cross-origin"
+              style={{ position: "absolute", inset: 0, width: "100%", height: "100%", border: 0 }}
+            />
+          ) : reel && reelIsVideo ? (
             <video
               ref={videoRef}
               src={reel}
@@ -256,7 +268,7 @@ export default function ProjectDetail({
           ) : (
             <div style={{ position: "absolute", inset: 0, background: gradient }} />
           )}
-          {poster && !reel && (
+          {poster && !reel && !project.youtube && (
             // eslint-disable-next-line @next/next/no-img-element
             <img
               src={poster}
@@ -271,7 +283,7 @@ export default function ProjectDetail({
             />
           )}
 
-          {(!reel || reelIsVideo) && (
+          {(!reel || reelIsVideo) && !project.youtube && (
             <button
               onClick={togglePlay}
               aria-label={playing ? "Pause" : "Play"}

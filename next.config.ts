@@ -37,7 +37,8 @@ const csp = [
   // Portal's Live Site tab, at its own domain and at its Vercel address.
   // Everyone else stays blocked.
   `frame-ancestors 'self' https://portal.triptychstudios.co https://triptych-portal.vercel.app`,
-  `frame-src 'none'`,
+  // Project pages embed the YouTube player (privacy-enhanced domain)
+  `frame-src https://www.youtube-nocookie.com`,
   `base-uri 'self'`,
   `form-action 'self'`,
   `object-src 'none'`,

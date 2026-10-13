@@ -14,6 +14,7 @@ import Header from "@/components/Header";
 import ProjectDetail from "@/components/ProjectDetail";
 import { getSiteContent, type PortalWork } from "@/lib/siteContent";
 import { site } from "@/lib/site";
+import { youtubePoster } from "@/lib/youtube";
 
 // The portal adds and removes projects: re-read its feed every minute,
 // and render slugs that weren't known at build time on demand.
@@ -116,7 +117,7 @@ export default async function ProjectPage({
         project={project}
         work={work}
         gradient={placeholderGradient(index)}
-        media={work?.thumb ?? work?.clipPoster ?? projectMedia(index)}
+        media={work?.thumb ?? work?.clipPoster ?? (project.youtube ? youtubePoster(project.youtube) : projectMedia(index))}
         frames={[...(work?.frames ?? []), ...framesFor(slug)]}
       />
     </div>

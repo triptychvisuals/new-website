@@ -1,3 +1,4 @@
+import { youtubePoster } from "@/lib/youtube";
 import {
   projects,
   projectFromWork,
@@ -38,7 +39,7 @@ export function mergeCards(works: PortalWork[] = []): CardData[] {
   return projects.map((project, i) => ({
     project,
     index: i,
-    media: projectMedia(i),
+    media: project.youtube ? youtubePoster(project.youtube) : projectMedia(i),
     href: undefined,
   }));
 }

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { projects, placeholderGradient, projectMedia } from "@/lib/projects";
+import { youtubePoster } from "@/lib/youtube";
 import { site } from "@/lib/site";
 
 /**
@@ -56,7 +57,7 @@ const PRESS_URL =
 // EDIT: the newest video — its slug (the end of its /work/… link) gets the
 // NEW badge in the Projects dropdown and on the preview player. Set it to
 // the next release when it drops; "" hides the badge.
-const NEWEST_SLUG = "overthinking";
+const NEWEST_SLUG = "overthink";
 
 /**
  * The ✦ NEW badge — pulses: a copy of the pill swells out behind it and
@@ -95,7 +96,7 @@ const projectItem = (i: number): Item | null => {
       meta: desc,
       href,
       video: p.video && /\.(mp4|webm)$/i.test(p.video) ? p.video : undefined,
-      still: projectMedia(i),
+      still: p.youtube ? youtubePoster(p.youtube) : projectMedia(i),
       gradient: placeholderGradient(i),
     },
   };

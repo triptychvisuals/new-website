@@ -24,6 +24,12 @@ export type Project = {
   year?: string;
   /** EDIT: small logo shown under the year, e.g. "/logos/label.svg". */
   logo?: string;
+  /**
+   * EDIT: the video's YouTube id (the part after "watch?v=" in its link).
+   * Gives the card its thumbnail, the project page its player, and puts
+   * the video on the home page's 500+ grid.
+   */
+  youtube?: string;
 };
 
 // EDIT: brands / labels Triptych works with (used on the About page + hero marquee)
@@ -37,67 +43,59 @@ export const clients = [
   "Republic Records",
 ];
 
-// EDIT: placeholder titles for the not-yet-filled cards
-const titles = [
-  "Overthinking",
-  "Echoes of the City",
-  "Shadow of Tomorrow",
-  "Silent Horizon",
-  "Beyond the Last Frame",
-  "The Midnight Route",
-  "Broken Skyline",
-  "Fragments of Light",
-  "The Final Signal",
-  "Drive the Future",
-  "Pure Motion",
-  "Urban Energy",
-  "The Midnight Route V2",
-  "Neon Divide",
-  "Slow Tide",
-  "Afterglow",
-  "Paper Moon",
-  "Cold Open",
-  "Dust & Gold",
-  "The Long Exposure",
-  "Static Bloom",
-  "Undertow",
-  "Signal Fire",
-  "Glass Horizon",
-  "Night Shift",
-  "Half Light",
-  "The Understudy",
-  "Wildcard",
-  "Foreign Tongue",
-  "Paper Trail",
-  "Terminal Velocity",
-];
+// -------------------------------------------------------------------------
+// EDIT: the projects, newest first. Each one: title, artist, year, and
+// where its video lives —
+//   youtube: the id after "watch?v=" in its YouTube link (thumbnail, player
+//            on its page, and a tile on the home page's 500+ grid)
+//   video:   a local reel in /public/reels that loops on its card
+// Years marked "~" in a comment are estimates from the upload date — fix
+// them as you go. Projects with no youtube id yet show a colour poster
+// until one is pasted in.
+// -------------------------------------------------------------------------
+type Authored = Omit<Project, "slug" | "category"> & { category?: string };
 
-// EDIT: real projects wired to specific cards — { title, category, video }
-const OVERRIDES: Record<number, Partial<Project>> = {
-  // New project — no reel yet, so it shows the placeholder gradient. Year auto
-  // resolves to YEARS[0] = "2026".
-  0: { title: "Overthinking", category: "Music Video" },
-  1: { title: "Timmy Story", category: "Music Video", video: "/reels/reel-a.mp4" },
-  2: { title: "Hands Up", category: "Music Video", video: "/reels/reel-b.mp4" },
-  3: {
+const AUTHORED: Authored[] = [
+  { title: "Overthink", artist: "Wale ft. Elmiene", year: "2026", youtube: "aEfoHSFeTII" },
+  { title: "Dramatic", year: "2026" }, // EDIT: artist + youtube id
+  { title: "Timmy Story", year: "2025", video: "/reels/reel-a.mp4" }, // EDIT: artist + youtube id
+  { title: "Hands Up!!!", artist: "Jay Wood", year: "2025", video: "/reels/reel-b.mp4" }, // EDIT: youtube id
+  {
     title: "Good Morning America",
-    category: "Music Video",
+    year: "2025",
     video: "/reels/reel-c.mp4",
     // 4:3 source in a 16:9 cell — bias the crop down so the seated subject's
     // face + hands stay in frame instead of empty text headroom up top.
     objectPosition: "50% 60%",
-  },
-  4: { title: "Feel the Love", category: "Music Video", video: "/reels/feel-the-love.mp4" },
-  5: { title: "Dramatic", category: "Music Video", year: "2026" },
-  6: { title: "Ridin Wit It", category: "Music Video", year: "2023" },
-  7: { title: "Locked In", category: "Music Video", year: "2024" },
-  8: { title: "OK Cool", category: "Music Video" },
-  9: { title: "Wiscansin", category: "Music Video" },
-  10: { title: "Bogus", category: "Music Video" },
-  11: { title: "Letter to the Game", category: "Music Video" },
-};
+  }, // EDIT: artist + youtube id
+  { title: "Feel the Love", year: "2024", video: "/reels/feel-the-love.mp4", youtube: "4LQP9E6W-3w" }, // EDIT: artist
+  { title: "Locked In", year: "2024" }, // EDIT: artist + youtube id
+  { title: "Ridin Wit It", artist: "G Herbo", year: "2020" }, // EDIT: youtube id — Triptych's most-watched video
+  { title: "OK Cool", year: "2023" }, // EDIT: artist + youtube id
+  { title: "Wiscansin", year: "2023" }, // EDIT: artist + youtube id
+  { title: "Bogus", year: "2022" }, // EDIT: artist + youtube id
+  { title: "Letter to the Game", artist: "Young Tee Tee", year: "2021", youtube: "EBX9TMi5tao" },
+  { title: "Shooters", artist: "Lil Zay Osama ft. Doe Boy", year: "2021", youtube: "n0IiWdpcn5U" },
+  { title: "Too Hot", artist: "Queen Key", year: "2021" }, // EDIT: youtube id
+  { title: "Blackout", artist: "MVP Tino", year: "2019", youtube: "FiT7-3-EWEU" }, // ~
+  { title: "Nightmares", artist: "Solly Bandz", year: "2019", youtube: "FmhTALb6JTc" }, // ~
+  { title: "Timing", artist: "Khaliyah X", year: "2018" }, // EDIT: youtube id
+  { title: "Impulses", artist: "Khaliyah X", year: "2018", youtube: "4yVaIs9jXj0" }, // ~
+  { title: "Overweight", artist: "Trippie Redd ft. Chris King", year: "2017", youtube: "OvMwvYklW0I" },
+  { title: "Who Dat", artist: "Lil Pump", year: "2017" }, // EDIT: youtube id
+  { title: "My Way", artist: "Queen Key", year: "2017", youtube: "_3WOkRKuB9c" },
+  { title: "Hip Hopper (Remix)", artist: "Sumo", year: "2017", youtube: "bYbFS0aDm4I" }, // ~
+  { title: "Lean on Me", artist: "Sumo", year: "2017", youtube: "-wZKgZlHK-c" }, // ~
+  { title: "Broken Seal", artist: "Tone The Artist", year: "2018", youtube: "EB9IAu9weTk" }, // ~
+  { title: "Ready", artist: "VonMar", year: "2018", youtube: "kJmhphsjQeQ" }, // ~
+  { title: "Petro", artist: "Jay Wood", year: "2018", youtube: "r6RXpiIrVZ4" }, // ~
+  { title: "Ain't Sh*t", artist: "Captain Jaybe", year: "2017", youtube: "APCsiZ0lIfE" }, // ~
+  { title: "2DB", artist: "Chulo ft. Rodie", year: "2017", youtube: "SC_VS1pLwKo" }, // ~
+  { title: "Coupe", artist: "Bali Baby", year: "2017", youtube: "zwa5UybNXpk" }, // ~
+  { title: "Food for Thought", artist: "Jay Wood", year: "2016", youtube: "d48ptwLKnng" },
+];
 
-// EDIT: placeholder years shown top-right of each card (swap for the real ones)
+// EDIT: placeholder years for portal works that don't carry one
 const YEARS = ["2026", "2025", "2024", "2023", "2022", "2021"];
 
 // EDIT: placeholder logos (generic marks) so the logo slot is visible — replace
@@ -116,19 +114,12 @@ export function slugify(s: string): string {
     .replace(/^-+|-+$/g, "");
 }
 
-export const projects: Project[] = titles.map((title, i) => {
-  const t = OVERRIDES[i]?.title ?? title;
-  return {
-    title: t,
-    slug: slugify(t),
-    category: OVERRIDES[i]?.category ?? "Music Video", // EDIT: default category
-    video: OVERRIDES[i]?.video,
-    objectPosition: OVERRIDES[i]?.objectPosition,
-    artist: OVERRIDES[i]?.artist, // EDIT: set an artist to show instead of category
-    year: OVERRIDES[i]?.year ?? YEARS[i % YEARS.length],
-    logo: OVERRIDES[i]?.logo ?? PLACEHOLDER_LOGOS[i % PLACEHOLDER_LOGOS.length],
-  };
-});
+export const projects: Project[] = AUTHORED.map((a, i) => ({
+  ...a,
+  slug: slugify(a.title),
+  category: a.category ?? "Music Video", // EDIT: default category
+  logo: a.logo ?? PLACEHOLDER_LOGOS[i % PLACEHOLDER_LOGOS.length],
+}));
 
 /** Look up a project (and its index) by slug — for the detail route. */
 export function projectBySlug(

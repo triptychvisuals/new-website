@@ -1,31 +1,16 @@
 // -------------------------------------------------------------------------
-// EDIT: official music videos from Lawrence Mahone's YouTube — each one's
-// thumbnail fills a tile on the 500+ work grid (in this order, first tile
-// first) and the tile opens the video. With fewer videos than tiles the list
-// repeats to keep the grid full, so every video added here replaces a
-// repeat. Add a video: copy the id after "watch?v=" in its URL and add a
-// line. Thumbnails load straight from YouTube, so nothing needs downloading.
+// YouTube helpers. The videos themselves are the projects in lib/projects.ts
+// that have a `youtube` id — add one there and it appears on the 500+ grid,
+// gets a thumbnail on its card and a player on its page.
 // -------------------------------------------------------------------------
+import { projects } from "./projects";
 
 export type YouTubeVideo = { id: string; title: string };
 
-export const musicVideos: YouTubeVideo[] = [
-  { id: "_3WOkRKuB9c", title: "Queen Key — My Way (Official Music Video)" },
-  { id: "FiT7-3-EWEU", title: "MVP Tino — Blackout (Official Music Video)" },
-  { id: "-wZKgZlHK-c", title: "Sumo — Lean on Me (Official Music Video)" },
-  { id: "EB9IAu9weTk", title: "Tone The Artist — Broken Seal (Official Music Video)" },
-  { id: "EBX9TMi5tao", title: "Young Tee Tee — Letter to the Game (Official Music Video)" },
-  { id: "kJmhphsjQeQ", title: "VonMar — Ready (Official Music Video)" },
-  { id: "4yVaIs9jXj0", title: "Khaliyah X — Impulses (Official Music Video)" },
-  { id: "r6RXpiIrVZ4", title: "Jay Wood — Petro (Official Music Video)" },
-  { id: "APCsiZ0lIfE", title: "Captain Jaybe — Ain't Sh*t (Official Music Video)" },
-  { id: "SC_VS1pLwKo", title: "Chulo ft. Rodie — 2DB (Official Music Video)" },
-  { id: "d48ptwLKnng", title: "Jay Wood — Food for Thought (Official Music Video)" },
-  { id: "zwa5UybNXpk", title: "Bali Baby — Coupe (Official Music Video)" },
-  { id: "bYbFS0aDm4I", title: "Sumo — Hip Hopper (Remix) (Official Music Video)" },
-  { id: "FmhTALb6JTc", title: "Solly Bandz — NIGHTMARES (Official Video)" },
-  { id: "4LQP9E6W-3w", title: "FEEL THE LOVE (Official Video)" },
-];
+/** Every project with a YouTube video, in project order (newest first). */
+export const musicVideos: YouTubeVideo[] = projects
+  .filter((p): p is typeof p & { youtube: string } => !!p.youtube)
+  .map((p) => ({ id: p.youtube, title: p.artist ? `${p.artist} — ${p.title}` : p.title }));
 
 /**
  * Thumbnail URLs, best first. sddefault (640×480) is plenty for a ~170px
@@ -42,3 +27,13 @@ export function youtubeThumbs(id: string): [string, string] {
 }
 
 export const youtubeUrl = (id: string) => `https://www.youtube.com/watch?v=${id}`;
+
+/** The embeddable player (privacy-enhanced domain — no cookies until play). */
+export const youtubeEmbed = (id: string) =>
+  `https://www.youtube-nocookie.com/embed/${id}?rel=0&modestbranding=1&color=white`;
+
+/**
+ * Card / poster still: sddefault is 4:3 with the 16:9 frame letterboxed
+ * inside, which an object-cover 16:9 box crops exactly, so no zoom needed.
+ */
+export const youtubePoster = (id: string) => youtubeThumbs(id)[0];
