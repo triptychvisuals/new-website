@@ -154,21 +154,39 @@
 .dc-stage[data-3d] .dc-card {
   /* EDIT: card width on the spiral (the spiral's size scales with it) —
      iPad here, desktop in the media query below */
-  width: min(400px, 52vw);
+  width: min(470px, 60vw);
   backface-visibility: hidden;
+}
+/* The wash sits under everything in the stage; the big year, line and
+   cards paint over it */
+.dc-stage[data-3d] .dc-wash {
+  display: block;
+  /* painted at quarter size and scaled up — it's a soft blur, so no one can
+     tell, and the paint at each year change costs 1/16th as much */
+  inset: auto;
+  left: 0;
+  top: 0;
+  width: 25%;
+  height: 25%;
+  transform: scale(4);
+  transform-origin: 0 0;
+  will-change: opacity;
+}
+.dc-stage:not([data-3d]) .dc-wash {
+  display: none;
 }
 @media (min-width: 1024px) {
   .dc-stage[data-3d] .dc-card {
     /* capped by screen height too, so short laptop screens still fit a card
        plus its neighbours' edges */
-    width: min(580px, 42vw, calc((100svh - 330px) * 1.6));
+    width: min(720px, 50vw, calc((100svh - 300px) * 1.6));
   }
   /* text scaled up to match the bigger card */
   .dc-stage[data-3d] .dc-card h3 {
-    font-size: 1.9rem;
+    font-size: 2.2rem;
   }
   .dc-stage[data-3d] .dc-card h3 + p {
-    font-size: 17px;
+    font-size: 18px;
   }
 }
 /* The line round the spiral — straight segments (width set in JS) */

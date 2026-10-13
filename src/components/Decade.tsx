@@ -24,6 +24,9 @@ const SCROLL_PER_YEAR = 420; // px of scrolling to bring the next year round
 const TILT_DEG = 7; // camera looks slightly down onto the spiral
 const GAP = 0.32; // empty space between one card and the next, × card height
 const NODE_ABOVE = 22; // px the line + year dots run above each card's top
+// EDIT: how strongly the current card's colours wash over the whole stage
+// behind the spiral (0–1). Crossfades to the next year's as you scroll.
+const WASH = 0.55;
 // Each line segment is its own 3D layer, so keep the count modest.
 const SEGS_PER_YEAR = 6;
 
@@ -83,6 +86,7 @@ export default function Decade() {
         const segEls = gsap.utils.toArray<HTMLElement>("[data-dc-seg]", st);
         const nodes = gsap.utils.toArray<HTMLElement>("[data-dc-node]", st);
         const shades = cards.map((c) => c.querySelector<HTMLElement>("[data-dc-shade]")!);
+        const washes = gsap.utils.toArray<HTMLElement>("[data-dc-wash]", st);
         st.setAttribute("data-3d", "");
 
         const geo = { radius: 0, rise: 0, lift: 0 };
@@ -123,7 +127,20 @@ export default function Decade() {
         let shownYear = -1;
         let litSegs = -1;
         let litNodes = -1;
+        let washPair = -1;
         const render = (p: number) => {
+          // The background wash: the current year's colours, crossfading to
+          // the next. Only the two nearest layers exist on screen at a time
+          // (the rest are display:none, so they cost nothing).
+          const i0 = Math.min(Math.floor(p), washes.length - 2);
+          const f = p - i0;
+          if (i0 !== washPair) {
+            washes.forEach((w, i) => (w.style.display = i === i0 || i === i0 + 1 ? "" : "none"));
+            washPair = i0;
+          }
+          washes[i0].style.opacity = String((1 - f) * WASH);
+          washes[i0 + 1].style.opacity = String(f * WASH);
+
           // Turn + lift the helix so year p faces the camera, front and centre.
           hx.style.transform = `rotateX(${-TILT_DEG}deg) translateZ(${-geo.radius}px) translateY(${-p * geo.rise}px) rotateY(${-p * STEP_DEG}deg)`;
           // Cards dim with a dark layer inside them (not opacity), so they
@@ -178,10 +195,11 @@ export default function Decade() {
           st.removeAttribute("data-3d");
           st.style.perspective = "";
           hx.style.transform = "";
-          [...cards, ...segEls, ...nodes, ...shades].forEach((el) => {
+          [...cards, ...segEls, ...nodes, ...shades, ...washes].forEach((el) => {
             el.style.transform = "";
             el.style.opacity = "";
             el.style.width = "";
+            el.style.display = "";
             el.removeAttribute("data-lit");
           });
         };
@@ -303,6 +321,18 @@ export default function Decade() {
         {/* ── iPad / desktop: the spiral stage — pinned while the helix
             turns (.dc-stage in globals.css; hidden on phones) ── */}
         <div ref={stage} className="dc-stage">
+          {/* The wash: each year's card colours, blown up soft across the
+              whole stage (opacity + display set from JS) */}
+          {decade.map((d, i) => (
+            <span
+              key={`w${d.year}`}
+              data-dc-wash
+              aria-hidden
+              className="dc-wash pointer-events-none absolute opacity-0"
+              style={{ background: washFor(i) }}
+            />
+          ))}
+
           {/* Current year, huge and faint, behind the spiral */}
           <span
             ref={bigYear}
@@ -374,6 +404,30 @@ export default function Decade() {
   );
 }
 
+/** Same golden-angle hues as the 500+ grid. */
+const hueFor = (i: number) => Math.round((i * 137.508) % 360);
+
+/** The card's art: a vivid radial gradient. */
+const artFor = (i: number) => {
+  const h = hueFor(i);
+  return `radial-gradient(circle at 30% 25%, hsl(${h} 92% 66%), hsl(${(h + 38) % 360} 85% 48%) 55%, hsl(${(h + 70) % 360} 80% 26%))`;
+};
+
+/**
+ * The same art as a wash for the whole stage — the card's colours blown up
+ * huge with long soft falloffs, which reads as a blurred copy of the card
+ * without needing a blur filter (those cost every frame; this is one
+ * static paint, then only its opacity moves).
+ */
+const washFor = (i: number) => {
+  const h = hueFor(i);
+  return [
+    `radial-gradient(ellipse 70% 75% at 32% 30%, hsl(${h} 92% 62%) 0%, hsl(${h} 92% 62% / 0) 70%)`,
+    `radial-gradient(ellipse 80% 80% at 78% 72%, hsl(${(h + 38) % 360} 85% 46%) 0%, hsl(${(h + 38) % 360} 85% 46% / 0) 72%)`,
+    `radial-gradient(ellipse 120% 100% at 50% 50%, hsl(${(h + 70) % 360} 80% 28%) 0%, #0a0a0a 100%)`,
+  ].join(", ");
+};
+
 /** One year's card — same in the spiral and the phone list. */
 function Card({
   d,
@@ -387,9 +441,7 @@ function Card({
   /** Spiral cards dim via this dark layer (set from JS) instead of opacity. */
   shade?: boolean;
 }) {
-  // Same golden-angle hues as the 500+ grid. (No drop shadow: on 11 moving
-  // 3D layers it doubled each frame's cost.)
-  const hue = Math.round((i * 137.508) % 360);
+  // (No drop shadow: on 11 moving 3D layers it doubled each frame's cost.)
   return (
     <article
       data-dc-card
@@ -397,9 +449,7 @@ function Card({
     >
       <div
         className="relative aspect-[16/8] w-full"
-        style={{
-          background: `radial-gradient(circle at 30% 25%, hsl(${hue} 92% 66%), hsl(${(hue + 38) % 360} 85% 48%) 55%, hsl(${(hue + 70) % 360} 80% 26%))`,
-        }}
+        style={{ background: artFor(i) }}
       >
         <span className="absolute bottom-3 left-4 text-[clamp(2.25rem,5vw,3.25rem)] font-medium leading-none tracking-[-0.04em] text-white/60">
           {d.year}
