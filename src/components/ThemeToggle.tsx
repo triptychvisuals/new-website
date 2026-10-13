@@ -14,14 +14,20 @@ export default function ThemeToggle() {
   const [forced, setForced] = useState(false);
 
   useEffect(() => {
-    setDark(document.documentElement.getAttribute("data-theme") === "dark");
     const header = btn.current?.closest<HTMLElement>("[data-site-header]");
-    if (!header) return;
-    const sync = () => setForced(header.getAttribute("data-theme") === "dark");
-    sync();
+    const sync = () => setForced(header?.getAttribute("data-theme") === "dark");
+    // Read the saved theme + the header's state on the next frame (after
+    // hydration), then follow the header as the timeline toggles it.
+    const first = requestAnimationFrame(() => {
+      setDark(document.documentElement.getAttribute("data-theme") === "dark");
+      sync();
+    });
     const mo = new MutationObserver(sync);
-    mo.observe(header, { attributes: true, attributeFilter: ["data-theme"] });
-    return () => mo.disconnect();
+    if (header) mo.observe(header, { attributes: true, attributeFilter: ["data-theme"] });
+    return () => {
+      cancelAnimationFrame(first);
+      mo.disconnect();
+    };
   }, []);
   const shown = dark || forced;
 

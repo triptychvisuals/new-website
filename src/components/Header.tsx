@@ -38,9 +38,13 @@ function useClock() {
       const h = d.getHours() % 12 || 12;
       return `${pad(h)}:${pad(d.getMinutes())}:${pad(d.getSeconds())} ${ampm}`;
     };
-    setTime(fmt());
+    // First reading on the next frame (after hydration), then every second.
+    const first = requestAnimationFrame(() => setTime(fmt()));
     const id = setInterval(() => setTime(fmt()), 1000);
-    return () => clearInterval(id);
+    return () => {
+      cancelAnimationFrame(first);
+      clearInterval(id);
+    };
   }, []);
   return time;
 }
