@@ -158,9 +158,13 @@
   backface-visibility: hidden;
 }
 /* The wash sits under everything in the stage; the big year, line and
-   cards paint over it */
+   cards paint over it. The base is part of the stage's own paint (no
+   layer of its own); the fade layer only exists while a year fades out. */
+.dc-stage:not([data-3d]) .dc-wash-base,
+.dc-stage:not([data-3d]) .dc-wash {
+  display: none;
+}
 .dc-stage[data-3d] .dc-wash {
-  display: block;
   /* painted at quarter size and scaled up — it's a soft blur, so no one can
      tell, and the paint at each year change costs 1/16th as much */
   inset: auto;
@@ -170,10 +174,8 @@
   height: 25%;
   transform: scale(4);
   transform-origin: 0 0;
-  will-change: opacity;
-}
-.dc-stage:not([data-3d]) .dc-wash {
-  display: none;
+  /* EDIT: how long one year's colours take to give way to the next */
+  transition: opacity 0.7s ease;
 }
 @media (min-width: 1024px) {
   .dc-stage[data-3d] .dc-card {

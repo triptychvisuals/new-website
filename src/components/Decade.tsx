@@ -25,7 +25,8 @@ const TILT_DEG = 7; // camera looks slightly down onto the spiral
 const GAP = 0.32; // empty space between one card and the next, × card height
 const NODE_ABOVE = 22; // px the line + year dots run above each card's top
 // EDIT: how strongly the current card's colours wash over the whole stage
-// behind the spiral (0–1). Crossfades to the next year's as you scroll.
+// behind the spiral (0–1). Fades to the next year's as each comes round
+// (fade time: .dc-wash in globals.css).
 const WASH = 0.55;
 // Each line segment is its own 3D layer, so keep the count modest.
 const SEGS_PER_YEAR = 6;
@@ -86,7 +87,15 @@ export default function Decade() {
         const segEls = gsap.utils.toArray<HTMLElement>("[data-dc-seg]", st);
         const nodes = gsap.utils.toArray<HTMLElement>("[data-dc-node]", st);
         const shades = cards.map((c) => c.querySelector<HTMLElement>("[data-dc-shade]")!);
-        const washes = gsap.utils.toArray<HTMLElement>("[data-dc-wash]", st);
+        // The wash lives in two places: the stage's own background (painted
+        // with everything else — no extra layer while you scroll) and one
+        // fade layer that carries the outgoing year's colours away.
+        const washBase = st.querySelector<HTMLElement>("[data-dc-wash-base]")!;
+        const washFade = st.querySelector<HTMLElement>("[data-dc-wash-fade]")!;
+        const hideFade = () => {
+          if (washFade.style.opacity === "0") washFade.style.display = "none";
+        };
+        washFade.addEventListener("transitionend", hideFade);
         st.setAttribute("data-3d", "");
 
         const geo = { radius: 0, rise: 0, lift: 0 };
@@ -127,19 +136,7 @@ export default function Decade() {
         let shownYear = -1;
         let litSegs = -1;
         let litNodes = -1;
-        let washPair = -1;
         const render = (p: number) => {
-          // The background wash: the current year's colours, crossfading to
-          // the next. Only the two nearest layers exist on screen at a time
-          // (the rest are display:none, so they cost nothing).
-          const i0 = Math.min(Math.floor(p), washes.length - 2);
-          const f = p - i0;
-          if (i0 !== washPair) {
-            washes.forEach((w, i) => (w.style.display = i === i0 || i === i0 + 1 ? "" : "none"));
-            washPair = i0;
-          }
-          washes[i0].style.opacity = String((1 - f) * WASH);
-          washes[i0 + 1].style.opacity = String(f * WASH);
 
           // Turn + lift the helix so year p faces the camera, front and centre.
           hx.style.transform = `rotateX(${-TILT_DEG}deg) translateZ(${-geo.radius}px) translateY(${-p * geo.rise}px) rotateY(${-p * STEP_DEG}deg)`;
@@ -162,6 +159,19 @@ export default function Decade() {
           }
           const year = Math.round(p);
           if (year !== shownYear) {
+            // New year's colours go straight onto the stage; the old year's
+            // sit on the fade layer and the browser fades them out (CSS
+            // transition) — nothing per frame, no layer at all once faded.
+            washBase.style.background = washFor(year);
+            if (shownYear >= 0) {
+              washFade.style.transition = "none";
+              washFade.style.display = "";
+              washFade.style.background = washFor(shownYear);
+              washFade.style.opacity = String(WASH);
+              void washFade.offsetWidth; // commit the start state
+              washFade.style.transition = "";
+              washFade.style.opacity = "0";
+            }
             shownYear = year;
             if (bigYear.current) bigYear.current.textContent = decade[year].year;
             if (counter.current)
@@ -195,11 +205,17 @@ export default function Decade() {
           st.removeAttribute("data-3d");
           st.style.perspective = "";
           hx.style.transform = "";
-          [...cards, ...segEls, ...nodes, ...shades, ...washes].forEach((el) => {
+          washFade.removeEventListener("transitionend", hideFade);
+          [washBase, washFade].forEach((el) => {
+            el.style.background = "";
+            el.style.opacity = "";
+            el.style.display = "";
+            el.style.transition = "";
+          });
+          [...cards, ...segEls, ...nodes, ...shades].forEach((el) => {
             el.style.transform = "";
             el.style.opacity = "";
             el.style.width = "";
-            el.style.display = "";
             el.removeAttribute("data-lit");
           });
         };
@@ -321,17 +337,11 @@ export default function Decade() {
         {/* ── iPad / desktop: the spiral stage — pinned while the helix
             turns (.dc-stage in globals.css; hidden on phones) ── */}
         <div ref={stage} className="dc-stage">
-          {/* The wash: each year's card colours, blown up soft across the
-              whole stage (opacity + display set from JS) */}
-          {decade.map((d, i) => (
-            <span
-              key={`w${d.year}`}
-              data-dc-wash
-              aria-hidden
-              className="dc-wash pointer-events-none absolute opacity-0"
-              style={{ background: washFor(i) }}
-            />
-          ))}
+          {/* The wash: the current card's colours blown up soft across the
+              whole stage (base), and the previous year's fading out (fade).
+              Both set from JS. */}
+          <span data-dc-wash-base aria-hidden className="dc-wash-base pointer-events-none absolute inset-0" style={{ opacity: WASH }} />
+          <span data-dc-wash-fade aria-hidden className="dc-wash pointer-events-none absolute opacity-0" style={{ display: "none" }} />
 
           {/* Current year, huge and faint, behind the spiral */}
           <span
