@@ -157,56 +157,6 @@
   width: min(470px, 60vw);
   backface-visibility: hidden;
 }
-/* The timeline headline: one line sized to the full margin width (the
-   divisor is the line's width in em — tune it if the copy changes), in
-   liquid chrome: a metallic gradient clipped to the text, its highlight
-   drifting back and forth while the headline is on screen. */
-.dc-headline {
-  font-size: min(calc((100vw - 2.5rem) / 8.2), 200px);
-}
-@media (min-width: 640px) {
-  .dc-headline {
-    font-size: min(calc((100vw - 4rem) / 8.2), 200px);
-  }
-}
-.dc-chrome {
-  /* EDIT: the metal — light and dark bands at a steep angle */
-  background-image: linear-gradient(
-    104deg,
-    #4a4a4f 0%,
-    #d9d9de 12%,
-    #ffffff 20%,
-    #8a8a90 30%,
-    #5a5a5f 38%,
-    #f2f2f5 50%,
-    #9c9ca2 60%,
-    #ffffff 70%,
-    #6a6a70 80%,
-    #e4e4e8 90%,
-    #45454a 100%
-  );
-  background-size: 240% 100%;
-  background-position: 0% 50%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  -webkit-text-fill-color: transparent;
-  animation: dc-chrome 9s ease-in-out infinite alternate paused;
-}
-.dc-chrome[data-on] {
-  animation-play-state: running;
-}
-@keyframes dc-chrome {
-  to {
-    background-position: 100% 50%;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .dc-chrome {
-    animation: none;
-  }
-}
-
 /* Blurred thumbnails behind the 500+ grid (WorkGridClient): tiny 320×180
    images blurred a little and scaled up to cover the section — the
    upscale does most of the blurring for free. Opacity is set from JS. */
@@ -218,7 +168,9 @@
   height: 180px;
   object-fit: cover;
   opacity: 0;
-  filter: blur(6px);
+  /* EDIT: blur + a saturation boost — real thumbnails run dark, this brings
+     the colour up (applied to the tiny image, so it's cheap) */
+  filter: blur(5px) saturate(2.2) contrast(1.15) brightness(1.1);
   transform: translate(-50%, -50%) scale(var(--wg-bg-scale, 6));
   will-change: opacity;
 }
@@ -261,25 +213,27 @@
    drawn entirely with background layers (top layer first): sprocket holes
    along both edges, the dark gaps between frames, then the frames
    themselves, which fill with the accent from the left up to --fill (set
-   from JS as you scroll). EDIT: --strip-h sets its height. */
+   from JS as you scroll). Everything scales with --u. */
 .dc-stage[data-3d] .dc-seg {
   --fill: 0%;
-  --strip-h: 26px;
+  /* EDIT: --u scales the whole strip (1 = 26px tall) */
+  --u: 1.7;
+  --strip-h: calc(26px * var(--u));
   --hole: #050505;
   --base: #181818;
   display: block;
   height: var(--strip-h);
-  border-radius: 2px;
+  border-radius: calc(2px * var(--u));
   background:
-    repeating-linear-gradient(90deg, transparent 0 5px, var(--hole) 5px 9px, transparent 9px 14px) 0 2px / 100% 4px no-repeat,
-    repeating-linear-gradient(90deg, transparent 0 5px, var(--hole) 5px 9px, transparent 9px 14px) 0 calc(100% - 6px) / 100% 4px no-repeat,
-    repeating-linear-gradient(90deg, transparent 0 12px, var(--base) 12px 15px) 0 8px / 100% calc(var(--strip-h) - 16px) no-repeat,
-    linear-gradient(90deg, var(--accent) var(--fill), #2a2a2a var(--fill)) 0 8px / 100% calc(var(--strip-h) - 16px) no-repeat,
+    repeating-linear-gradient(90deg, transparent 0 calc(5px * var(--u)), var(--hole) calc(5px * var(--u)) calc(9px * var(--u)), transparent calc(9px * var(--u)) calc(14px * var(--u))) 0 calc(2px * var(--u)) / 100% calc(4px * var(--u)) no-repeat,
+    repeating-linear-gradient(90deg, transparent 0 calc(5px * var(--u)), var(--hole) calc(5px * var(--u)) calc(9px * var(--u)), transparent calc(9px * var(--u)) calc(14px * var(--u))) 0 calc(100% - 6px * var(--u)) / 100% calc(4px * var(--u)) no-repeat,
+    repeating-linear-gradient(90deg, transparent 0 calc(12px * var(--u)), var(--base) calc(12px * var(--u)) calc(15px * var(--u))) 0 calc(8px * var(--u)) / 100% calc(var(--strip-h) - 16px * var(--u)) no-repeat,
+    linear-gradient(90deg, var(--accent) var(--fill), #2a2a2a var(--fill)) 0 calc(8px * var(--u)) / 100% calc(var(--strip-h) - 16px * var(--u)) no-repeat,
     var(--base);
 }
 @media (max-width: 1023px) {
   .dc-stage[data-3d] .dc-seg {
-    --strip-h: 20px;
+    --u: 1.15;
   }
 }
 /* A dot on the strip above every year; ignites once reached.

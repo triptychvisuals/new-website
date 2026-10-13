@@ -67,8 +67,8 @@ function Thumb({ src, fallback }: { src: string; fallback?: string }) {
 // EDIT: how long the count-up takes (seconds).
 const COUNT_SECONDS = 2.4;
 // EDIT: the blurred thumbnails behind the grid — how many, how strong.
-const BG_COUNT = 5;
-const BG_STRENGTH = 0.55;
+const BG_COUNT = 7;
+const BG_STRENGTH = 0.85;
 export default function WorkGridClient({
   bubbles,
   countLabel,
@@ -182,7 +182,10 @@ export default function WorkGridClient({
           // eslint-disable-next-line @next/next/no-img-element
           <img key={src} data-wg-bg src={src} alt="" loading="lazy" decoding="async" referrerPolicy="no-referrer" className="wg-bg" />
         ))}
-        <div className="absolute inset-0 bg-background/55" />
+        {/* light tint, and the backdrop fades out at the top and bottom so
+            the section has no hard edges */}
+        <div className="absolute inset-0 bg-background/25" />
+        <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, var(--background) 0%, transparent 22%, transparent 78%, var(--background) 100%)" }} />
       </div>
 
       <div className="relative mx-auto grid w-full max-w-[1100px] grid-cols-6 gap-2.5 sm:gap-4">
