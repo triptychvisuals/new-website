@@ -4,10 +4,10 @@ import { socials } from "@/lib/about";
 
 /* EDIT: footer legal links (the Navigation column mirrors the header via site.nav) */
 const legal = [
-  { label: "Privacy Policy", href: "#" },
-  { label: "Terms of Service", href: "#" },
-  { label: "Disclaimer", href: "#" },
-  { label: "404", href: "/404" },
+  { label: "Privacy Policy", href: "/privacy" },
+  { label: "Terms of Service", href: "/terms" },
+  { label: "Disclaimer", href: "/disclaimer" },
+  { label: "Contact", href: "/contact" },
 ];
 
 const colHead = "font-mono text-[11px] uppercase tracking-[0.15em] text-muted";

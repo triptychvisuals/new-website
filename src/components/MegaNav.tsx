@@ -122,8 +122,8 @@ const MENUS: Record<string, Menu> = {
     footer: {
       cta: { label: "See all projects", href: "/projects" },
       links: [
-        { label: "Press", href: "/about#press" },
-        { label: "Awards", href: "/about#awards" },
+        { label: "Press", href: "/press" },
+        { label: "Awards", href: "/press#awards" },
         { label: "Contact", href: site.contactUrl },
       ],
     },
@@ -157,7 +157,7 @@ const MENUS: Record<string, Menu> = {
     columns: [
       {
         items: [
-          { title: "Production experience", desc: "A decade of credits, partners, and releases", href: "/about#press", icon: "bolt" },
+          { title: "Press & awards", desc: "Features, honors, and the press kit", href: "/press", icon: "bolt" },
         ],
       },
       {
@@ -167,7 +167,7 @@ const MENUS: Record<string, Menu> = {
       },
       {
         items: [
-          { title: "Awards", desc: "Selected honors from festivals and the industry", href: "/about#awards", icon: "award" },
+          { title: "Awards", desc: "Selected honors from festivals and the industry", href: "/press#awards", icon: "award" },
         ],
       },
     ],

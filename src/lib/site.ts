@@ -25,7 +25,7 @@ export const site = {
   nav: [
     { label: "Projects", href: "/projects" }, // EDIT: the full project index
     { label: "About", href: "/about" }, // EDIT
-    { label: "Press", href: "/about#awards" }, // EDIT
-    { label: "Store", href: "#" }, // EDIT: link to your store; shows the ↗
+    { label: "Press", href: "/press" }, // EDIT
+    { label: "Store", href: "/store" }, // EDIT: the store page; shows the ↗
   ],
 };

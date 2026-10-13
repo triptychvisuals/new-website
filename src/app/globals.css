@@ -232,6 +232,52 @@
   box-shadow: 0 0 0 5px rgb(229 54 31 / 0.22);
 }
 
+/* Reading progress (legal pages) — a CSS scroll timeline: the bar's width
+   follows how far down the page you are, with no JavaScript. Browsers
+   without scroll timelines never show it. */
+.reading-bar {
+  display: none;
+}
+@supports (animation-timeline: scroll()) {
+  .reading-bar {
+    display: block;
+    position: sticky;
+    top: 0;
+    z-index: 41;
+    height: 2px;
+    width: 100%;
+    background: var(--accent);
+    transform-origin: 0 50%;
+    animation: reading-bar linear both;
+    animation-timeline: scroll(root);
+  }
+  @keyframes reading-bar {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
+}
+
+/* A strip of film (404 page, decorative) — same drawing as the spiral's,
+   with --fill for how much of it is lit. EDIT: --strip-h = thickness. */
+.film-strip {
+  --fill: 0%;
+  --strip-h: 34px;
+  --hole: #050505;
+  --base: #181818;
+  height: var(--strip-h);
+  border-radius: 3px;
+  background:
+    repeating-linear-gradient(90deg, transparent 0 7px, var(--hole) 7px 12px, transparent 12px 18px) 0 3px / 100% 5px no-repeat,
+    repeating-linear-gradient(90deg, transparent 0 7px, var(--hole) 7px 12px, transparent 12px 18px) 0 calc(100% - 8px) / 100% 5px no-repeat,
+    repeating-linear-gradient(90deg, transparent 0 16px, var(--base) 16px 20px) 0 10px / 100% calc(var(--strip-h) - 20px) no-repeat,
+    linear-gradient(90deg, var(--accent) var(--fill), #2a2a2a var(--fill)) 0 10px / 100% calc(var(--strip-h) - 20px) no-repeat,
+    var(--base);
+}
+
 /* NEW badge (Projects dropdown) — a copy of the pill swells out and fades.
    EDIT: duration = pulse speed, scale = how far it swells. */
 @keyframes badge-pulse {
