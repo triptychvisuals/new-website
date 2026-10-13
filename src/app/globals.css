@@ -152,9 +152,24 @@
   transform-origin: 0 0;
 }
 .dc-stage[data-3d] .dc-card {
-  /* EDIT: card width on the spiral (the spiral's size scales with it) */
+  /* EDIT: card width on the spiral (the spiral's size scales with it) —
+     iPad here, desktop in the media query below */
   width: min(400px, 52vw);
   backface-visibility: hidden;
+}
+@media (min-width: 1024px) {
+  .dc-stage[data-3d] .dc-card {
+    /* capped by screen height too, so short laptop screens still fit a card
+       plus its neighbours' edges */
+    width: min(580px, 42vw, calc((100svh - 330px) * 1.6));
+  }
+  /* text scaled up to match the bigger card */
+  .dc-stage[data-3d] .dc-card h3 {
+    font-size: 1.9rem;
+  }
+  .dc-stage[data-3d] .dc-card h3 + p {
+    font-size: 17px;
+  }
 }
 /* The line round the spiral — straight segments (width set in JS) */
 .dc-stage[data-3d] .dc-seg {
