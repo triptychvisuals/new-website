@@ -24,7 +24,7 @@ const STEP_DEG = 45; // turn between one year's card and the next
 const SCROLL_PER_YEAR = 420; // px of scrolling to bring the next year round
 const TILT_DEG = 7; // camera looks slightly down onto the spiral
 const GAP = 0.32; // empty space between one card and the next, × card height
-const NODE_ABOVE = 38; // px the film strip + year dots run above each card's top
+const NODE_ABOVE = 52; // px the film strip + year dots run above each card's top
 // EDIT: how strongly the current card's colours wash over the whole stage
 // behind the spiral (0–1). Fades to the next year's as each comes round
 // (fade time: .dc-wash in globals.css).

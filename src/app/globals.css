@@ -217,7 +217,7 @@
 .dc-stage[data-3d] .dc-seg {
   --fill: 0%;
   /* EDIT: --u scales the whole strip (1 = 26px tall) */
-  --u: 1.7;
+  --u: 2.6;
   --strip-h: calc(26px * var(--u));
   --hole: #050505;
   --base: #181818;
@@ -233,7 +233,7 @@
 }
 @media (max-width: 1023px) {
   .dc-stage[data-3d] .dc-seg {
-    --u: 1.15;
+    --u: 1.7;
   }
 }
 /* A dot on the strip above every year; ignites once reached.
