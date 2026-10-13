@@ -12,7 +12,7 @@ export type CardData = {
   project: Project;
   /** Original position — keeps gradients/media stable across filters. */
   index: number;
-  media: string;
+  media?: string;
   href?: string;
 };
 
@@ -36,10 +36,13 @@ export function mergeCards(works: PortalWork[] = []): CardData[] {
       };
     });
   }
+  // Projects without a video yet get no media: the card shows its colour
+  // poster with a gear drawing (the animated SVG reels are kept for the
+  // single-image spots — thirty of them in one grid cost frames).
   return projects.map((project, i) => ({
     project,
     index: i,
-    media: project.youtube ? youtubePoster(project.youtube) : projectMedia(i),
+    media: project.youtube ? youtubePoster(project.youtube) : undefined,
     href: undefined,
   }));
 }

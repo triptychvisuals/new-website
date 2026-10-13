@@ -1,4 +1,5 @@
 import type { Project } from "@/lib/projects";
+import VideoGearIcon from "@/components/VideoGearIcon";
 
 /**
  * Gallery card — the reel itself with the meta overlaid on it: a small logo,
@@ -7,6 +8,7 @@ import type { Project } from "@/lib/projects";
  */
 export default function ProjectCard({
   project,
+  index,
   gradient,
   media,
   className = "",
@@ -36,8 +38,11 @@ export default function ProjectCard({
   return (
     <a data-card href={href || `/work/${project.slug}`} className={`group block ${className}`}>
       <div className={`relative aspect-[16/9] w-full overflow-hidden bg-neutral-200 dark:bg-neutral-800 ${rounded ? "rounded-2xl" : ""}`}>
-        {/* Gradient base (poster) */}
+        {/* Gradient base (poster) — with a gear drawing when there's no reel */}
         <div className="absolute inset-0" style={{ background: gradient }} />
+        {!reel && (
+          <VideoGearIcon index={index} className="absolute left-1/2 top-1/2 h-[46%] w-auto -translate-x-1/2 -translate-y-1/2 text-white/80 transition-transform duration-700 ease-out group-hover:scale-105" />
+        )}
 
         {/* Reel — autoplaying loop. Real footage is served as a tiny muted
             <video> (mp4); the SVG placeholders stay as <img>. */}
