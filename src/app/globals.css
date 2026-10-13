@@ -191,16 +191,32 @@
     font-size: 18px;
   }
 }
-/* The line round the spiral — straight segments (width set in JS) */
+/* The film strip round the spiral — straight pieces (width set in JS),
+   drawn entirely with background layers (top layer first): sprocket holes
+   along both edges, the dark gaps between frames, then the frames
+   themselves, which fill with the accent from the left up to --fill (set
+   from JS as you scroll). EDIT: --strip-h sets its height. */
 .dc-stage[data-3d] .dc-seg {
+  --fill: 0%;
+  --strip-h: 26px;
+  --hole: #050505;
+  --base: #181818;
   display: block;
-  height: 3px;
-  background: rgb(255 255 255 / 0.3);
+  height: var(--strip-h);
+  border-radius: 2px;
+  background:
+    repeating-linear-gradient(90deg, transparent 0 5px, var(--hole) 5px 9px, transparent 9px 14px) 0 2px / 100% 4px no-repeat,
+    repeating-linear-gradient(90deg, transparent 0 5px, var(--hole) 5px 9px, transparent 9px 14px) 0 calc(100% - 6px) / 100% 4px no-repeat,
+    repeating-linear-gradient(90deg, transparent 0 12px, var(--base) 12px 15px) 0 8px / 100% calc(var(--strip-h) - 16px) no-repeat,
+    linear-gradient(90deg, var(--accent) var(--fill), #2a2a2a var(--fill)) 0 8px / 100% calc(var(--strip-h) - 16px) no-repeat,
+    var(--base);
 }
-.dc-stage[data-3d] .dc-seg[data-lit] {
-  background: var(--accent);
+@media (max-width: 1023px) {
+  .dc-stage[data-3d] .dc-seg {
+    --strip-h: 20px;
+  }
 }
-/* A dot on the line above every year; ignites once reached.
+/* A dot on the strip above every year; ignites once reached.
    (Ring is a hard spread, no blur — blurred shadows cost every frame.) */
 .dc-stage[data-3d] .dc-node {
   display: block;

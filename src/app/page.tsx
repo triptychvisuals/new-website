@@ -13,6 +13,23 @@ import AboutTestimonial from "@/components/about/AboutTestimonial";
 import AboutCTA from "@/components/about/AboutCTA";
 import Footer from "@/components/Footer";
 import { getSiteContent } from "@/lib/siteContent";
+import fs from "node:fs";
+import path from "node:path";
+
+/**
+ * Real frames for the timeline cards: /public/decade/<year>.(jpg|png|webp)
+ * — e.g. 2019.jpg becomes the 2019 card's picture. EDIT: drop files there.
+ */
+function decadeStills(): Record<string, string> {
+  const dir = path.join(process.cwd(), "public", "decade");
+  if (!fs.existsSync(dir)) return {};
+  const out: Record<string, string> = {};
+  for (const f of fs.readdirSync(dir)) {
+    const m = f.match(/^(\d{4})\.(jpe?g|png|webp)$/i);
+    if (m) out[m[1]] = `/decade/${encodeURIComponent(f)}`;
+  }
+  return out;
+}
 
 export default async function Home() {
   // Portal content (empty when the portal is unreachable — the page then
@@ -29,7 +46,7 @@ export default async function Home() {
         {/* The 6×6 "500+ projects" grid follows the Featured Work band */}
         <WorkGrid />
         {/* Scrolling on: the page dims into the 2016 → 2026 timeline */}
-        <Decade />
+        <Decade stills={decadeStills()} />
 
         {/* Phones only: the About page inline, right under the third reel, so
             the mobile menu can scroll here instead of loading another page.

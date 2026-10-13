@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { decade } from "@/lib/about";
+import VideoGearIcon from "@/components/VideoGearIcon";
 
 // EDIT: header copy.
 const HEADLINE_TOP = "10 years";
@@ -23,12 +24,13 @@ const STEP_DEG = 45; // turn between one year's card and the next
 const SCROLL_PER_YEAR = 420; // px of scrolling to bring the next year round
 const TILT_DEG = 7; // camera looks slightly down onto the spiral
 const GAP = 0.32; // empty space between one card and the next, × card height
-const NODE_ABOVE = 22; // px the line + year dots run above each card's top
+const NODE_ABOVE = 26; // px the film strip + year dots run above each card's top
 // EDIT: how strongly the current card's colours wash over the whole stage
 // behind the spiral (0–1). Fades to the next year's as each comes round
 // (fade time: .dc-wash in globals.css).
 const WASH = 0.55;
-// Each line segment is its own 3D layer, so keep the count modest.
+// The film strip is straight pieces bent round the helix; each is its own
+// 3D layer, so keep the count modest.
 const SEGS_PER_YEAR = 6;
 
 // EDIT: phone timeline — where on screen the "now" line sits (the spine
@@ -41,11 +43,12 @@ const NOW_LINE = "60%";
  * then the timeline:
  *
  *  • iPad / desktop — a 3D spiral. One card per year, spaced well apart,
- *    wound round a helix with a line running round it through a dot above
- *    every card. The stage pins and scrolling turns + lifts the helix so
- *    each year swings round to the front in turn; the line lights up behind
- *    you and each year's dot ignites as you reach it. CSS 3D throughout —
- *    the browser moves one GPU layer per frame.
+ *    wound round a helix with a film strip running round it through a dot
+ *    above every card. The stage pins and scrolling turns + lifts the helix
+ *    so each year swings round to the front in turn; the strip's frames
+ *    fill in with colour behind you, frame by frame, and each year's dot
+ *    ignites as you reach it. CSS 3D throughout — the browser moves one
+ *    GPU layer per frame.
  *  • Phones — a straight vertical timeline: a spine on the left draws
  *    itself down with a comet at its tip, nodes ignite as it reaches them,
  *    cards slide in and brighten as they rise toward "now".
@@ -53,7 +56,12 @@ const NOW_LINE = "60%";
  *
  * Layering: dim layer z-38 < this section z-39 < header z-40.
  */
-export default function Decade() {
+/**
+ * `stills`: real frames for the cards, keyed by year ("2019" → "/decade/
+ * 2019.jpg"); page.tsx reads them from /public/decade. Years without one
+ * show the colour art with a line drawing of video gear.
+ */
+export default function Decade({ stills = {} }: { stills?: Record<string, string> }) {
   const root = useRef<HTMLElement>(null);
   const dim = useRef<HTMLDivElement>(null);
   // spiral
@@ -116,7 +124,7 @@ export default function Decade() {
           // The line + dots ride NODE_ABOVE px over the cards' top edges.
           geo.lift = h / 2 + NODE_ABOVE;
           nodes.forEach((n, i) => (n.style.transform = at(i)));
-          // Each segment is the straight chord between two points on the
+          // Each strip piece is the straight chord between two points on the
           // helix: centred between them (just inside the radius), turned to
           // face out, tilted down the slope, and as long as the chord.
           const dA = (STEP_DEG / SEGS_PER_YEAR) * (Math.PI / 180);
@@ -145,13 +153,17 @@ export default function Decade() {
           shades.forEach((s, i) => {
             s.style.opacity = String(1 - Math.max(CARD_MIN_LIGHT, 1 - Math.abs(i - p) * 0.35));
           });
-          // Light the line up to where we are, and every dot we've reached
-          // (only touching the ones that change).
-          const segsOn = Math.floor(p * SEGS_PER_YEAR + 1e-4);
+          // Fill the strip's frames up to where we are: every piece behind
+          // us full, the piece we're on part-way (its --fill moves every
+          // frame; the rest only change when we cross into a new piece), and
+          // every dot we've reached lit.
+          const exact = p * SEGS_PER_YEAR + 1e-4;
+          const segsOn = Math.floor(exact);
           if (segsOn !== litSegs) {
-            segEls.forEach((s, k) => s.toggleAttribute("data-lit", k < segsOn));
+            segEls.forEach((s, k) => s.style.setProperty("--fill", k < segsOn ? "100%" : "0%"));
             litSegs = segsOn;
           }
+          segEls[segsOn]?.style.setProperty("--fill", `${((exact - segsOn) * 100).toFixed(1)}%`);
           const nodesOn = Math.floor(p + 0.02);
           if (nodesOn !== litNodes) {
             nodes.forEach((n, i) => n.toggleAttribute("data-lit", i <= nodesOn));
@@ -216,6 +228,7 @@ export default function Decade() {
             el.style.transform = "";
             el.style.opacity = "";
             el.style.width = "";
+            el.style.removeProperty("--fill");
             el.removeAttribute("data-lit");
           });
         };
@@ -353,7 +366,7 @@ export default function Decade() {
           </span>
 
           <div ref={helix} className="dc-helix">
-            {/* The line round the spiral, and a dot above every year */}
+            {/* The film strip round the spiral, and a dot above every year */}
             {segs.map((k) => (
               <span key={`s${k}`} data-dc-seg aria-hidden className="dc-seg" />
             ))}
@@ -362,7 +375,7 @@ export default function Decade() {
             ))}
 
             {decade.map((d, i) => (
-              <Card key={d.year} d={d} i={i} className="dc-card" shade />
+              <Card key={d.year} d={d} i={i} still={stills[d.year]} className="dc-card" shade />
             ))}
           </div>
 
@@ -404,7 +417,7 @@ export default function Decade() {
                   aria-hidden
                   className="relative z-10 col-start-1 row-start-1 mx-auto h-[14px] w-[14px] rounded-full border border-white/30 bg-[#0a0a0a] transition-all duration-500 group-data-[on]/row:scale-125 group-data-[on]/row:border-[color:var(--accent)] group-data-[on]/row:bg-[color:var(--accent)] group-data-[on]/row:shadow-[0_0_0_6px_rgba(229,54,31,0.18),0_0_22px_rgba(229,54,31,0.6)]"
                 />
-                <Card d={d} i={i} className="col-start-2 row-start-1 will-change-[opacity,transform]" />
+                <Card d={d} i={i} still={stills[d.year]} className="col-start-2 row-start-1 will-change-[opacity,transform]" />
               </li>
             ))}
           </ol>
@@ -446,11 +459,14 @@ const washFor = (i: number) => {
 function Card({
   d,
   i,
+  still,
   className = "",
   shade = false,
 }: {
   d: (typeof decade)[number];
   i: number;
+  /** A real frame for this year (replaces the colour art + gear drawing). */
+  still?: string;
   className?: string;
   /** Spiral cards dim via this dark layer (set from JS) instead of opacity. */
   shade?: boolean;
@@ -465,6 +481,13 @@ function Card({
         className="relative aspect-[16/8] w-full"
         style={{ background: artFor(i) }}
       >
+        {still ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={still} alt="" loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover" />
+        ) : (
+          // EDIT: the placeholder gear drawing — size / position / strength
+          <VideoGearIcon index={i} className="absolute right-[6%] top-1/2 h-[64%] w-auto -translate-y-1/2 text-white opacity-90" />
+        )}
         <span className="absolute bottom-3 left-4 text-[clamp(2.25rem,5vw,3.25rem)] font-medium leading-none tracking-[-0.04em] text-white/60">
           {d.year}
         </span>

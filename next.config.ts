@@ -85,7 +85,7 @@ const nextConfig: NextConfig = {
   outputFileTracingIncludes: {
     "/work/\\[slug\\]": ["./public/work/**/*"],
     // Home page: partner logos + work-grid thumbnails are read with fs too.
-    "/": ["./public/partners/**/*", "./public/grid/**/*"],
+    "/": ["./public/partners/**/*", "./public/grid/**/*", "./public/decade/**/*"],
   },
   async headers() {
     return [
