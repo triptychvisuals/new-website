@@ -88,6 +88,19 @@ const nextConfig: NextConfig = {
     "/": ["./public/partners/**/*", "./public/grid/**/*", "./public/decade/**/*"],
     "/press": ["./public/press/**/*"],
   },
+  // One address for search engines: www and the Vercel preview host send
+  // visitors (and Googlebot) to the bare domain with a permanent redirect.
+  // EDIT: the canonical host (keep in step with site.url).
+  async redirects() {
+    return [
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "www.triptychstudios.co" }],
+        destination: "https://triptychstudios.co/:path*",
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     return [
       {
