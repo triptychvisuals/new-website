@@ -49,6 +49,19 @@ function useClock() {
   return time;
 }
 
+/**
+ * The clock on its own: only these digits re-render each second, not the
+ * whole header (menus and all).
+ */
+function Clock({ className }: { className: string }) {
+  const time = useClock();
+  return (
+    <span className={className} suppressHydrationWarning>
+      {time || "--:--:-- --"}
+    </span>
+  );
+}
+
 /* Social icons — EDIT: sizes are the width/height on each svg */
 function IgIcon() {
   return (
@@ -133,7 +146,6 @@ function Logo({
 export default function Header({ logo }: { logo?: string }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const close = () => setMenuOpen(false);
-  const time = useClock();
 
   return (
     // data-site-header: Decade sets data-theme="dark" here while the
@@ -152,9 +164,7 @@ export default function Header({ logo }: { logo?: string }) {
       {/* Right: theme toggle + clock + social icons */}
       <div className="hidden items-center gap-5 lg:flex">
         <ThemeToggle />
-        <span className="hidden text-[15px] font-medium tabular-nums tracking-tight text-foreground/70 xl:inline" suppressHydrationWarning>
-          {time || "--:--:-- --"}
-        </span>
+        <Clock className="hidden text-[15px] font-medium tabular-nums tracking-tight text-foreground/70 xl:inline" />
         <SocialRow />
       </div>
 
@@ -163,12 +173,7 @@ export default function Header({ logo }: { logo?: string }) {
         <Logo src={logo} />
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
-            <span
-              className="text-[15px] font-medium tabular-nums tracking-tight text-foreground/70"
-              suppressHydrationWarning
-            >
-              {time || "--:--:-- --"}
-            </span>
+            <Clock className="text-[15px] font-medium tabular-nums tracking-tight text-foreground/70" />
             <ThemeToggle />
           </div>
           <button

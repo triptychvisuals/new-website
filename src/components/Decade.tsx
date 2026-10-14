@@ -238,7 +238,8 @@ export default function Decade({ stills = {} }: { stills?: Record<string, string
       mm.add("(max-width: 767px) and (prefers-reduced-motion: no-preference)", () => {
         // The spine draws itself down to the "now" line, comet riding the tip.
         const spine = { trigger: line.current, start: `top ${NOW_LINE}`, end: `bottom ${NOW_LINE}`, scrub: true };
-        gsap.fromTo(fill.current, { scaleY: 0 }, { scaleY: 1, ease: "none", scrollTrigger: spine });
+        gsap.fromTo(fill.current, { y: 0, yPercent: -100 }, { yPercent: 0, ease: "none", scrollTrigger: spine });
+        gsap.fromTo("[data-dc-fill-inner]", { y: 0, yPercent: 100 }, { yPercent: 0, ease: "none", scrollTrigger: spine });
         // Transform, not `top`, so the comet never triggers a layout pass.
         gsap.fromTo(
           comet.current,
@@ -398,12 +399,13 @@ export default function Decade({ stills = {} }: { stills?: Record<string, string
         {/* ── Phones (and reduced motion): the straight timeline ── */}
         <div className="dc-list relative mx-auto max-w-[640px] px-5 sm:px-8">
           {/* Spine: faint track, accent fill that draws down, comet at the tip */}
-          <div ref={line} aria-hidden className="absolute bottom-0 left-[31.5px] top-0 w-px bg-white/12 sm:left-[43.5px]">
-            <div
-              ref={fill}
-              className="dc-fill absolute inset-0 origin-top bg-gradient-to-b from-[color:var(--accent)] via-[color:var(--accent)] to-white"
-              style={{ transform: "scaleY(0)" }}
-            />
+          {/* Spine: a vertical film strip. The lit copy sits in a window that
+              slides down while the strip inside slides up by the same amount
+              — so the red frames reveal top-down using transforms only. */}
+          <div ref={line} aria-hidden className="film-strip-v absolute bottom-0 left-[18px] top-0 sm:left-[30px]">
+            <div ref={fill} className="dc-fill dc-fill-window absolute inset-0 overflow-hidden will-change-transform">
+              <div data-dc-fill-inner className="film-strip-v film-strip-v--lit dc-fill-inner absolute inset-0 will-change-transform" />
+            </div>
             <div
               ref={comet}
               className="absolute left-1/2 top-0 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white shadow-[0_0_0_4px_rgba(229,54,31,0.35),0_0_24px_6px_rgba(229,54,31,0.55)] will-change-transform"

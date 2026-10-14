@@ -106,8 +106,37 @@
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .dc-fill {
+  .dc-fill,
+  .dc-fill > * {
     transform: none !important; /* static spine, fully drawn */
+  }
+}
+/* The phone timeline's spine: the same film strip, running vertically.
+   EDIT: --u scales it (1 = 28px wide). */
+.film-strip-v {
+  --u: 1;
+  --hole: #050505;
+  --base: #181818;
+  --frame: #2a2a2a;
+  width: calc(28px * var(--u));
+  border-radius: calc(2px * var(--u));
+  background:
+    repeating-linear-gradient(180deg, transparent 0 calc(5px * var(--u)), var(--hole) calc(5px * var(--u)) calc(9px * var(--u)), transparent calc(9px * var(--u)) calc(14px * var(--u))) calc(2px * var(--u)) 0 / calc(4px * var(--u)) 100% no-repeat,
+    repeating-linear-gradient(180deg, transparent 0 calc(5px * var(--u)), var(--hole) calc(5px * var(--u)) calc(9px * var(--u)), transparent calc(9px * var(--u)) calc(14px * var(--u))) calc(100% - 2px * var(--u)) 0 / calc(4px * var(--u)) 100% no-repeat,
+    repeating-linear-gradient(180deg, transparent 0 calc(14px * var(--u)), var(--base) calc(14px * var(--u)) calc(17px * var(--u))) center 0 / calc(100% - 16px * var(--u)) 100% no-repeat,
+    linear-gradient(var(--frame), var(--frame)) center 0 / calc(100% - 16px * var(--u)) 100% no-repeat,
+    var(--base);
+}
+.film-strip-v--lit {
+  --frame: var(--accent);
+  width: 100%;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .dc-fill-window {
+    transform: translateY(-100%);
+  }
+  .dc-fill-inner {
+    transform: translateY(100%);
   }
 }
 .dc-helix {
