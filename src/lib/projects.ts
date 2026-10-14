@@ -57,7 +57,7 @@ type Authored = Omit<Project, "slug" | "category"> & { category?: string };
 
 const AUTHORED: Authored[] = [
   { title: "Overthink", artist: "Wale ft. Elmiene", year: "2026", youtube: "aEfoHSFeTII" },
-  { title: "Dramatic", year: "2026" }, // EDIT: artist + youtube id
+  { title: "Dramatic", artist: "Jay Wood ft. Quintin & Jonah Renna", year: "2025" }, // EDIT: youtube id
   { title: "Timmy Story", year: "2025", video: "/reels/reel-a.mp4" }, // EDIT: artist + youtube id
   { title: "Hands Up!!!", artist: "Jay Wood", year: "2025", video: "/reels/reel-b.mp4" }, // EDIT: youtube id
   {
@@ -69,8 +69,8 @@ const AUTHORED: Authored[] = [
     objectPosition: "50% 60%",
   }, // EDIT: artist + youtube id
   { title: "Feel the Love", year: "2024", video: "/reels/feel-the-love.mp4", youtube: "4LQP9E6W-3w" }, // EDIT: artist
-  { title: "Locked In", year: "2024" }, // EDIT: artist + youtube id
-  { title: "Ridin Wit It", artist: "G Herbo", year: "2020" }, // EDIT: youtube id — Triptych's most-watched video
+  { title: "Locked In", artist: "G Herbo", year: "2022", youtube: "n3JAY-3H8Ao" },
+  { title: "Ridin Wit It", artist: "G Herbo", year: "2020" }, // EDIT: youtube id — Triptych's most-watched video (official upload not findable from here)
   { title: "OK Cool", year: "2023" }, // EDIT: artist + youtube id
   { title: "Wiscansin", year: "2023" }, // EDIT: artist + youtube id
   { title: "Bogus", year: "2022" }, // EDIT: artist + youtube id
