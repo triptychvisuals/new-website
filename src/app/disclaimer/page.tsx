@@ -5,7 +5,7 @@ import { legalBySlug } from "@/lib/legal";
 const doc = legalBySlug("disclaimer")!;
 
 export const metadata: Metadata = {
-  title: `${doc.title} — Triptych`,
+  title: doc.title,
   description: doc.lead,
 };
 

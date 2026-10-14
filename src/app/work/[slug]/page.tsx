@@ -72,7 +72,7 @@ export async function generateMetadata({
   const image = frames[0] ?? work?.clipPoster;
   const pageUrl = `${site.url}/work/${slug}`;
   return {
-    title: title ? `${title} — Triptych` : "Project — Triptych",
+    title: title ? title : "Project",
     description,
     alternates: { canonical: pageUrl },
     openGraph: {

@@ -61,7 +61,7 @@ export const facts: [string, string][] = [
   ["Founder", "Lawrence “Law” Mahone"],
   ["Projects", "500+"],
   ["Partners", "80+"],
-  ["Press contact", site.email],
+  ["Press contact", site.pressEmail],
 ];
 
 export const logoFiles: { label: string; file: string; note: string }[] = [

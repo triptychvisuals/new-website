@@ -18,6 +18,17 @@ export const site = {
    */
   pinterestVerify: "",
   email: "hello@triptychvisuals.com", // EDIT: contact email (also confirm law@…)
+  /** EDIT: press enquiries. */
+  pressEmail: "law@triptychstudios.co",
+  /** EDIT: search + business listing. Paste the Google Search Console HTML-tag
+   *  code here once the domain is added there, and the Google Business
+   *  Profile link (the "Share" link from the profile) once it's verified. */
+  googleVerify: "",
+  googleBusinessUrl: "",
+  /** EDIT: studio location for search + maps. */
+  city: "Chicago",
+  region: "IL",
+  country: "US",
   /** EDIT: where every Contact button goes — the portal's project intake. */
   contactUrl: "https://portal.triptychstudios.co/start",
   sectionNumber: "001", // EDIT: hero index label

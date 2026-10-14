@@ -11,7 +11,7 @@ import { socials } from "@/lib/about";
 import { getSiteContent } from "@/lib/siteContent";
 
 export const metadata: Metadata = {
-  title: "Contact — Triptych", // EDIT
+  title: "Contact", // EDIT
   description: "Start a project with Triptych Studios.", // EDIT
 };
 

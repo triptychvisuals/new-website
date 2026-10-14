@@ -8,7 +8,7 @@ import { projects } from "@/lib/projects";
 import { getSiteContent } from "@/lib/siteContent";
 
 export const metadata: Metadata = {
-  title: "Projects — Triptych", // EDIT
+  title: "Projects", // EDIT
   description: "Every project — music videos, films, and motion.", // EDIT
 };
 

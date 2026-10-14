@@ -34,9 +34,17 @@ function fromAnOpenFrame(request: NextRequest): boolean {
 // EDIT: crawlers that may read the project pages (/work/<slug>) through the
 // wall, so a pin's link resolves to the page's title and picture (Pinterest
 // reads the Open Graph tags when a frame is pinned, and for Rich Pins).
-// The pages are a preview of public work, not a secret; everything else on
+// Search engines (SEARCH_BOTS) may read every page so the studio shows up
+// when someone searches for it. The pages are a preview of public work, not a secret; everything else on
 // the site stays behind the wall for them too.
 const CRAWLERS_THROUGH_THE_WALL = [/Pinterest/i];
+// EDIT: search-engine crawlers allowed on every page.
+const SEARCH_BOTS = [/Googlebot/i, /Google-InspectionTool/i, /Bingbot/i, /DuckDuckBot/i, /Applebot/i, /Slurp/i];
+
+function searchBot(request: NextRequest): boolean {
+  const ua = request.headers.get("user-agent") ?? "";
+  return SEARCH_BOTS.some((re) => re.test(ua));
+}
 
 /** A known crawler fetching a project page. */
 function crawlerOnAProjectPage(request: NextRequest): boolean {
@@ -69,6 +77,8 @@ export function proxy(request: NextRequest) {
     pathname === "/login" ||
     pathname === "/api/login" ||
     pathname === "/triptych-logo.png" ||
+    pathname === "/robots.txt" ||
+    pathname === "/sitemap.xml" ||
     (/^\/work\//.test(pathname) && /\.(jpe?g|png|webp)$/i.test(pathname))
   ) {
     return NextResponse.next();
@@ -92,7 +102,7 @@ export function proxy(request: NextRequest) {
     });
     return res;
   }
-  if (fromAnOpenFrame(request) || crawlerOnAProjectPage(request)) {
+  if (fromAnOpenFrame(request) || crawlerOnAProjectPage(request) || searchBot(request)) {
     return NextResponse.next();
   }
 

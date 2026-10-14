@@ -7,7 +7,7 @@ import { products } from "@/lib/store";
 import { getSiteContent } from "@/lib/siteContent";
 
 export const metadata: Metadata = {
-  title: "Store — Triptych", // EDIT
+  title: "Store", // EDIT
   description: "Studio apparel, signed prints and the LUTs behind the videos.", // EDIT
 };
 

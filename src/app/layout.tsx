@@ -2,16 +2,78 @@ import type { Metadata } from "next";
 import "./globals.css";
 import SmoothScroll from "@/components/SmoothScroll";
 import { site } from "@/lib/site";
+import { socials } from "@/lib/about";
+
+const NAME = "Triptych Studios";
+// EDIT: the default search-result title + description.
+const DESCRIPTION =
+  "Triptych Studios is a Chicago video production studio making music videos, commercials and brand films since 2016. Imagination in motion.";
 
 export const metadata: Metadata = {
-  title: "Triptych Studios® - Imagination in Motion", // EDIT: browser-tab / search-result title
-  description:
-    "Triptych Studios — cinematic storytelling, film, and motion for brands.", // EDIT
+  title: { default: `${NAME}® — Chicago Video Production`, template: `%s — ${NAME}` },
+  description: DESCRIPTION,
+  applicationName: NAME,
   metadataBase: new URL(site.url),
-  // The Pinterest website claim, once site.pinterestVerify is filled in.
-  ...(site.pinterestVerify
-    ? { verification: { other: { "p:domain_verify": site.pinterestVerify } } }
-    : {}),
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    siteName: NAME,
+    title: `${NAME}® — Imagination in Motion`,
+    description: DESCRIPTION,
+    url: site.url,
+    locale: "en_US",
+  },
+  twitter: { card: "summary_large_image", title: NAME, description: DESCRIPTION },
+  robots: { index: true, follow: true },
+  // Google Search Console + Pinterest claims, once filled in (lib/site.ts).
+  verification: {
+    ...(site.googleVerify ? { google: site.googleVerify } : {}),
+    ...(site.pinterestVerify ? { other: { "p:domain_verify": site.pinterestVerify } } : {}),
+  },
+};
+
+// Structured data: tells Google who the studio is, so a search for the name
+// shows the right site, logo and (with a verified Business Profile) the
+// knowledge panel. EDIT: details in lib/site.ts + lib/about.ts.
+const sameAs = [
+  ...socials.map((s) => s.href).filter((h) => /^https?:/.test(h)),
+  ...(site.googleBusinessUrl ? [site.googleBusinessUrl] : []),
+];
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": `${site.url}/#org`,
+      name: NAME,
+      alternateName: ["Triptych", "Triptych Visuals"],
+      url: site.url,
+      logo: `${site.url}/triptych-logo.png`,
+      email: site.email,
+      foundingDate: "2016", // EDIT
+      founder: { "@type": "Person", name: "Lawrence Mahone" }, // EDIT
+      sameAs,
+    },
+    {
+      "@type": "ProfessionalService",
+      "@id": `${site.url}/#business`,
+      name: NAME,
+      url: site.url,
+      image: `${site.url}/triptych-logo.png`,
+      email: site.email,
+      description: DESCRIPTION,
+      parentOrganization: { "@id": `${site.url}/#org` },
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: site.city,
+        addressRegion: site.region,
+        addressCountry: site.country,
+      },
+      areaServed: "Worldwide",
+      sameAs,
+    },
+    { "@type": "WebSite", "@id": `${site.url}/#site`, name: NAME, url: site.url, publisher: { "@id": `${site.url}/#org` } },
+  ],
 };
 
 export default function RootLayout({
@@ -30,6 +92,10 @@ export default function RootLayout({
         <link
           href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap"
           rel="stylesheet"
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
       <body className="min-h-full bg-background text-foreground">

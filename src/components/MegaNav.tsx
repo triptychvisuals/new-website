@@ -133,14 +133,14 @@ const MENUS: Record<string, Menu> = {
     columns: [
       {
         items: [
-          { title: "Who we are", desc: "The studio, the people, and the process", href: "/about#about-intro", icon: "spark" },
-          { title: "Services & partners", desc: "Music video, commercial, and brand film for the labels we work with", href: "/about#about-intro", icon: "globe" },
+          { title: "Who we are", desc: "The studio, the people, and the process", href: "/who-we-are", icon: "spark" },
+          { title: "Services & partners", desc: "Music video, commercial, and brand film for the labels we work with", href: "/services", icon: "globe" },
         ],
       },
       {
         items: [
-          { title: "Philosophy", desc: "How we think about every frame we make", href: "/about#philosophy", icon: "film" },
-          { title: "Testimonials", desc: "What collaborators say — and a note from our founder", href: "/about#testimonials", icon: "quote" },
+          { title: "Philosophy", desc: "How we think about every frame we make", href: "/philosophy", icon: "film" },
+          { title: "Testimonials", desc: "What collaborators say — and a note from our founder", href: "/testimonials", icon: "quote" },
         ],
       },
       {
@@ -156,7 +156,8 @@ const MENUS: Record<string, Menu> = {
     columns: [
       {
         items: [
-          { title: "Press", desc: "Features, coverage, and the press kit", href: "/press", icon: "bolt" },
+          { title: "In the news", desc: "Features and coverage of the studio", href: "/press", icon: "bolt" },
+          { title: "Press kit", desc: "Bios, facts, logos, and credits", href: "/press/kit", icon: "spark" },
         ],
       },
       {

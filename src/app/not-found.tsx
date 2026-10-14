@@ -5,7 +5,7 @@ import RuleLabel from "@/components/RuleLabel";
 import ProjectFinder from "@/components/notfound/ProjectFinder";
 import { getSiteContent } from "@/lib/siteContent";
 
-export const metadata: Metadata = { title: "Not found — Triptych" };
+export const metadata: Metadata = { title: "Not found" };
 
 /**
  * 404 — "this frame didn't make the cut": an oversized 404 with an empty

@@ -11,7 +11,7 @@ import Footer from "@/components/Footer";
 import { getSiteContent } from "@/lib/siteContent";
 
 export const metadata: Metadata = {
-  title: "About — Triptych", // EDIT
+  title: "About", // EDIT
   description: "Who we are — cinematic storytelling, film, and motion.", // EDIT
 };
 
