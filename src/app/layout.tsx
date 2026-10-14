@@ -22,8 +22,9 @@ export const metadata: Metadata = {
     description: DESCRIPTION,
     url: site.url,
     locale: "en_US",
+    images: [{ url: "/press/triptych-banner.jpg", width: 2000, height: 1050 }],
   },
-  twitter: { card: "summary_large_image", title: NAME, description: DESCRIPTION },
+  twitter: { card: "summary_large_image", title: NAME, description: DESCRIPTION, images: ["/press/triptych-banner.jpg"] },
   robots: { index: true, follow: true },
   // Google Search Console + Pinterest claims, once filled in (lib/site.ts).
   verification: {
@@ -48,7 +49,7 @@ const jsonLd = {
       name: NAME,
       alternateName: ["Triptych", "Triptych Visuals"],
       url: site.url,
-      logo: `${site.url}/triptych-logo.png`,
+      logo: `${site.url}/press/triptych-icon-1024.png`,
       email: site.email,
       foundingDate: "2016", // EDIT
       founder: { "@type": "Person", name: "Lawrence Mahone" }, // EDIT

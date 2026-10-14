@@ -78,6 +78,10 @@ export function proxy(request: NextRequest) {
     pathname === "/api/login" ||
     pathname === "/triptych-logo.png" ||
     pathname === "/robots.txt" ||
+    pathname === "/favicon.ico" ||
+    pathname === "/icon.png" ||
+    pathname === "/apple-icon.png" ||
+    /^\/press\/[^/]+\.(png|jpe?g|svg|zip|pdf)$/i.test(pathname) ||
     pathname === "/sitemap.xml" ||
     (/^\/work\//.test(pathname) && /\.(jpe?g|png|webp)$/i.test(pathname))
   ) {

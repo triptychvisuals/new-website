@@ -67,3 +67,43 @@ export const facts: [string, string][] = [
 export const logoFiles: { label: string; file: string; note: string }[] = [
   { label: "Logo — white", file: "/triptych-logo.png", note: "PNG, transparent · for dark backgrounds" },
 ];
+
+// EDIT: every downloadable file in the press kit (files live in public/press).
+export const downloads: { label: string; file: string; note: string; dark: boolean }[] = [
+  { label: "Logo — white", file: "/triptych-logo.png", note: "PNG · transparent", dark: true },
+  { label: "Logo — black", file: "/press/triptych-logo-black.png", note: "PNG · transparent", dark: false },
+  { label: "App icon", file: "/press/triptych-icon-1024.png", note: "PNG · 1024 × 1024", dark: true },
+  { label: "Social banner", file: "/press/triptych-banner.jpg", note: "JPG · 2000 × 1050", dark: true },
+];
+
+// EDIT: brand colours.
+export const brandColors: { name: string; hex: string }[] = [
+  { name: "Black", hex: "#0A0A0A" },
+  { name: "Paper", hex: "#F4F2EC" },
+  { name: "Signal red", hex: "#E5361F" },
+  { name: "Grey", hex: "#7A7A7A" },
+];
+
+// EDIT: how to write the name.
+export const nameStyle: { ok: boolean; text: string }[] = [
+  { ok: true, text: "Triptych Studios" },
+  { ok: true, text: "Triptych (on second mention)" },
+  { ok: false, text: "TripTych, Triptic, Triptych Studio" },
+  { ok: false, text: "Recolouring, stretching or outlining the logo" },
+];
+
+// EDIT: story angles for writers.
+export const angles: string[] = [
+  "A Chicago studio started by a teenager with one camera, now 500+ videos deep.",
+  "How a music video gets made in 72 hours — treatment to final grade.",
+  "Colour as a signature: building a recognisable look across hundreds of artists.",
+  "The Chicago drill and hip-hop scene, seen from behind the camera.",
+];
+
+// EDIT: what the founder is available for.
+export const availability: string[] = [
+  "Interviews (in person in Chicago, phone or video)",
+  "Podcast and panel appearances",
+  "Behind-the-scenes set visits, on request",
+  "High-res stills from selected projects",
+];
