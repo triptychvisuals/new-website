@@ -70,7 +70,7 @@ const AUTHORED: Authored[] = [
   }, // EDIT: artist + youtube id
   { title: "Feel the Love", year: "2024", video: "/reels/feel-the-love.mp4", youtube: "4LQP9E6W-3w" }, // EDIT: artist
   { title: "Locked In", artist: "G Herbo", year: "2022", youtube: "n3JAY-3H8Ao" },
-  { title: "Ridin Wit It", artist: "G Herbo", year: "2020" }, // EDIT: youtube id — Triptych's most-watched video (official upload not findable from here)
+  { title: "Ridin Wit It", artist: "G Herbo", year: "2020", youtube: "k5coDLFQrj0" }, // Triptych's most-watched video
   { title: "OK Cool", year: "2023" }, // EDIT: artist + youtube id
   { title: "Wiscansin", year: "2023" }, // EDIT: artist + youtube id
   { title: "Bogus", year: "2022" }, // EDIT: artist + youtube id
