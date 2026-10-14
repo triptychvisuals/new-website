@@ -62,6 +62,12 @@ function crawlerOnAProjectPage(request: NextRequest): boolean {
 //   src/proxy.ts · src/lib/siteAuth.ts · src/app/login · src/app/api/login
 // ---------------------------------------------------------------------------
 export function proxy(request: NextRequest) {
+  // EDIT: retired sections of the old site. 410 Gone tells search engines
+  // the pages were removed on purpose, so they drop them from the index.
+  if (/^\/blog(\/|$)/.test(request.nextUrl.pathname)) {
+    return new NextResponse("This page has been removed.", { status: 410 });
+  }
+
   // Never gate local dev — edit the site freely on localhost.
   if (process.env.NODE_ENV !== "production") {
     return NextResponse.next();
