@@ -327,6 +327,40 @@
     var(--base);
 }
 
+/* Menu icons (About / Press dropdowns): on hover the icon redraws itself
+   and gives a small lift — motion only, the colour never changes. */
+.nav-icon {
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.nav-icon path {
+  stroke-dasharray: 120;
+  stroke-dashoffset: 0;
+}
+.group\/item:hover .nav-icon,
+.group\/item:focus-visible .nav-icon {
+  transform: translateY(-2px) rotate(-6deg) scale(1.08);
+}
+.group\/item:hover .nav-icon path,
+.group\/item:focus-visible .nav-icon path {
+  animation: nav-icon-draw 0.7s ease-out;
+}
+@keyframes nav-icon-draw {
+  from {
+    stroke-dashoffset: 120;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nav-icon,
+  .nav-icon path {
+    transition: none;
+    animation: none !important;
+    transform: none !important;
+  }
+}
+
 /* NEW badge (Projects dropdown) — a copy of the pill swells out and fades.
    EDIT: duration = pulse speed, scale = how far it swells. */
 @keyframes badge-pulse {

@@ -191,7 +191,7 @@ function Icon({ name }: { name: IconName }) {
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden
-      className="mt-0.5 shrink-0 text-foreground/70"
+      className="nav-icon mt-0.5 shrink-0 text-foreground/70"
     >
       <path d={ICON_PATHS[name]} />
     </svg>
@@ -234,7 +234,7 @@ function MenuItem({
       </span>
     </>
   );
-  const cls = `-mx-3 flex gap-3 rounded-xl px-3 py-3 transition-colors hover:bg-foreground/[0.05] focus-visible:bg-foreground/[0.05] focus-visible:outline-none ${
+  const cls = `group/item -mx-3 flex gap-3 rounded-xl px-3 py-3 transition-colors hover:bg-foreground/[0.05] focus-visible:bg-foreground/[0.05] focus-visible:outline-none ${
     previewing ? "bg-foreground/[0.05]" : ""
   }`;
   // Hover or keyboard focus swaps the preview player to this project.

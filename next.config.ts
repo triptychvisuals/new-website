@@ -86,6 +86,7 @@ const nextConfig: NextConfig = {
     "/work/\\[slug\\]": ["./public/work/**/*"],
     // Home page: partner logos + work-grid thumbnails are read with fs too.
     "/": ["./public/partners/**/*", "./public/grid/**/*", "./public/decade/**/*"],
+    "/press": ["./public/press/**/*"],
   },
   async headers() {
     return [
