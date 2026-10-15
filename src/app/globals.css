@@ -456,3 +456,104 @@ html.lenis body {
 .lenis.lenis-smooth iframe {
   pointer-events: none;
 }
+
+/* ---------------------------------------------------------------------------
+   Liquid-glass theme switch (ThemeToggle.tsx).
+   Frosted pill track with the mode's name; an oversized glossy knob that
+   overhangs the track edge, icon glowing from inside. Only transforms and
+   opacity animate. EDIT: --lg-h is the track height; the rest scales.
+   --------------------------------------------------------------------------- */
+.lg-switch {
+  --lg-h: 26px;
+  --lg-w: calc(var(--lg-h) * 2.9);
+  --lg-knob: calc(var(--lg-h) * 1.5);
+  --lg-travel: calc(var(--lg-w) - var(--lg-knob) + var(--lg-h) * 0.1);
+  position: relative;
+  display: inline-block;
+  flex-shrink: 0;
+  width: var(--lg-w);
+  height: var(--lg-h);
+  margin-inline: calc(var(--lg-h) * 0.25);
+  border: 0;
+  padding: 0;
+  background: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.lg-track {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.04));
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.55),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.25),
+    0 6px 16px -6px rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(10px) saturate(1.3);
+  -webkit-backdrop-filter: blur(10px) saturate(1.3);
+  overflow: hidden;
+}
+.lg-label {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  font-size: calc(var(--lg-h) * 0.5);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: var(--foreground);
+  opacity: 0.85;
+  transition: opacity 0.35s ease, transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+/* The track names the mode you're in, like the reference: sun knob on the
+   left with "Light"; moon knob on the right with "Dark". */
+.lg-label-light { right: calc(var(--lg-h) * 0.5); }
+.lg-label-dark { left: calc(var(--lg-h) * 0.5); opacity: 0; transform: translateX(-6px); }
+.lg-switch[data-on] .lg-label-light { opacity: 0; transform: translateX(6px); }
+.lg-switch[data-on] .lg-label-dark { opacity: 0.85; transform: none; }
+.lg-knob {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: var(--lg-knob);
+  height: var(--lg-knob);
+  margin-top: calc(var(--lg-knob) / -2);
+  margin-left: calc(var(--lg-h) * -0.1);
+  border-radius: 50%;
+  transform: translateX(0);
+  transition: transform 0.5s cubic-bezier(0.34, 1.3, 0.64, 1);
+  background:
+    radial-gradient(circle at 35% 25%, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0) 45%),
+    linear-gradient(160deg, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0.05) 60%, rgba(0, 0, 0, 0.12));
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.7),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.28),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.18),
+    0 10px 24px -8px rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(6px) saturate(1.4);
+  -webkit-backdrop-filter: blur(6px) saturate(1.4);
+}
+.lg-switch[data-on] .lg-knob { transform: translateX(var(--lg-travel)); }
+.lg-switch:active .lg-knob { transition-duration: 0.15s; }
+.lg-icon {
+  position: absolute;
+  inset: 26%;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: #fff;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0) 70%);
+  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.9)) drop-shadow(0 0 10px rgba(255, 255, 255, 0.45));
+}
+.lg-icon svg { width: 100%; height: 100%; }
+/* On the light theme the knob's icon is dark, with a soft halo instead of a glow. */
+:root:not([data-theme="dark"]) .lg-switch:not([data-on]) .lg-icon {
+  color: #1a1a1a;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.25));
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0) 70%);
+}
+.lg-switch:focus-visible .lg-track { outline: 2px solid var(--foreground); outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) {
+  .lg-knob, .lg-label { transition: none; }
+}
