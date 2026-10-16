@@ -106,7 +106,7 @@ export default function RootLayout({
             Applied before paint so there's no flash. */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `try{if(sessionStorage.getItem('theme')!=='light'){document.documentElement.setAttribute('data-theme','dark')}}catch(e){document.documentElement.setAttribute('data-theme','dark')}`,
+            __html: `try{if(sessionStorage.getItem('theme')==='dark'){document.documentElement.setAttribute('data-theme','dark')}}catch(e){}`,
           }}
         />
         {/*

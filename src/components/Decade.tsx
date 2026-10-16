@@ -516,7 +516,7 @@ const washFor = (i: number) => {
 
 /** One year's card — same in the spiral and the phone list. A liquid-glass
  *  window: the picture inset in a frosted frame with glass chips over it
- *  (chapter + more), the year's title and a progress line on the footage,
+ *  (chapter + more), the year's title on the footage,
  *  and a glass control bar underneath carrying the year's story. The frame
  *  is .glass-faux (no backdrop blur — these are moving 3D layers). */
 function Card({
@@ -535,8 +535,6 @@ function Card({
   shade?: boolean;
 }) {
   const chapter = String(i + 1).padStart(2, "0");
-  // How far through the decade this year is — drawn as the footage's progress line.
-  const through = `${Math.round(((i + 1) / decade.length) * 100)}%`;
   return (
     <article
       data-dc-card
@@ -564,18 +562,10 @@ function Card({
           <svg width="14" height="4" viewBox="0 0 14 4" fill="currentColor"><circle cx="2" cy="2" r="1.5" /><circle cx="7" cy="2" r="1.5" /><circle cx="12" cy="2" r="1.5" /></svg>
         </span>
 
-        {/* Bottom: title, year, progress */}
+        {/* Bottom: title + year */}
         <div className="absolute inset-x-0 bottom-0 px-4 pb-3 sm:px-5 sm:pb-4">
           <h3 className="text-[clamp(1.15rem,2vw,1.55rem)] font-medium leading-tight tracking-tight text-white">{d.title}</h3>
           <p className="mt-1 text-[13px] text-white/70">{d.year} · Year {chapter} of {decade.length}</p>
-          <div aria-hidden className="mt-3 flex items-center gap-3 text-white">
-            <svg width="12" height="14" viewBox="0 0 12 14" fill="currentColor"><rect x="1" y="1" width="3.5" height="12" rx="1" /><rect x="7.5" y="1" width="3.5" height="12" rx="1" /></svg>
-            <span className="relative h-[3px] flex-1 rounded-full bg-white/25">
-              <span className="absolute inset-y-0 left-0 rounded-full bg-white" style={{ width: through }} />
-              <span className="absolute top-1/2 h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white" style={{ left: through }} />
-            </span>
-            <svg width="16" height="14" viewBox="0 0 16 14" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M1.5 5v4h3L8.5 12V2L4.5 5h-3z" fill="currentColor" /><path d="M11 4.5a3.5 3.5 0 0 1 0 5M13 2.5a6.5 6.5 0 0 1 0 9" /></svg>
-          </div>
         </div>
       </div>
 

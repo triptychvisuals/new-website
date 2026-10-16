@@ -70,18 +70,18 @@ function Thumb({ src, fallback }: { src: string; fallback?: string }) {
 const COUNT_SECONDS = 2.4;
 // EDIT: the blurred thumbnails behind the grid — how many, how strong.
 const BG_COUNT = 7;
-const BG_STRENGTH = 0.85;
+const BG_STRENGTH = 1;
 // EDIT: the orbits. Cards are dealt out to the rings in order. Per ring:
 // how many cards, its radius and card size (× the stage's base values in
 // globals.css, so phones scale down), its height off the middle (px), one
 // trip round in seconds, and which way it turns.
 const RINGS = [
-  { count: 12, radius: 1, scale: 1, y: 0, seconds: 52, reverse: false },
-  { count: 10, radius: 0.72, scale: 0.72, y: -270, seconds: 38, reverse: true },
-  { count: 14, radius: 1.28, scale: 0.86, y: 260, seconds: 68, reverse: false },
+  { count: 10, radius: 1, scale: 0.9, y: 0, seconds: 56, reverse: false },
+  { count: 8, radius: 0.8, scale: 0.68, y: -330, seconds: 44, reverse: true },
+  { count: 12, radius: 1.3, scale: 0.8, y: 330, seconds: 72, reverse: false },
 ];
 // EDIT: scatter within a ring (px, cycled) so it reads as floating cards.
-const JITTER = [-40, 25, -10, 45, -30, 10, 35, -20];
+const JITTER = [-24, 16, -8, 26, -18, 6, 22, -12];
 
 export default function WorkGridClient({
   cards,
@@ -193,14 +193,22 @@ export default function WorkGridClient({
       {/* Backdrop — blurred thumbnails crossfading with scroll, under a
           tint of the page colour so the tiles stay the focus */}
       <div aria-hidden className="pointer-events-none absolute inset-0">
+        {/* EDIT: a vivid colour field under the thumbnails, so the section
+            is saturated from the first frame (and if stills don't load) */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(45% 55% at 22% 30%, #ff2d7a 0%, transparent 70%), radial-gradient(45% 55% at 80% 28%, #ff9a1f 0%, transparent 70%), radial-gradient(50% 55% at 70% 78%, #1fb8ff 0%, transparent 70%), radial-gradient(45% 50% at 25% 80%, #7a2dff 0%, transparent 70%), #2a0f3a",
+          }}
+        />
         {bgs.map((src) => (
           // eslint-disable-next-line @next/next/no-img-element
           <img key={src} data-wg-bg src={src} alt="" loading="lazy" decoding="async" referrerPolicy="no-referrer" className="wg-bg" />
         ))}
-        {/* light tint, and the backdrop fades out at the top and bottom so
-            the section has no hard edges */}
-        <div className="absolute inset-0 bg-background/25" />
-        <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, var(--background) 0%, transparent 22%, transparent 78%, var(--background) 100%)" }} />
+        {/* the backdrop fades out at the very top and bottom so the section
+            has no hard edges */}
+        <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, var(--background) 0%, transparent 12%, transparent 88%, var(--background) 100%)" }} />
       </div>
 
       {/* The orbit — a tilted ring in 3D, the count at its centre (inside
@@ -211,11 +219,12 @@ export default function WorkGridClient({
             {/* tabular-nums keeps the width steady while the digits tick */}
             <span
               ref={num}
-              className="text-[clamp(3rem,10vw,8rem)] font-medium leading-none tracking-[-0.04em] text-foreground tabular-nums"
+              // 3D: extruded with stacked shadows (globals.css, .wo-num3d)
+              className="wo-num3d text-[clamp(3.5rem,12vw,10rem)] font-semibold leading-none tracking-[-0.04em] tabular-nums"
             >
               {countLabel}
             </span>
-            <span className="mt-2 text-[clamp(0.7rem,1.3vw,1rem)] font-medium uppercase tracking-[0.14em] text-muted sm:mt-3">
+            <span className="mt-3 text-[clamp(0.7rem,1.3vw,1rem)] font-semibold uppercase tracking-[0.14em] text-white [text-shadow:0_2px_10px_rgba(0,0,0,0.45)] sm:mt-4">
               {caption}
             </span>
           </div>

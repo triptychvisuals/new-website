@@ -94,8 +94,8 @@ export default function HeroReel() {
       </div>
 
       {/* Glass control bar — one long, slim pill across the bottom:
-          prev / play-pause / next, the clip's name, its progress line
-          (stretches to fill), the count, and one dot per clip.
+          prev / play-pause / next and the clip's name on the left, the
+          count and one dot per clip on the right.
           EDIT: max-w-[860px] = bar length. */}
       {count > 1 && (
         <div className="absolute inset-x-0 bottom-3 z-20 flex justify-center px-3 sm:bottom-5 sm:px-6">
@@ -117,15 +117,7 @@ export default function HeroReel() {
             <span className="ml-2 hidden shrink-0 text-[13px] font-medium leading-none sm:block">
               {HERO_LABELS[active] ?? `Reel ${active + 1}`}
             </span>
-            <span className="relative mx-3 h-[2px] flex-1 overflow-hidden rounded-full bg-white/20">
-              <span
-                // Re-keyed per clip so the line restarts from empty.
-                key={`${active}-${onScreen}`}
-                className="hero-progress absolute inset-0 rounded-full bg-white"
-                data-paused={paused || !onScreen ? "" : undefined}
-                style={{ ["--dur" as string]: `${AUTO_MS}ms` }}
-              />
-            </span>
+            <span className="flex-1" />
             <span className="hidden shrink-0 text-[12px] leading-none text-white/60 tabular-nums sm:block">
               {String(active + 1).padStart(2, "0")} / {String(count).padStart(2, "0")}
             </span>
