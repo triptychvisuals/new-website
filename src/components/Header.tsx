@@ -78,6 +78,35 @@ function SocialRow() {
   );
 }
 
+/**
+ * The call-to-action: a dark glass pill inside an iridescent ring of light
+ * that flows round its edge, with a soft glow of the same colours behind it.
+ * Only a rotation animates (globals.css, .cta-liquid).
+ */
+function LiquidButton({
+  href,
+  onClick,
+  small = false,
+  children,
+}: {
+  href: string;
+  onClick?: () => void;
+  small?: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <a href={href} onClick={onClick} className="cta-liquid group">
+      <span aria-hidden className="cta-glow">
+        <span className="cta-spin" />
+      </span>
+      <span aria-hidden className="cta-ring">
+        <span className="cta-spin" />
+      </span>
+      <span className={`cta-face ${small ? "px-4 py-2 text-[14px]" : "px-5 py-2.5 text-[15px]"}`}>{children}</span>
+    </a>
+  );
+}
+
 function Logo({
   onClick,
   className = "",
@@ -128,12 +157,7 @@ export default function Header({ logo }: { logo?: string }) {
           <div className="ml-auto flex items-center gap-3">
             <ThemeToggle />
             {/* EDIT: the call-to-action button */}
-            <a
-              href={site.contactUrl}
-              className="rounded-full bg-foreground px-5 py-2.5 text-[15px] font-medium tracking-tight text-background shadow-[inset_0_1px_0_rgba(255,255,255,0.25)] transition-transform duration-200 hover:scale-[1.03]"
-            >
-              Start a project
-            </a>
+            <LiquidButton href={site.contactUrl}>Start a project</LiquidButton>
           </div>
         </div>
 
@@ -186,9 +210,9 @@ export default function Header({ logo }: { logo?: string }) {
           </nav>
           <div className="flex items-center justify-between gap-4 px-5 pb-4 pt-1">
             <SocialRow />
-            <a href={site.contactUrl} onClick={close} className="rounded-full bg-foreground px-4 py-2 text-[14px] font-medium text-background">
+            <LiquidButton href={site.contactUrl} onClick={close} small>
               Start a project
-            </a>
+            </LiquidButton>
           </div>
         </div>
       </div>
