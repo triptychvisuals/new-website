@@ -4,16 +4,16 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "@/lib/gsap";
 
-export type Bubble = {
+export type OrbitCard = {
   href: string;
   title: string;
-  /** Still for the bubble; absent → a color swatch. */
+  /** Artist · year. */
+  sub: string;
+  /** Still for the card; absent → a color swatch. */
   thumb?: string;
   /** Used if `thumb` fails (YouTube has no SD still for some uploads). */
   thumbFallback?: string;
-  /** Opens off-site (a YouTube video) in a new tab. */
-  external?: boolean;
-  /** Base hue (0–360) for the swatch gradient / thumbnail tint. */
+  /** Base hue (0–360) for the swatch behind the still. */
   hue: number;
 };
 
@@ -57,11 +57,13 @@ function Thumb({ src, fallback }: { src: string; fallback?: string }) {
 }
 
 /**
- * Renders the 6×6 grid. The counter tile is placed explicitly in the middle
- * 2×2; the 32 rounded-square tiles auto-flow into the remaining cells around
- * it. On scroll-in the tiles pop in radiating out from the center (GSAP grid
- * stagger) while the counter counts up from 0, then each tile drifts gently
- * on its own rhythm.
+ * The count in the middle, and liquid-glass player cards orbiting it on a
+ * tilted ring. The orbit is pure CSS (globals.css, .wo-*): every card runs
+ * the same compositor animation — round the ring, counter-turned so it
+ * always faces you, fading as it passes behind — offset by a negative
+ * delay, so nothing runs on the main thread while it turns. Hovering
+ * pauses it; it also pauses while off screen. On scroll-in the counter
+ * counts up and the cards fade in one by one.
  */
 
 // EDIT: how long the count-up takes (seconds).
@@ -69,12 +71,18 @@ const COUNT_SECONDS = 2.4;
 // EDIT: the blurred thumbnails behind the grid — how many, how strong.
 const BG_COUNT = 7;
 const BG_STRENGTH = 0.85;
+// EDIT: one trip round the ring, in seconds.
+const ORBIT_SECONDS = 48;
+// EDIT: each card's height off the ring (px, cycled) — scatters them so the
+// orbit reads as floating cards rather than a flat carousel.
+const LIFTS = [-200, 90, -60, 210, -170, 40, 180, -120, 140, -30];
+
 export default function WorkGridClient({
-  bubbles,
+  cards,
   countLabel,
   caption,
 }: {
-  bubbles: Bubble[];
+  cards: OrbitCard[];
   countLabel: string;
   caption: string;
 }) {
@@ -82,7 +90,7 @@ export default function WorkGridClient({
   const num = useRef<HTMLSpanElement>(null);
   // Thumbnails for the backdrop: the small (320×180) version of the first
   // few distinct tiles — blurred and scaled up, so no one can tell.
-  const bgs = Array.from(new Set(bubbles.map((b) => b.thumbFallback ?? b.thumb).filter((s): s is string => !!s))).slice(0, BG_COUNT);
+  const bgs = Array.from(new Set(cards.map((b) => b.thumbFallback ?? b.thumb).filter((s): s is string => !!s))).slice(0, BG_COUNT);
 
   // "500+" → 500 and "+": the number counts, the suffix rides along.
   const match = countLabel.match(/^([\d,]+)(.*)$/);
@@ -107,12 +115,11 @@ export default function WorkGridClient({
           },
         });
       }
-      gsap.from("[data-bubble]", {
-        scale: 0.4,
+      gsap.from("[data-orbit-slot]", {
         autoAlpha: 0,
-        duration: 0.7,
-        ease: "back.out(1.6)",
-        stagger: { grid: [6, 6], from: "center", amount: 0.9 },
+        duration: 0.9,
+        ease: "power2.out",
+        stagger: 0.08,
         scrollTrigger: { trigger: root.current, start: "top 75%" },
       });
       gsap.from("[data-count]", {
@@ -158,7 +165,7 @@ export default function WorkGridClient({
     const ro = new ResizeObserver(fit);
     if (sec) ro.observe(sec);
 
-    // The tiles' idle drift only runs while the grid is on screen.
+    // The orbit only turns while it's on screen.
     const el = root.current;
     const io = new IntersectionObserver(([e]) => el?.toggleAttribute("data-idle", !e.isIntersecting));
     if (el) io.observe(el);
@@ -190,56 +197,81 @@ export default function WorkGridClient({
         <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, var(--background) 0%, transparent 22%, transparent 78%, var(--background) 100%)" }} />
       </div>
 
-      <div className="relative mx-auto grid w-full max-w-[1100px] grid-cols-6 gap-2.5 sm:gap-4">
-        {/* Counter — middle 2×2 */}
-        <div
-          data-count
-          className="col-span-2 col-start-3 row-span-2 row-start-3 flex flex-col items-center justify-center text-center"
-        >
-          {/* tabular-nums keeps the width steady while the digits tick */}
-          <span
-            ref={num}
-            className="text-[clamp(2.25rem,9vw,7rem)] font-medium leading-none tracking-[-0.04em] text-foreground tabular-nums"
-          >
-            {countLabel}
-          </span>
-          <span className="mt-1 text-[clamp(0.6rem,1.3vw,1rem)] font-medium uppercase tracking-[0.14em] text-muted sm:mt-3">
-            {caption}
-          </span>
-        </div>
-
-        {bubbles.map((b, i) => (
-          <Link
-            key={i}
-            href={b.href}
-            {...(b.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-            data-bubble
-            aria-label={b.title}
-            title={b.title}
-            className="group relative aspect-square"
-          >
-            {/* Liquid-glass tile: a glass rim, the picture inset, a sheen on top */}
+      {/* The orbit — a tilted ring in 3D, the count at its centre (inside
+          the 3D scene, so cards pass in front of it and behind it). */}
+      <div className="wo-stage">
+        <div className="wo-ring">
+          <div data-count className="wo-count flex flex-col items-center justify-center text-center">
+            {/* tabular-nums keeps the width steady while the digits tick */}
             <span
-              className="wg-drift wg-glass absolute inset-0 block rounded-xl p-[4%] sm:rounded-2xl lg:rounded-[22px] transition-transform duration-300 ease-out group-hover:scale-[1.08]"
-              style={{
-                animationDelay: `${(i % 7) * -0.9}s`,
-                animationDuration: `${6 + (i % 5)}s`,
-              }}
+              ref={num}
+              className="text-[clamp(3rem,10vw,8rem)] font-medium leading-none tracking-[-0.04em] text-foreground tabular-nums"
             >
-              <span
-                className="relative block h-full w-full overflow-hidden rounded-lg sm:rounded-xl lg:rounded-[17px]"
+              {countLabel}
+            </span>
+            <span className="mt-2 text-[clamp(0.7rem,1.3vw,1rem)] font-medium uppercase tracking-[0.14em] text-muted sm:mt-3">
+              {caption}
+            </span>
+          </div>
+
+          {cards.map((c, i) => (
+            <div key={i} data-orbit-slot className="wo-slot" style={{ ["--lift" as string]: `${LIFTS[i % LIFTS.length]}px` }}>
+              <Link
+                href={c.href}
+                aria-label={`${c.title} — ${c.sub}`}
+                className="wo-card"
                 style={{
-                  // EDIT: swatch colors — vivid hue-to-hue radial gradients.
-                  background: `radial-gradient(circle at 30% 25%, hsl(${b.hue} 92% 70%), hsl(${(b.hue + 38) % 360} 85% 52%) 55%, hsl(${(b.hue + 70) % 360} 80% 34%))`,
+                  animationDuration: `${ORBIT_SECONDS}s`,
+                  animationDelay: `${(-i / cards.length) * ORBIT_SECONDS}s`,
                 }}
               >
-                {b.thumb && <Thumb src={b.thumb} fallback={b.thumbFallback} />}
-                <span aria-hidden className="wg-sheen pointer-events-none absolute inset-0 rounded-[inherit]" />
-              </span>
-            </span>
-          </Link>
-        ))}
+                <PlayerCard c={c} i={i} />
+              </Link>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
+  );
+}
+
+/** One glass player card: the studio mark, the still with title + artist,
+ *  a progress line, and the transport row (decorative — the card is a link). */
+function PlayerCard({ c, i }: { c: OrbitCard; i: number }) {
+  // A different point in each "track", so the cards don't look cloned.
+  const through = `${18 + ((i * 37) % 64)}%`;
+  return (
+    <>
+      <span className="flex items-center gap-1.5 text-[12px] font-medium text-white/90">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/triptych-logo.png" alt="" className="h-2.5 w-auto" />
+        Triptych
+      </span>
+      <span className="mt-3 flex items-center gap-3">
+        <span
+          className="relative h-14 w-14 shrink-0 overflow-hidden rounded-[10px] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.2)] sm:h-16 sm:w-16"
+          style={{ background: `radial-gradient(circle at 30% 25%, hsl(${c.hue} 92% 66%), hsl(${(c.hue + 38) % 360} 85% 48%) 55%, hsl(${(c.hue + 70) % 360} 80% 28%))` }}
+        >
+          {c.thumb && <Thumb src={c.thumb} fallback={c.thumbFallback} />}
+        </span>
+        <span className="min-w-0">
+          <span className="block truncate text-[15px] font-medium leading-tight text-white">{c.title}</span>
+          <span className="mt-1 block truncate text-[12px] text-white/65">{c.sub}</span>
+        </span>
+      </span>
+      <span aria-hidden className="relative mt-4 block h-[3px] rounded-full bg-white/25">
+        <span className="absolute inset-y-0 left-0 rounded-full bg-white/90" style={{ width: through }} />
+        <span className="absolute top-1/2 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white" style={{ left: through }} />
+      </span>
+      <span aria-hidden className="mt-3 flex items-center justify-between text-white/90">
+        <svg width="16" height="14" viewBox="0 0 16 14" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><path d="M1 3h3l7 8h4M1 11h3l2-2.3M9.5 5.3 11 3h4M13 1l2 2-2 2M13 9l2 2-2 2" /></svg>
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><rect x="1" y="1.5" width="2" height="11" rx="0.8" /><path d="M13 1.5v11L4.5 7z" /></svg>
+        <span className="grid h-9 w-9 place-items-center rounded-full bg-white text-[#141414] shadow-[0_4px_12px_-4px_rgba(0,0,0,0.5)]">
+          <svg width="12" height="13" viewBox="0 0 12 13" fill="currentColor"><path d="M2 1v11l9.5-5.5z" /></svg>
+        </span>
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><path d="M1 1.5v11L9.5 7z" /><rect x="11" y="1.5" width="2" height="11" rx="0.8" /></svg>
+        <svg width="16" height="14" viewBox="0 0 16 14" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><path d="M2 6V5a2 2 0 0 1 2-2h9M11 1l2 2-2 2M14 8v1a2 2 0 0 1-2 2H3M5 13l-2-2 2-2" /></svg>
+      </span>
+    </>
   );
 }

@@ -3,8 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 
 /**
- * Light-switch toggle — a pill track with a sliding knob. Sets data-theme on
- * <html> (persisted); the page fades between themes via the global transition.
+ * Theme switch — a glass capsule with a sun and a moon; a bead slides behind
+ * the active mode. Sets data-theme on <html> (kept for the visit).
  */
 export default function ThemeToggle() {
   const btn = useRef<HTMLButtonElement>(null);
@@ -59,26 +59,21 @@ export default function ThemeToggle() {
       aria-label={dark ? "Switch to light mode" : "Switch to dark mode"}
       onClick={toggle}
       data-on={shown ? "" : undefined}
-      // Liquid-glass switch: a frosted pill track and a glass knob that
-      // sits just proud of the track's edge, its icon lit from inside. Styles live in globals.css (.lg-switch).
-      // EDIT: size — the --lg-h custom property sets the track height;
-      // everything else scales from it.
-      className="lg-switch"
+      // Glass capsule: sun | moon, with a lit bead behind the active one.
+      // Styles in globals.css (.seg-switch); EDIT: size via --seg there.
+      className="seg-switch"
     >
-      <span className="lg-track" aria-hidden />
-      <span className="lg-knob" aria-hidden>
-        <span className="lg-icon">
-          {shown ? (
-            <svg viewBox="0 0 24 24" fill="currentColor">
-              <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
-            </svg>
-          ) : (
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
-              <circle cx="12" cy="12" r="4" />
-              <path d="M12 2v2M12 20v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M2 12h2M20 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4" />
-            </svg>
-          )}
-        </span>
+      <span className="seg-bead" aria-hidden />
+      <span className="seg-icon seg-sun" aria-hidden>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+          <circle cx="12" cy="12" r="4" fill="currentColor" />
+          <path d="M12 2v2M12 20v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M2 12h2M20 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4" />
+        </svg>
+      </span>
+      <span className="seg-icon seg-moon" aria-hidden>
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
+        </svg>
       </span>
     </button>
   );

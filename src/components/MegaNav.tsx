@@ -356,7 +356,9 @@ export default function MegaNav({ nav }: { nav: { label: string; href: string }[
     active?.columns.flatMap((c) => c.items).find((it) => it.preview)?.preview;
 
   return (
-    <div ref={root} className="relative" onMouseLeave={scheduleClose} onMouseEnter={cancelClose}>
+    // Not positioned: the dropdown panel centres on the header pill (the
+    // nearest positioned ancestor), wherever the links sit inside it.
+    <div ref={root} onMouseLeave={scheduleClose} onMouseEnter={cancelClose}>
       <nav className="flex items-center gap-1" aria-label="Main">
         {nav.map((item) => {
           const menu = MENUS[item.label];

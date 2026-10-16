@@ -1,15 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { site } from "@/lib/site";
 import ThemeToggle from "@/components/ThemeToggle";
 import MegaNav from "@/components/MegaNav";
 
 /**
- * Sticky header:
- *   ◬ Triptych Studios® .... [Projects ⇕][About ⇕][Press ⇕][Store ↗] .... ☀ TIME icons
- * Below lg it collapses to a hamburger that drops a compact panel from the top.
+ * Sticky header — a floating liquid-glass pill:
+ *   ◬ Triptych Studios® | Projects ⇕  About ⇕  Press ⇕  Store ↗ ....... ☀☾  [Start a project]
+ * Below lg it collapses to logo · switch · hamburger, with the menu dropping
+ * from under the pill.
  */
 /** EDIT: the authored wordmark, used whenever the portal has no logo set. */
 const DEFAULT_LOGO = "/triptych-logo.png";
@@ -26,40 +27,6 @@ function mobileHref(href: string) {
   if (href === "/about") return "/#about";
   if (href.startsWith("/about#")) return `/#${href.split("#")[1]}`;
   return href;
-}
-
-function useClock() {
-  const [time, setTime] = useState("");
-  useEffect(() => {
-    const pad = (n: number) => String(n).padStart(2, "0");
-    const fmt = () => {
-      const d = new Date();
-      const ampm = d.getHours() >= 12 ? "PM" : "AM";
-      const h = d.getHours() % 12 || 12;
-      return `${pad(h)}:${pad(d.getMinutes())}:${pad(d.getSeconds())} ${ampm}`;
-    };
-    // First reading on the next frame (after hydration), then every second.
-    const first = requestAnimationFrame(() => setTime(fmt()));
-    const id = setInterval(() => setTime(fmt()), 1000);
-    return () => {
-      cancelAnimationFrame(first);
-      clearInterval(id);
-    };
-  }, []);
-  return time;
-}
-
-/**
- * The clock on its own: only these digits re-render each second, not the
- * whole header (menus and all).
- */
-function Clock({ className }: { className: string }) {
-  const time = useClock();
-  return (
-    <span className={className} suppressHydrationWarning>
-      {time || "--:--:-- --"}
-    </span>
-  );
 }
 
 /* Social icons — EDIT: sizes are the width/height on each svg */
@@ -133,7 +100,7 @@ function Logo({
         className={`h-4 w-auto lg:h-5 ${isDefault ? "[filter:brightness(0)] dark:[filter:none]" : ""}`}
       />
       {/* EDIT: wordmark — sits right of the mark, ® floated above its end */}
-      <span className="relative whitespace-nowrap pr-2 text-[15px] font-medium leading-none tracking-tight text-foreground lg:pr-2.5 lg:text-[19px]">
+      <span className="relative whitespace-nowrap pr-2 text-[15px] font-medium leading-none tracking-tight text-foreground lg:pr-2.5 lg:text-[18px]">
         Triptych Studios
         <span aria-hidden className="absolute -top-1.5 right-0 text-[8px] leading-none lg:-top-2 lg:text-[10px]">
           ®
@@ -150,76 +117,79 @@ export default function Header({ logo }: { logo?: string }) {
   return (
     // data-site-header: Decade sets data-theme="dark" here while the
     // timeline is on screen, re-theming everything inside (menus included).
-    <header data-site-header className="sticky top-0 z-40 flex items-center justify-between border-b border-dashed border-hairline bg-background/95 px-5 py-3.5 sm:px-6 lg:min-h-16 lg:py-2.5">
-      {/* Left: logo + wordmark */}
-      <div className="hidden items-center gap-3 lg:flex">
-        <Logo src={logo} />
-      </div>
-
-      {/* Center: pill triggers + dropdown panels */}
-      <div className="absolute left-1/2 hidden -translate-x-1/2 lg:block">
-        <MegaNav nav={site.nav} />
-      </div>
-
-      {/* Right: theme toggle + clock + social icons */}
-      <div className="hidden items-center gap-5 lg:flex">
-        <ThemeToggle />
-        <Clock className="hidden text-[15px] font-medium tabular-nums tracking-tight text-foreground/70 xl:inline" />
-        <SocialRow />
-      </div>
-
-      {/* Mobile: logo + clock right beside the theme toggle + hamburger */}
-      <div className="relative flex w-full items-center justify-between lg:hidden">
-        <Logo src={logo} />
-        <div className="flex items-center gap-3 sm:gap-4">
-          <div className="flex items-center gap-1.5 sm:gap-2">
-            <Clock className="whitespace-nowrap max-[379px]:hidden text-[14px] font-medium tabular-nums tracking-tight text-foreground/70 sm:text-[15px]" />
+    <header data-site-header className="sticky top-0 z-40 px-3 pt-3 sm:px-5">
+      {/* EDIT: max-w-[1240px] = how wide the pill gets on big screens */}
+      <div className="nav-pill relative mx-auto flex h-14 max-w-[1240px] items-center rounded-full pl-5 pr-2 sm:pl-6 lg:h-[60px]">
+        {/* Desktop: logo | links ........ switch + CTA */}
+        <div className="hidden min-w-0 flex-1 items-center lg:flex">
+          <Logo src={logo} />
+          <span aria-hidden className="mx-4 h-6 w-px bg-foreground/15 xl:mx-5" />
+          <MegaNav nav={site.nav} />
+          <div className="ml-auto flex items-center gap-3">
             <ThemeToggle />
-          </div>
-          <button
-            type="button"
-            onClick={() => setMenuOpen((o) => !o)}
-            aria-label={menuOpen ? "Close menu" : "Open menu"}
-            aria-expanded={menuOpen}
-            className="relative flex h-[18px] w-7 flex-col items-end justify-center"
-          >
-            <span
-              className={`block h-[1.5px] w-7 bg-foreground transition-transform duration-300 ${
-                menuOpen ? "translate-y-[3px] rotate-45" : "-translate-y-[3px]"
-              }`}
-            />
-            <span
-              className={`block h-[1.5px] w-7 bg-foreground transition-transform duration-300 ${
-                menuOpen ? "-translate-y-[1.5px] -rotate-45" : "translate-y-[3px]"
-              }`}
-            />
-          </button>
-        </div>
-      </div>
-
-      {/* Mobile dropdown — drops from the top, sized to content */}
-      <div
-        className={`glass-menu absolute inset-x-2 top-full mt-2 origin-top overflow-hidden rounded-[26px] transition-all duration-300 ease-out lg:hidden ${
-          menuOpen
-            ? "visible translate-y-0 opacity-100"
-            : "pointer-events-none invisible -translate-y-3 opacity-0"
-        }`}
-      >
-        <nav className="flex flex-col px-5 py-2">
-          {site.nav.map((item) => (
-            <Link
-              key={item.label}
-              href={mobileHref(item.href)}
-              onClick={close}
-              className="flex items-center gap-2 border-b border-hairline/70 py-3.5 text-xl font-normal tracking-tight text-foreground last:border-0"
+            {/* EDIT: the call-to-action button */}
+            <a
+              href={site.contactUrl}
+              className="rounded-full bg-foreground px-5 py-2.5 text-[15px] font-medium tracking-tight text-background shadow-[inset_0_1px_0_rgba(255,255,255,0.25)] transition-transform duration-200 hover:scale-[1.03]"
             >
-              {item.label}
-              {hasArrow(item.label) && <span aria-hidden>↗</span>}
-            </Link>
-          ))}
-        </nav>
-        <div className="flex items-center justify-between px-5 pb-4 pt-1">
-          <SocialRow />
+              Start a project
+            </a>
+          </div>
+        </div>
+
+        {/* Mobile: logo .... switch + hamburger */}
+        <div className="flex w-full items-center justify-between pr-3 lg:hidden">
+          <Logo src={logo} />
+          <div className="flex items-center gap-4">
+            <ThemeToggle />
+            <button
+              type="button"
+              onClick={() => setMenuOpen((o) => !o)}
+              aria-label={menuOpen ? "Close menu" : "Open menu"}
+              aria-expanded={menuOpen}
+              className="relative flex h-[18px] w-7 flex-col items-end justify-center"
+            >
+              <span
+                className={`block h-[1.5px] w-7 bg-foreground transition-transform duration-300 ${
+                  menuOpen ? "translate-y-[3px] rotate-45" : "-translate-y-[3px]"
+                }`}
+              />
+              <span
+                className={`block h-[1.5px] w-7 bg-foreground transition-transform duration-300 ${
+                  menuOpen ? "-translate-y-[1.5px] -rotate-45" : "translate-y-[3px]"
+                }`}
+              />
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile dropdown — dark glass, drops from under the pill */}
+        <div
+          className={`glass-menu absolute inset-x-0 top-full mt-2 origin-top overflow-hidden rounded-[26px] transition-all duration-300 ease-out lg:hidden ${
+            menuOpen
+              ? "visible translate-y-0 opacity-100"
+              : "pointer-events-none invisible -translate-y-3 opacity-0"
+          }`}
+        >
+          <nav className="flex flex-col px-5 py-2">
+            {site.nav.map((item) => (
+              <Link
+                key={item.label}
+                href={mobileHref(item.href)}
+                onClick={close}
+                className="flex items-center gap-2 border-b border-hairline/70 py-3.5 text-xl font-normal tracking-tight text-foreground last:border-0"
+              >
+                {item.label}
+                {hasArrow(item.label) && <span aria-hidden>↗</span>}
+              </Link>
+            ))}
+          </nav>
+          <div className="flex items-center justify-between gap-4 px-5 pb-4 pt-1">
+            <SocialRow />
+            <a href={site.contactUrl} onClick={close} className="rounded-full bg-foreground px-4 py-2 text-[14px] font-medium text-background">
+              Start a project
+            </a>
+          </div>
         </div>
       </div>
     </header>
