@@ -235,8 +235,8 @@ function MenuItem({
       </span>
     </>
   );
-  const cls = `group/item -mx-3 flex gap-3 rounded-xl px-3 py-3 transition-colors hover:bg-foreground/[0.05] focus-visible:bg-foreground/[0.05] focus-visible:outline-none ${
-    previewing ? "bg-foreground/[0.05]" : ""
+  const cls = `group/item -mx-3 flex gap-3 rounded-xl px-3 py-3 transition-colors hover:bg-foreground/[0.07] hover:shadow-[inset_0_1px_0_var(--glass-rim)] focus-visible:bg-foreground/[0.07] focus-visible:outline-none ${
+    previewing ? "bg-foreground/[0.07] shadow-[inset_0_1px_0_var(--glass-rim)]" : ""
   }`;
   // Hover or keyboard focus swaps the preview player to this project.
   const show = item.preview && onPreview ? () => onPreview(item.preview!) : undefined;
@@ -409,11 +409,12 @@ export default function MegaNav({ nav }: { nav: { label: string; href: string }[
       >
         {active && (
           <div
-            className={`${active.width} rounded-2xl border border-hairline bg-background p-2 dark:bg-[#151515] shadow-[0_24px_60px_-12px_rgba(0,0,0,0.45)]`}
+            // Liquid glass: frosted over the page (.glass in globals.css)
+            className={`${active.width} glass rounded-[26px] p-2`}
             role="menu"
           >
             <div
-              className="grid divide-x divide-hairline rounded-xl border border-hairline"
+              className="grid divide-x divide-[color:var(--glass-edge)] rounded-[20px] bg-foreground/[0.03] shadow-[inset_0_0_0_1px_var(--glass-edge)]"
               style={{
                 gridTemplateColumns:
                   active.template ?? `repeat(${active.columns.length}, minmax(0,1fr))`,

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import HeroReel from "@/components/HeroReel";
 
 /**
@@ -23,10 +24,24 @@ export default function HeroStudio({
   return (
     // Inset in a container: dashed rules above/below, a small gutter, and a
     // rounded, beveled panel (see the bevel overlay at the end).
-    <section className="border-b border-dashed border-hairline bg-background px-2 py-2 sm:px-3 sm:py-3">
-      {/* Panel — square on phones, 16:9 on desktop, capped wide.
+    <section className="relative isolate overflow-hidden border-b border-dashed border-hairline bg-background px-2 py-2 sm:px-4 sm:py-4">
+      {/* Ambient light behind the glass, so the frame has something to
+          catch — soft colour pools, painted once (no blur filter). */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 -z-10"
+        style={{
+          // EDIT: ambient glow colours behind the hero glass
+          background:
+            "radial-gradient(40% 55% at 18% 85%, rgb(229 54 31 / 0.22), transparent 70%), radial-gradient(45% 55% at 85% 15%, rgb(120 140 255 / 0.16), transparent 70%)",
+        }}
+      />
+      {/* Liquid-glass frame — the footage sits inset in a frosted slab.
+          EDIT: p-2.5 / sm:p-3 = frame thickness. */}
+      <div className="glass mx-auto w-full max-w-[1760px] rounded-[30px] p-2 sm:rounded-[36px] sm:p-3">
+      {/* Panel — square on phones, 16:9 on desktop.
           EDIT: rounded-[22px] = corner radius. */}
-      <div className="relative isolate mx-auto flex aspect-square min-h-0 w-full max-w-[1760px] flex-col overflow-hidden rounded-[22px] bg-[#0e0e10] text-white shadow-[0_1px_0_rgba(255,255,255,0.06),0_18px_40px_-18px_rgba(0,0,0,0.55)] md:aspect-video">
+      <div className="relative isolate flex aspect-square min-h-0 w-full flex-col overflow-hidden rounded-[22px] bg-[#0e0e10] text-white sm:rounded-[26px] md:aspect-video">
         {/* Background: horizontal reel carousel (clips cycle every 2.5s with
             dots), a legibility overlay, and film grain. EDIT clips in HeroReel. */}
         <HeroReel />
@@ -65,7 +80,18 @@ export default function HeroStudio({
           <Plus />
         </div>
 
-        {/* Bottom band — kept empty so the carousel dots clear the frame edge. */}
+        {/* Top-left glass chip — straight to the work. */}
+        <Link
+          href="/projects"
+          className="glass-dark absolute left-3 top-3 z-20 inline-flex items-center gap-2 rounded-full px-4 py-2 text-[14px] font-medium transition-transform duration-200 hover:scale-[1.03] sm:left-5 sm:top-5"
+        >
+          <svg aria-hidden width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
+            <path d="M7.5 1.5h3v3M4.5 10.5h-3v-3M10.5 1.5 7 5M1.5 10.5 5 7" />
+          </svg>
+          See the work
+        </Link>
+
+        {/* Bottom band — room for the glass control bar. */}
         <div className="relative p-6 sm:p-8 md:p-10" />
 
         {/* Bevel — sits above the video: a hairline inner border, a lit top
@@ -74,12 +100,13 @@ export default function HeroStudio({
             under the video, hence the overlay. */}
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-0 z-20 rounded-[22px]"
+          className="pointer-events-none absolute inset-0 z-20 rounded-[22px] sm:rounded-[26px]"
           style={{
             boxShadow:
               "inset 0 0 0 1px rgba(255,255,255,0.10), inset 0 1px 0 rgba(255,255,255,0.22), inset 0 -1px 0 rgba(0,0,0,0.5), inset 0 0 40px rgba(0,0,0,0.35)",
           }}
         />
+      </div>
       </div>
     </section>
   );

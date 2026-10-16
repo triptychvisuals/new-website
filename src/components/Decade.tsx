@@ -24,12 +24,12 @@ const STEP_DEG = 45; // turn between one year's card and the next
 const SCROLL_PER_YEAR = 420; // px of scrolling to bring the next year round
 const TILT_DEG = 7; // camera looks slightly down onto the spiral
 const GAP = 0.32; // empty space between one card and the next, × card height
-const NODE_ABOVE = 52; // px the film strip + year dots run above each card's top
+const NODE_ABOVE = 52; // px the glass line + year beads run above each card's top
 // EDIT: how strongly the current card's colours wash over the whole stage
 // behind the spiral (0–1). Fades to the next year's as each comes round
 // (fade time: .dc-wash in globals.css).
 const WASH = 0.55;
-// The film strip is straight pieces bent round the helix; each is its own
+// The glass line is straight pieces bent round the helix; each is its own
 // 3D layer, so keep the count modest.
 const SEGS_PER_YEAR = 6;
 
@@ -398,13 +398,12 @@ export default function Decade({ stills = {} }: { stills?: Record<string, string
 
         {/* ── Phones (and reduced motion): the straight timeline ── */}
         <div className="dc-list relative mx-auto max-w-[640px] px-5 sm:px-8">
-          {/* Spine: faint track, accent fill that draws down, comet at the tip */}
-          {/* Spine: a vertical film strip. The lit copy sits in a window that
-              slides down while the strip inside slides up by the same amount
-              — so the red frames reveal top-down using transforms only. */}
-          <div ref={line} aria-hidden className="film-strip-v absolute bottom-0 left-[18px] top-0 sm:left-[30px]">
+          {/* Spine: a liquid-glass tube. The lit copy sits in a window that
+              slides down while the tube inside slides up by the same amount
+              — so the accent pours in top-down using transforms only. */}
+          <div ref={line} aria-hidden className="glass-tube-v absolute bottom-0 left-[27px] top-0 sm:left-[39px]">
             <div ref={fill} className="dc-fill dc-fill-window absolute inset-0 overflow-hidden will-change-transform">
-              <div data-dc-fill-inner className="film-strip-v film-strip-v--lit dc-fill-inner absolute inset-0 will-change-transform" />
+              <div data-dc-fill-inner className="glass-tube-v glass-tube-v--lit dc-fill-inner absolute inset-0 will-change-transform" />
             </div>
             <div
               ref={comet}
@@ -423,7 +422,7 @@ export default function Decade({ stills = {} }: { stills?: Record<string, string
                 <span
                   data-dc-dot
                   aria-hidden
-                  className="relative z-10 col-start-1 row-start-1 mx-auto h-[14px] w-[14px] rounded-full border border-white/30 bg-[#0a0a0a] transition-all duration-500 group-data-[on]/row:scale-125 group-data-[on]/row:border-[color:var(--accent)] group-data-[on]/row:bg-[color:var(--accent)] group-data-[on]/row:shadow-[0_0_0_6px_rgba(229,54,31,0.18),0_0_22px_rgba(229,54,31,0.6)]"
+                  className="relative z-10 col-start-1 row-start-1 mx-auto h-[20px] w-[20px] rounded-full bg-[radial-gradient(circle_at_35%_28%,rgba(255,255,255,0.7),rgba(255,255,255,0)_42%),radial-gradient(circle,#232325,#141416)] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.3),inset_0_-3px_6px_rgba(0,0,0,0.4)] transition-all duration-500 group-data-[on]/row:scale-110 group-data-[on]/row:bg-[radial-gradient(circle_at_35%_28%,rgba(255,255,255,0.85),rgba(255,255,255,0)_42%),radial-gradient(circle,#ff7a5e,var(--accent)_70%)] group-data-[on]/row:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.45),0_0_0_6px_rgba(229,54,31,0.18),0_0_22px_rgba(229,54,31,0.6)]"
                 />
                 <Card d={d} i={i} still={stills[d.year]} className="col-start-2 row-start-1 will-change-[opacity,transform]" />
               </li>
@@ -463,7 +462,11 @@ const washFor = (i: number) => {
   ].join(", ");
 };
 
-/** One year's card — same in the spiral and the phone list. */
+/** One year's card — same in the spiral and the phone list. A liquid-glass
+ *  window: the picture inset in a frosted frame with glass chips over it
+ *  (chapter + more), the year's title and a progress line on the footage,
+ *  and a glass control bar underneath carrying the year's story. The frame
+ *  is .glass-faux (no backdrop blur — these are moving 3D layers). */
 function Card({
   d,
   i,
@@ -479,32 +482,64 @@ function Card({
   /** Spiral cards dim via this dark layer (set from JS) instead of opacity. */
   shade?: boolean;
 }) {
-  // (No drop shadow: on 11 moving 3D layers it doubled each frame's cost.)
+  const chapter = String(i + 1).padStart(2, "0");
+  // How far through the decade this year is — drawn as the footage's progress line.
+  const through = `${Math.round(((i + 1) / decade.length) * 100)}%`;
   return (
     <article
       data-dc-card
-      className={`relative overflow-hidden rounded-[22px] border border-white/10 bg-[#141414] shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] ${className}`}
+      className={`glass-faux relative overflow-hidden rounded-[30px] p-2.5 sm:p-3 ${className}`}
     >
-      <div
-        className="relative aspect-[16/8] w-full"
-        style={{ background: artFor(i) }}
-      >
+      {/* The footage */}
+      <div className="relative aspect-[16/9] w-full overflow-hidden rounded-[22px]" style={{ background: artFor(i) }}>
         {still ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={still} alt="" loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover" />
         ) : (
           // EDIT: the placeholder gear drawing — size / position / strength
-          <VideoGearIcon index={i} className="absolute right-[6%] top-1/2 h-[64%] w-auto -translate-y-1/2 text-white opacity-90" />
+          <VideoGearIcon index={i} className="absolute right-[7%] top-[46%] h-[44%] w-auto -translate-y-1/2 text-white opacity-90" />
         )}
-        <span className="absolute bottom-3 left-4 text-[clamp(2.25rem,5vw,3.25rem)] font-medium leading-none tracking-[-0.04em] text-white/60">
-          {d.year}
+        <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-black/20" />
+
+        {/* Top: chapter chip + more */}
+        <span className="glass-chip absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[12px] font-medium sm:left-4 sm:top-4 sm:text-[13px]">
+          <svg aria-hidden width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
+            <path d="M7.5 1.5h3v3M4.5 10.5h-3v-3M10.5 1.5 7 5M1.5 10.5 5 7" />
+          </svg>
+          Chapter {chapter}
+        </span>
+        <span aria-hidden className="glass-chip absolute right-3 top-3 grid h-8 w-8 place-items-center rounded-full sm:right-4 sm:top-4">
+          <svg width="14" height="4" viewBox="0 0 14 4" fill="currentColor"><circle cx="2" cy="2" r="1.5" /><circle cx="7" cy="2" r="1.5" /><circle cx="12" cy="2" r="1.5" /></svg>
+        </span>
+
+        {/* Bottom: title, year, progress */}
+        <div className="absolute inset-x-0 bottom-0 px-4 pb-3 sm:px-5 sm:pb-4">
+          <h3 className="text-[clamp(1.15rem,2vw,1.55rem)] font-medium leading-tight tracking-tight text-white">{d.title}</h3>
+          <p className="mt-1 text-[13px] text-white/70">{d.year} · Year {chapter} of {decade.length}</p>
+          <div aria-hidden className="mt-3 flex items-center gap-3 text-white">
+            <svg width="12" height="14" viewBox="0 0 12 14" fill="currentColor"><rect x="1" y="1" width="3.5" height="12" rx="1" /><rect x="7.5" y="1" width="3.5" height="12" rx="1" /></svg>
+            <span className="relative h-[3px] flex-1 rounded-full bg-white/25">
+              <span className="absolute inset-y-0 left-0 rounded-full bg-white" style={{ width: through }} />
+              <span className="absolute top-1/2 h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white" style={{ left: through }} />
+            </span>
+            <svg width="16" height="14" viewBox="0 0 16 14" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M1.5 5v4h3L8.5 12V2L4.5 5h-3z" fill="currentColor" /><path d="M11 4.5a3.5 3.5 0 0 1 0 5M13 2.5a6.5 6.5 0 0 1 0 9" /></svg>
+          </div>
+        </div>
+      </div>
+
+      {/* The control bar — the year's story */}
+      <div className="glass-faux mt-2.5 flex items-center gap-3 rounded-[20px] p-2 pr-4 sm:mt-3 sm:gap-4">
+        <span aria-hidden className="hidden shrink-0 items-center gap-3 pl-2 text-white/85 sm:flex">
+          <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><path d="M8 1v10L1 6zM17 1v10l-7-5z" /></svg>
+          <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><path d="M1 1v10l7-5zM10 1v10l7-5z" /></svg>
+        </span>
+        <span aria-hidden className="h-11 w-11 shrink-0 rounded-[12px] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.18)]" style={{ background: still ? `center / cover url(${still})` : artFor(i) }} />
+        <span className="min-w-0 flex-1">
+          <span className="block text-[12px] font-medium text-[color:var(--accent)]">{d.year}</span>
+          <span className="mt-0.5 block text-[14px] leading-snug text-white/75">{d.body}</span>
         </span>
       </div>
-      <div className="p-6 sm:p-7">
-        <p className="text-[12px] font-bold uppercase tracking-[0.16em] text-[color:var(--accent)]">{d.year}</p>
-        <h3 className="mt-3 text-[clamp(1.2rem,2vw,1.55rem)] font-medium leading-tight tracking-tight">{d.title}</h3>
-        <p className="mt-3 text-[15px] leading-relaxed text-white/60">{d.body}</p>
-      </div>
+
       {shade && (
         <span data-dc-shade aria-hidden className="pointer-events-none absolute inset-0 bg-[#050505] opacity-0 will-change-[opacity]" />
       )}

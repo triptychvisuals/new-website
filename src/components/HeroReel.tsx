@@ -12,6 +12,9 @@ const HERO_VIDEOS = [
   "/reels/reel-a.mp4",
 ];
 
+// EDIT: the name shown in the glass control bar for each clip (same order).
+const HERO_LABELS = ["Showreel", "Reel 02", "Reel 03", "Reel 04"];
+
 // EDIT: auto-advance interval in milliseconds.
 const AUTO_MS = 2500;
 
@@ -27,6 +30,8 @@ const AUTO_MS = 2500;
 export default function HeroReel() {
   const [active, setActive] = useState(0);
   const [onScreen, setOnScreen] = useState(true);
+  // Paused from the glass control bar: the clip stops and the reel holds.
+  const [paused, setPaused] = useState(false);
   const track = useRef<HTMLDivElement>(null);
   const count = HERO_VIDEOS.length;
 
@@ -43,19 +48,24 @@ export default function HeroReel() {
   useEffect(() => {
     const vids = track.current?.querySelectorAll("video") ?? [];
     vids.forEach((v, i) => {
-      if (onScreen && i === active) v.play().catch(() => {});
+      if (onScreen && !paused && i === active) v.play().catch(() => {});
       else v.pause();
     });
     // Buffer the next clip ahead so it's ready when the track slides to it.
     const next = vids[(active + 1) % vids.length];
     if (next) next.preload = "auto";
-  }, [active, onScreen]);
+  }, [active, onScreen, paused]);
 
+  // Advance when the clip's time is up. A timeout restarted on every change
+  // (not an interval), so stepping by hand gives the new clip its full time
+  // and the progress line below always starts from empty.
   useEffect(() => {
-    if (count <= 1 || !onScreen) return;
-    const id = setInterval(() => setActive((a) => (a + 1) % count), AUTO_MS);
-    return () => clearInterval(id);
-  }, [count, onScreen]);
+    if (count <= 1 || !onScreen || paused) return;
+    const id = setTimeout(() => setActive((a) => (a + 1) % count), AUTO_MS);
+    return () => clearTimeout(id);
+  }, [count, onScreen, paused, active]);
+
+  const go = (step: number) => setActive((a) => (a + step + count) % count);
 
   return (
     <>
@@ -83,25 +93,76 @@ export default function HeroReel() {
         </div>
       </div>
 
-      {/* Dots — one per clip, centered near the bottom */}
+      {/* Glass control bar — prev / play-pause / next, the clip's name with
+          its progress line, and one dot per clip. Frosted over the footage. */}
       {count > 1 && (
-        <div className="absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2">
-          {HERO_VIDEOS.map((src, i) => (
-            <button
-              key={`dot-${src}-${i}`}
-              type="button"
-              aria-label={`Hero clip ${i + 1}`}
-              aria-current={i === active}
-              onClick={() => setActive(i)}
-              className={`h-1.5 rounded-full transition-all duration-300 ${
-                i === active
-                  ? "w-5 bg-white"
-                  : "w-1.5 bg-white/40 hover:bg-white/70"
-              }`}
-            />
-          ))}
+        <div className="absolute inset-x-0 bottom-4 z-20 flex justify-center px-3 sm:bottom-6">
+          <div className="glass-dark flex items-center gap-1 rounded-full p-1.5 sm:gap-2 sm:p-2">
+            <GlassButton label="Previous clip" onClick={() => go(-1)}>
+              <svg width="20" height="14" viewBox="0 0 20 14" fill="currentColor"><path d="M9 1v12L1 7zM19 1v12l-8-6z" /></svg>
+            </GlassButton>
+            <GlassButton label={paused ? "Play" : "Pause"} onClick={() => setPaused((p) => !p)}>
+              {paused ? (
+                <svg width="14" height="16" viewBox="0 0 14 16" fill="currentColor"><path d="M2 1.5v13l11-6.5z" /></svg>
+              ) : (
+                <svg width="14" height="16" viewBox="0 0 14 16" fill="currentColor"><rect x="1.5" y="1" width="4" height="14" rx="1.2" /><rect x="8.5" y="1" width="4" height="14" rx="1.2" /></svg>
+              )}
+            </GlassButton>
+            <GlassButton label="Next clip" onClick={() => go(1)}>
+              <svg width="20" height="14" viewBox="0 0 20 14" fill="currentColor"><path d="M1 1v12l8-6zM11 1v12l8-6z" /></svg>
+            </GlassButton>
+
+            {/* Now playing */}
+            <div className="ml-1 hidden min-w-[200px] flex-col gap-1.5 rounded-full bg-black/25 py-2 pl-4 pr-5 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.08)] sm:flex">
+              <div className="flex items-baseline justify-between gap-4">
+                <span className="text-[14px] font-medium leading-none">{HERO_LABELS[active] ?? `Reel ${active + 1}`}</span>
+                <span className="text-[12px] leading-none text-white/60 tabular-nums">
+                  {String(active + 1).padStart(2, "0")} / {String(count).padStart(2, "0")}
+                </span>
+              </div>
+              <span className="relative h-[3px] overflow-hidden rounded-full bg-white/20">
+                <span
+                  // Re-keyed per clip so the line restarts from empty.
+                  key={`${active}-${onScreen}`}
+                  className="hero-progress absolute inset-0 rounded-full bg-white"
+                  data-paused={paused || !onScreen ? "" : undefined}
+                  style={{ ["--dur" as string]: `${AUTO_MS}ms` }}
+                />
+              </span>
+            </div>
+
+            {/* Dots */}
+            <div className="flex items-center gap-1.5 px-2 sm:pl-3 sm:pr-3">
+              {HERO_VIDEOS.map((src, i) => (
+                <button
+                  key={`dot-${src}-${i}`}
+                  type="button"
+                  aria-label={`Hero clip ${i + 1}`}
+                  aria-current={i === active}
+                  onClick={() => setActive(i)}
+                  className={`h-1.5 rounded-full transition-all duration-300 ${
+                    i === active ? "w-5 bg-white" : "w-1.5 bg-white/40 hover:bg-white/70"
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
         </div>
       )}
     </>
+  );
+}
+
+/** A round glass button in the hero's control bar. */
+function GlassButton({ label, onClick, children }: { label: string; onClick: () => void; children: React.ReactNode }) {
+  return (
+    <button
+      type="button"
+      aria-label={label}
+      onClick={onClick}
+      className="grid h-10 w-10 place-items-center rounded-full text-white transition-[background-color,transform] duration-200 hover:bg-white/15 active:scale-90 sm:h-11 sm:w-11"
+    >
+      {children}
+    </button>
   );
 }

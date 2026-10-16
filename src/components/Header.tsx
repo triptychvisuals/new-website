@@ -171,9 +171,9 @@ export default function Header({ logo }: { logo?: string }) {
       {/* Mobile: logo + clock right beside the theme toggle + hamburger */}
       <div className="relative flex w-full items-center justify-between lg:hidden">
         <Logo src={logo} />
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <Clock className="text-[15px] font-medium tabular-nums tracking-tight text-foreground/70" />
+        <div className="flex items-center gap-3 sm:gap-4">
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            <Clock className="whitespace-nowrap max-[379px]:hidden text-[14px] font-medium tabular-nums tracking-tight text-foreground/70 sm:text-[15px]" />
             <ThemeToggle />
           </div>
           <button
@@ -199,7 +199,7 @@ export default function Header({ logo }: { logo?: string }) {
 
       {/* Mobile dropdown — drops from the top, sized to content */}
       <div
-        className={`absolute inset-x-0 top-full origin-top overflow-hidden border-b border-hairline bg-background shadow-xl transition-all duration-300 ease-out lg:hidden ${
+        className={`glass absolute inset-x-2 top-full mt-2 origin-top overflow-hidden rounded-[26px] transition-all duration-300 ease-out lg:hidden ${
           menuOpen
             ? "visible translate-y-0 opacity-100"
             : "pointer-events-none invisible -translate-y-3 opacity-0"
