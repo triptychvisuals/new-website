@@ -148,7 +148,7 @@ export default function Header({ logo }: { logo?: string }) {
     // timeline is on screen, re-theming everything inside (menus included).
     <header data-site-header className="sticky top-0 z-40 px-3 pt-3 sm:px-5">
       {/* EDIT: max-w-[1240px] = how wide the pill gets on big screens */}
-      <div className="nav-pill relative mx-auto flex h-14 max-w-[1240px] items-center rounded-full pl-5 pr-2 sm:pl-6 lg:h-[60px]">
+      <div className="nav-pill relative mx-auto flex h-14 max-w-[1240px] items-center rounded-[18px] pl-5 pr-2 sm:pl-6 lg:h-[60px] lg:rounded-[20px]">
         {/* Desktop: logo | links ........ switch + CTA */}
         <div className="hidden min-w-0 flex-1 items-center lg:flex">
           <Logo src={logo} />
@@ -189,7 +189,7 @@ export default function Header({ logo }: { logo?: string }) {
 
         {/* Mobile dropdown — dark glass, drops from under the pill */}
         <div
-          className={`glass-menu absolute inset-x-0 top-full mt-2 origin-top overflow-hidden rounded-[26px] transition-all duration-300 ease-out lg:hidden ${
+          className={`glass-menu absolute inset-x-0 top-full mt-2 origin-top overflow-hidden rounded-[18px] transition-all duration-300 ease-out lg:hidden ${
             menuOpen
               ? "visible translate-y-0 opacity-100"
               : "pointer-events-none invisible -translate-y-3 opacity-0"

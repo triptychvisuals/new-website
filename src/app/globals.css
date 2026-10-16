@@ -564,12 +564,10 @@ html.lenis body {
   backdrop-filter: blur(28px) saturate(1.8);
   box-shadow: inset 0 1px 0 var(--glass-rim);
 }
-/* Menus: darker smoked glass — still frosted, with a lit rim. EDIT: the
-   first gradient's alphas set how dark (light theme: a soft grey glass). */
+/* Menus: solid smoked glass — opaque, with the glass's lit rim and sheen.
+   EDIT: the gradient colours (light theme first, dark below). */
 .glass-menu {
-  background: linear-gradient(160deg, rgb(255 255 255 / 0.98), rgb(244 242 237 / 0.97));
-  -webkit-backdrop-filter: blur(48px) saturate(1.6);
-  backdrop-filter: blur(48px) saturate(1.6);
+  background: linear-gradient(160deg, #ffffff, #f3f1ec);
   box-shadow:
     inset 0 1px 0 rgb(255 255 255 / 0.9),
     inset 0 0 0 1px rgb(0 0 0 / 0.08),
@@ -577,7 +575,7 @@ html.lenis body {
 }
 [data-theme="dark"] .glass-menu,
 .glass-menu:where([data-theme="dark"] *) {
-  background: linear-gradient(160deg, rgb(30 30 33 / 0.985), rgb(15 15 17 / 0.98) 60%, rgb(24 24 27 / 0.985));
+  background: linear-gradient(160deg, #1e1e21, #0f0f11 60%, #18181b);
   box-shadow:
     inset 0 1px 0 rgb(255 255 255 / 0.16),
     inset 0 0 0 1px rgb(255 255 255 / 0.07),
@@ -687,11 +685,12 @@ html.lenis body {
 .cta-liquid {
   --cta-speed: 10s;
   --cta-ring: 2px;
+  --cta-radius: 14px; /* EDIT: corner radius — matches the header's rounded square */
   position: relative;
   isolation: isolate;
   display: inline-flex;
   flex-shrink: 0;
-  border-radius: 999px;
+  border-radius: var(--cta-radius);
   padding: var(--cta-ring);
   transition: transform 0.25s ease;
 }
@@ -701,7 +700,7 @@ html.lenis body {
 .cta-ring,
 .cta-glow {
   position: absolute;
-  border-radius: 999px;
+  border-radius: var(--cta-radius);
   overflow: hidden;
   pointer-events: none;
 }
@@ -750,7 +749,7 @@ html.lenis body {
 }
 .cta-face {
   position: relative;
-  border-radius: 999px;
+  border-radius: calc(var(--cta-radius) - var(--cta-ring));
   font-weight: 500;
   letter-spacing: -0.01em;
   white-space: nowrap;
@@ -792,4 +791,60 @@ html.lenis body {
 }
 @media (prefers-reduced-motion: reduce) {
   .wo-num3d { animation: none; transform: perspective(900px) rotateX(10deg); }
+}
+
+/* ---------------------------------------------------------------------------
+   Nav hover lens (MegaNav): a liquid-glass capsule that glides to the item
+   under the pointer (or the open menu's item), slightly taller than the
+   bar's items, with lit rims top and bottom — and the item's label
+   swells a touch inside it. Transform / width / opacity only.
+   --------------------------------------------------------------------------- */
+.nav-lens {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  height: 46px;
+  margin-top: -23px;
+  border-radius: 16px;
+  pointer-events: none;
+  opacity: 0;
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.95), rgb(255 255 255 / 0.55) 45%, rgb(255 255 255 / 0.75));
+  box-shadow:
+    inset 0 1.5px 0 rgb(255 255 255 / 1),
+    inset 0 -1.5px 0 rgb(255 255 255 / 0.9),
+    inset 0 0 0 1px rgb(0 0 0 / 0.06),
+    inset 0 -6px 10px -6px rgb(120 160 255 / 0.35),
+    inset 0 6px 10px -6px rgb(120 160 255 / 0.25),
+    0 8px 22px -8px rgb(0 0 0 / 0.3);
+  transition:
+    transform 0.5s cubic-bezier(0.34, 1.35, 0.64, 1),
+    width 0.5s cubic-bezier(0.34, 1.35, 0.64, 1),
+    opacity 0.25s ease;
+}
+.nav-lens[data-on] {
+  opacity: 1;
+}
+[data-theme="dark"] .nav-lens,
+.nav-lens:where([data-theme="dark"] *) {
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.2), rgb(255 255 255 / 0.04) 45%, rgb(255 255 255 / 0.12)),
+    #0b0b0d;
+  box-shadow:
+    inset 0 1.5px 0 rgb(255 255 255 / 0.55),
+    inset 0 -1.5px 0 rgb(255 255 255 / 0.35),
+    inset 0 0 0 1px rgb(255 255 255 / 0.12),
+    inset 0 -6px 10px -6px rgb(120 170 255 / 0.5),
+    inset 0 6px 10px -6px rgb(120 170 255 / 0.35),
+    0 10px 26px -8px rgb(0 0 0 / 0.8);
+}
+.nav-item {
+  position: relative;
+  transition: transform 0.4s cubic-bezier(0.34, 1.35, 0.64, 1);
+}
+.nav-item[data-lensed] {
+  transform: scale(1.06);
+}
+@media (prefers-reduced-motion: reduce) {
+  .nav-lens, .nav-item { transition: opacity 0.2s ease; }
 }

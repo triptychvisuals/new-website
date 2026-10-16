@@ -315,6 +315,17 @@ function PreviewPlayer({ preview, onPick }: { preview?: Preview; onPick: () => v
 
 export default function MegaNav({ nav }: { nav: { label: string; href: string }[] }) {
   const [open, setOpen] = useState<string | null>(null);
+  // The liquid-glass lens that slides under the nav item you're over (or
+  // the one whose menu is open). Positions are measured as items are
+  // entered, so nothing is read during render.
+  const [hover, setHover] = useState<string | null>(null);
+  const [spots, setSpots] = useState<Record<string, { x: number; w: number }>>({});
+  const aim = (label: string) => (e: { currentTarget: HTMLElement }) => {
+    const el = e.currentTarget;
+    const spot = { x: el.offsetLeft, w: el.offsetWidth };
+    setSpots((s) => (s[label]?.x === spot.x && s[label]?.w === spot.w ? s : { ...s, [label]: spot }));
+    setHover(label);
+  };
   // The hovered project, remembered with the panel it was hovered in — so a
   // panel that opens again starts the player on its default.
   const [preview, setPreview] = useState<{ panel: string; p: Preview } | undefined>(undefined);
@@ -359,7 +370,20 @@ export default function MegaNav({ nav }: { nav: { label: string; href: string }[
     // Not positioned: the dropdown panel centres on the header pill (the
     // nearest positioned ancestor), wherever the links sit inside it.
     <div ref={root} onMouseLeave={scheduleClose} onMouseEnter={cancelClose}>
-      <nav className="flex items-center gap-1" aria-label="Main">
+      <nav className="relative flex items-center gap-1" aria-label="Main" onMouseLeave={() => setHover(null)}>
+        {/* The lens (globals.css, .nav-lens) */}
+        {(() => {
+          const target = hover ?? open;
+          const spot = target ? spots[target] : undefined;
+          return (
+            <span
+              aria-hidden
+              className="nav-lens"
+              data-on={spot ? "" : undefined}
+              style={spot ? { transform: `translateX(${spot.x}px)`, width: spot.w } : undefined}
+            />
+          );
+        })()}
         {nav.map((item) => {
           const menu = MENUS[item.label];
           if (!menu) {
@@ -368,8 +392,14 @@ export default function MegaNav({ nav }: { nav: { label: string; href: string }[
               <Link
                 key={item.label}
                 href={item.href}
-                onMouseEnter={close}
-                className={`${triggerCls} border-transparent hover:bg-foreground/[0.05]`}
+                onMouseEnter={(e) => {
+                  close();
+                  aim(item.label)(e);
+                }}
+                onFocus={aim(item.label)}
+                onBlur={() => setHover(null)}
+                data-lensed={hover === item.label ? "" : undefined}
+                className={`${triggerCls} nav-item border-transparent`}
               >
                 {item.label}
                 {external && <span aria-hidden>↗</span>}
@@ -383,16 +413,16 @@ export default function MegaNav({ nav }: { nav: { label: string; href: string }[
               type="button"
               aria-expanded={isOpen}
               aria-haspopup="true"
-              onMouseEnter={() => {
+              onMouseEnter={(e) => {
                 cancelClose();
                 setOpen(item.label);
+                aim(item.label)(e);
               }}
+              onFocus={aim(item.label)}
+              onBlur={() => setHover(null)}
               onClick={() => setOpen(isOpen ? null : item.label)}
-              className={`${triggerCls} ${
-                isOpen
-                  ? "border-hairline bg-foreground/[0.05]"
-                  : "border-transparent hover:bg-foreground/[0.05]"
-              }`}
+              data-lensed={(hover ?? open) === item.label ? "" : undefined}
+              className={`${triggerCls} nav-item border-transparent`}
             >
               {item.label}
               <Chevrons />
@@ -412,11 +442,11 @@ export default function MegaNav({ nav }: { nav: { label: string; href: string }[
         {active && (
           <div
             // Dark liquid glass: frosted over the page (.glass-menu in globals.css)
-            className={`${active.width} glass-menu rounded-[26px] p-2`}
+            className={`${active.width} glass-menu rounded-[20px] p-2`}
             role="menu"
           >
             <div
-              className="grid divide-x divide-[color:var(--glass-edge)] rounded-[20px] bg-foreground/[0.03] shadow-[inset_0_0_0_1px_var(--glass-edge)]"
+              className="grid divide-x divide-[color:var(--glass-edge)] rounded-[14px] bg-foreground/[0.03] shadow-[inset_0_0_0_1px_var(--glass-edge)]"
               style={{
                 gridTemplateColumns:
                   active.template ?? `repeat(${active.columns.length}, minmax(0,1fr))`,
