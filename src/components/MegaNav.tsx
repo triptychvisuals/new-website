@@ -315,17 +315,6 @@ function PreviewPlayer({ preview, onPick }: { preview?: Preview; onPick: () => v
 
 export default function MegaNav({ nav }: { nav: { label: string; href: string }[] }) {
   const [open, setOpen] = useState<string | null>(null);
-  // The liquid-glass lens that slides under the nav item you're over (or
-  // the one whose menu is open). Positions are measured as items are
-  // entered, so nothing is read during render.
-  const [hover, setHover] = useState<string | null>(null);
-  const [spots, setSpots] = useState<Record<string, { x: number; w: number }>>({});
-  const aim = (label: string) => (e: { currentTarget: HTMLElement }) => {
-    const el = e.currentTarget;
-    const spot = { x: el.offsetLeft, w: el.offsetWidth };
-    setSpots((s) => (s[label]?.x === spot.x && s[label]?.w === spot.w ? s : { ...s, [label]: spot }));
-    setHover(label);
-  };
   // The hovered project, remembered with the panel it was hovered in — so a
   // panel that opens again starts the player on its default.
   const [preview, setPreview] = useState<{ panel: string; p: Preview } | undefined>(undefined);
@@ -370,20 +359,7 @@ export default function MegaNav({ nav }: { nav: { label: string; href: string }[
     // Not positioned: the dropdown panel centres on the header pill (the
     // nearest positioned ancestor), wherever the links sit inside it.
     <div ref={root} onMouseLeave={scheduleClose} onMouseEnter={cancelClose}>
-      <nav className="relative flex items-center gap-1" aria-label="Main" onMouseLeave={() => setHover(null)}>
-        {/* The lens (globals.css, .nav-lens) */}
-        {(() => {
-          const target = hover ?? open;
-          const spot = target ? spots[target] : undefined;
-          return (
-            <span
-              aria-hidden
-              className="nav-lens"
-              data-on={spot ? "" : undefined}
-              style={spot ? { transform: `translateX(${spot.x}px)`, width: spot.w } : undefined}
-            />
-          );
-        })()}
+      <nav className="flex items-center gap-1" aria-label="Main">
         {nav.map((item) => {
           const menu = MENUS[item.label];
           if (!menu) {
@@ -392,14 +368,8 @@ export default function MegaNav({ nav }: { nav: { label: string; href: string }[
               <Link
                 key={item.label}
                 href={item.href}
-                onMouseEnter={(e) => {
-                  close();
-                  aim(item.label)(e);
-                }}
-                onFocus={aim(item.label)}
-                onBlur={() => setHover(null)}
-                data-lensed={hover === item.label ? "" : undefined}
-                className={`${triggerCls} nav-item border-transparent`}
+                onMouseEnter={close}
+                className={`${triggerCls} border-transparent hover:bg-foreground/[0.05]`}
               >
                 {item.label}
                 {external && <span aria-hidden>↗</span>}
@@ -413,16 +383,16 @@ export default function MegaNav({ nav }: { nav: { label: string; href: string }[
               type="button"
               aria-expanded={isOpen}
               aria-haspopup="true"
-              onMouseEnter={(e) => {
+              onMouseEnter={() => {
                 cancelClose();
                 setOpen(item.label);
-                aim(item.label)(e);
               }}
-              onFocus={aim(item.label)}
-              onBlur={() => setHover(null)}
               onClick={() => setOpen(isOpen ? null : item.label)}
-              data-lensed={(hover ?? open) === item.label ? "" : undefined}
-              className={`${triggerCls} nav-item border-transparent`}
+              className={`${triggerCls} ${
+                isOpen
+                  ? "border-hairline bg-foreground/[0.05]"
+                  : "border-transparent hover:bg-foreground/[0.05]"
+              }`}
             >
               {item.label}
               <Chevrons />

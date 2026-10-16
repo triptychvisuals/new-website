@@ -91,7 +91,7 @@ export default function HeroStudio({
           See the work
         </Link>
 
-        {/* Bottom band — room for the glass control bar. */}
+        {/* Bottom band — keeps the panel's proportions. */}
         <div className="relative p-6 sm:p-8 md:p-10" />
 
         {/* Bevel — sits above the video: a hairline inner border, a lit top

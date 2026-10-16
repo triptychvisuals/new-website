@@ -11,8 +11,8 @@ const STATEMENT_2_ACCENT = "your story."; // accent-underlined tail
 // ------------------------------------------------------------------------------
 
 /**
- * Featured-work band — full-bleed black (no side margins): meta row, the
- * oversized "Featured© Work" line looping horizontally forever, then bold
+ * Featured-work band — full-bleed (no side margins): meta row, the
+ * oversized "Featured© Work" line, then bold
  * uppercase statements with a vertical /WORK label and a SEE WORKS pill.
  */
 export default function SelectedWorks() {
@@ -24,23 +24,15 @@ export default function SelectedWorks() {
         <span className="text-foreground/80">{META_RIGHT}</span>
       </div>
 
-      {/* Endless title marquee between hairlines */}
-      <div className="mt-5 overflow-hidden border-y border-hairline">
-        <div className="flex w-max animate-marquee-l">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <span
-              key={i}
-              aria-hidden={i > 0}
-              className="whitespace-nowrap pr-[7vw] text-[min(13vw,120px)] font-medium leading-[1.05] tracking-[-0.04em] sm:text-[min(11.5vw,170px)]"
-            >
-              Featured
-              <span aria-hidden className="align-[0.12em] text-[0.62em]">
-                ©
-              </span>{" "}
-              Work
-            </span>
-          ))}
-        </div>
+      {/* Title between hairlines (static) */}
+      <div className="mt-5 overflow-hidden border-y border-hairline px-5 sm:px-8">
+        <h2 className="mx-auto max-w-[1760px] whitespace-nowrap text-[min(13vw,120px)] font-medium leading-[1.05] tracking-[-0.04em] sm:text-[min(11.5vw,170px)]">
+          Featured
+          <span aria-hidden className="align-[0.12em] text-[0.62em]">
+            ©
+          </span>{" "}
+          Work
+        </h2>
       </div>
 
       {/* Statements */}

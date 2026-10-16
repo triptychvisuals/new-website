@@ -8,7 +8,7 @@ import MegaNav from "@/components/MegaNav";
 
 /**
  * Sticky header — a floating liquid-glass pill:
- *   ◬ Triptych Studios® | Projects ⇕  About ⇕  Press ⇕  Store ↗ ....... ☀☾  [Start a project]
+ *   ◬ Triptych Studios® .... Projects ⇕  About ⇕  Press ⇕  Store ↗ .... ☀☾  [Start a project]
  * Below lg it collapses to logo · switch · hamburger, with the menu dropping
  * from under the pill.
  */
@@ -152,8 +152,10 @@ export default function Header({ logo }: { logo?: string }) {
         {/* Desktop: logo | links ........ switch + CTA */}
         <div className="hidden min-w-0 flex-1 items-center lg:flex">
           <Logo src={logo} />
-          <span aria-hidden className="mx-4 h-6 w-px bg-foreground/15 xl:mx-5" />
-          <MegaNav nav={site.nav} />
+          {/* Links centred in the bar */}
+          <div className="absolute left-1/2 -translate-x-1/2">
+            <MegaNav nav={site.nav} />
+          </div>
           <div className="ml-auto flex items-center gap-3">
             <ThemeToggle />
             {/* EDIT: the call-to-action button */}
