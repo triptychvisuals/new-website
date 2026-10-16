@@ -6,8 +6,9 @@ import WorkGridClient, { type OrbitCard } from "./WorkGridClient";
 const COUNT_LABEL = "500+";
 const CAPTION = "Projects completed";
 
-// EDIT: how many glass cards ride the orbit (more = a denser ring).
-const CARDS = 10;
+// How many different videos the orbits cycle through (the rings themselves
+// are set in WorkGridClient — they repeat these if they hold more).
+const CARDS = 36;
 
 /**
  * "Body of work" — the project count in the middle with liquid-glass
@@ -16,7 +17,7 @@ const CARDS = 10;
  */
 export default function WorkGrid() {
   const withVideo = projects.filter((p) => p.youtube);
-  const cards: OrbitCard[] = Array.from({ length: Math.min(CARDS, Math.max(withVideo.length, 1) * 3) }, (_, i) => {
+  const cards: OrbitCard[] = Array.from({ length: Math.min(CARDS, Math.max(withVideo.length, 1)) }, (_, i) => {
     const p = withVideo[i % Math.max(withVideo.length, 1)];
     // Golden-angle hues: the swatch behind a still that hasn't loaded.
     const hue = Math.round((i * 137.508) % 360);

@@ -298,14 +298,40 @@ export default function Decade({ stills = {} }: { stills?: Record<string, string
         scrollTrigger: { trigger: root.current, start: "bottom 95%", end: "bottom 55%", scrub: true },
       });
 
-      // Headline: words rise in.
-      gsap.from("[data-dc-word]", {
-        yPercent: 110,
-        opacity: 0,
-        duration: 1.1,
-        ease: "power4.out",
-        stagger: 0.08,
-        scrollTrigger: { trigger: "[data-dc-head]", start: "top 75%" },
+      // Headline. On arrival the letters flip up into place out of a blur,
+      // one after another, while the "10" counts up from 0; then a light
+      // runs along "strong". While it scrolls by, the two lines drift
+      // together from either side (scrubbed, transforms only).
+      mm.add("(prefers-reduced-motion: no-preference)", () => {
+        const head = "[data-dc-head]";
+        const num = root.current?.querySelector<HTMLElement>("[data-dc-num]");
+        const tl = gsap.timeline({ scrollTrigger: { trigger: head, start: "top 75%" } });
+        tl.from("[data-dc-char]", {
+          yPercent: 115,
+          rotateX: -85,
+          opacity: 0,
+          filter: "blur(14px)",
+          transformOrigin: "50% 100%",
+          duration: 1.2,
+          ease: "power4.out",
+          stagger: 0.04,
+          clearProps: "filter",
+        });
+        if (num) {
+          const n = { v: 0 };
+          const goal = parseInt(num.dataset.dcNum ?? "0", 10);
+          num.textContent = "0";
+          tl.to(n, { v: goal, duration: 1.3, ease: "power2.out", onUpdate: () => (num.textContent = String(Math.round(n.v))) }, 0);
+        }
+        // The light along "strong": each letter flashes white in a wave.
+        tl.to("[data-dc-shine]", { color: "#ffffff", duration: 0.25, stagger: 0.06, ease: "power1.out" }, ">-0.2").to(
+          "[data-dc-shine]",
+          { color: "rgb(255 255 255 / 0.45)", duration: 0.6, stagger: 0.06, ease: "power2.inOut" },
+          "<0.25"
+        );
+        // EDIT: how far apart the lines start (% of their width)
+        gsap.fromTo("[data-dc-line='1']", { xPercent: -9 }, { xPercent: 0, ease: "none", scrollTrigger: { trigger: head, start: "top bottom", end: "top 25%", scrub: true } });
+        gsap.fromTo("[data-dc-line='2']", { xPercent: 9 }, { xPercent: 0, ease: "none", scrollTrigger: { trigger: head, start: "top bottom", end: "top 25%", scrub: true } });
       });
 
       ScrollTrigger.sort();
@@ -338,15 +364,34 @@ export default function Decade({ stills = {} }: { stills?: Record<string, string
         {/* Headline */}
         <div data-dc-head className="mx-auto max-w-[1760px] px-5 pb-10 pt-28 text-center sm:px-8 sm:pt-40">
           {/* pb on each line leaves room for descenders (the g in "strong") */}
-          <h2 className="text-[clamp(3.5rem,13vw,13rem)] font-medium leading-[0.88] tracking-[-0.045em]">
-            <span className="block overflow-hidden pb-[0.04em]">
-              <span data-dc-word className="inline-block">
-                {HEADLINE_TOP}
+          <h2
+            aria-label={`${HEADLINE_TOP} ${HEADLINE_BOTTOM}`}
+            className="text-[clamp(3.5rem,13vw,13rem)] font-medium leading-[0.88] tracking-[-0.045em]"
+          >
+            {/* Split into letters for the entrance (the leading number is
+                one piece, so it can count up). perspective lets them flip. */}
+            <span aria-hidden className="block overflow-hidden pb-[0.04em] [perspective:900px]">
+              <span data-dc-line="1" className="inline-block will-change-transform">
+                {splitHeadline(HEADLINE_TOP).map((part, k) =>
+                  part.num ? (
+                    <span key={k} data-dc-char data-dc-num={part.text} className="inline-block tabular-nums">
+                      {part.text}
+                    </span>
+                  ) : (
+                    <span key={k} data-dc-char className="inline-block">
+                      {part.text === " " ? "\u00a0" : part.text}
+                    </span>
+                  )
+                )}
               </span>
             </span>
-            <span className="block overflow-hidden pb-[0.16em] text-white/45">
-              <span data-dc-word className="inline-block">
-                {HEADLINE_BOTTOM}
+            <span aria-hidden className="block overflow-hidden pb-[0.16em] text-white/45 [perspective:900px]">
+              <span data-dc-line="2" className="inline-block will-change-transform">
+                {HEADLINE_BOTTOM.split("").map((ch, k) => (
+                  <span key={k} data-dc-char data-dc-shine className="inline-block">
+                    {ch === " " ? "\u00a0" : ch}
+                  </span>
+                ))}
               </span>
             </span>
           </h2>
@@ -432,6 +477,13 @@ export default function Decade({ stills = {} }: { stills?: Record<string, string
       </section>
     </>
   );
+}
+
+/** "10 years" → the number as one piece (so it can count), then letters. */
+function splitHeadline(text: string): { text: string; num?: boolean }[] {
+  const m = text.match(/^(\d+)(.*)$/);
+  const rest = m ? m[2] : text;
+  return [...(m ? [{ text: m[1], num: true }] : []), ...rest.split("").map((ch) => ({ text: ch }))];
 }
 
 /** Same golden-angle hues as the 500+ grid. */

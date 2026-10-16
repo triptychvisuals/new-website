@@ -61,8 +61,8 @@ function Thumb({ src, fallback }: { src: string; fallback?: string }) {
  * tilted ring. The orbit is pure CSS (globals.css, .wo-*): every card runs
  * the same compositor animation — round the ring, counter-turned so it
  * always faces you, fading as it passes behind — offset by a negative
- * delay, so nothing runs on the main thread while it turns. Hovering
- * pauses it; it also pauses while off screen. On scroll-in the counter
+ * delay, so nothing runs on the main thread while it turns. It keeps
+ * turning under the pointer; it only pauses while off screen. On scroll-in the counter
  * counts up and the cards fade in one by one.
  */
 
@@ -71,11 +71,17 @@ const COUNT_SECONDS = 2.4;
 // EDIT: the blurred thumbnails behind the grid — how many, how strong.
 const BG_COUNT = 7;
 const BG_STRENGTH = 0.85;
-// EDIT: one trip round the ring, in seconds.
-const ORBIT_SECONDS = 48;
-// EDIT: each card's height off the ring (px, cycled) — scatters them so the
-// orbit reads as floating cards rather than a flat carousel.
-const LIFTS = [-200, 90, -60, 210, -170, 40, 180, -120, 140, -30];
+// EDIT: the orbits. Cards are dealt out to the rings in order. Per ring:
+// how many cards, its radius and card size (× the stage's base values in
+// globals.css, so phones scale down), its height off the middle (px), one
+// trip round in seconds, and which way it turns.
+const RINGS = [
+  { count: 12, radius: 1, scale: 1, y: 0, seconds: 52, reverse: false },
+  { count: 10, radius: 0.72, scale: 0.72, y: -270, seconds: 38, reverse: true },
+  { count: 14, radius: 1.28, scale: 0.86, y: 260, seconds: 68, reverse: false },
+];
+// EDIT: scatter within a ring (px, cycled) so it reads as floating cards.
+const JITTER = [-40, 25, -10, 45, -30, 10, 35, -20];
 
 export default function WorkGridClient({
   cards,
@@ -119,7 +125,7 @@ export default function WorkGridClient({
         autoAlpha: 0,
         duration: 0.9,
         ease: "power2.out",
-        stagger: 0.08,
+        stagger: 0.03,
         scrollTrigger: { trigger: root.current, start: "top 75%" },
       });
       gsap.from("[data-count]", {
@@ -214,21 +220,38 @@ export default function WorkGridClient({
             </span>
           </div>
 
-          {cards.map((c, i) => (
-            <div key={i} data-orbit-slot className="wo-slot" style={{ ["--lift" as string]: `${LIFTS[i % LIFTS.length]}px` }}>
-              <Link
-                href={c.href}
-                aria-label={`${c.title} — ${c.sub}`}
-                className="wo-card"
-                style={{
-                  animationDuration: `${ORBIT_SECONDS}s`,
-                  animationDelay: `${(-i / cards.length) * ORBIT_SECONDS}s`,
-                }}
-              >
-                <PlayerCard c={c} i={i} />
-              </Link>
-            </div>
-          ))}
+          {RINGS.flatMap((ring, r) => {
+            const start = RINGS.slice(0, r).reduce((n, x) => n + x.count, 0);
+            return Array.from({ length: ring.count }, (_, j) => {
+              const i = start + j;
+              const c = cards[i % cards.length];
+              return (
+                <div
+                  key={i}
+                  data-orbit-slot
+                  className="wo-slot"
+                  style={{ ["--lift" as string]: `${ring.y + JITTER[i % JITTER.length]}px` }}
+                >
+                  <Link
+                    href={c.href}
+                    aria-label={c.title}
+                    tabIndex={i < cards.length ? 0 : -1}
+                    className="wo-card"
+                    style={{
+                      ["--ring" as string]: ring.radius,
+                      ["--ks" as string]: ring.scale,
+                      animationDuration: `${ring.seconds}s`,
+                      animationDirection: ring.reverse ? "reverse" : "normal",
+                      // spread evenly round the ring, each ring at its own phase
+                      animationDelay: `${-((j + r * 0.37) / ring.count) * ring.seconds}s`,
+                    }}
+                  >
+                    <PlayerCard c={c} i={i} />
+                  </Link>
+                </div>
+              );
+            });
+          })}
         </div>
       </div>
     </section>
