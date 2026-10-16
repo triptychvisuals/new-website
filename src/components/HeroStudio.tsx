@@ -36,9 +36,9 @@ export default function HeroStudio({
             "radial-gradient(40% 55% at 18% 85%, rgb(229 54 31 / 0.22), transparent 70%), radial-gradient(45% 55% at 85% 15%, rgb(120 140 255 / 0.16), transparent 70%)",
         }}
       />
-      {/* Liquid-glass frame — the footage sits inset in a frosted slab.
-          EDIT: p-2.5 / sm:p-3 = frame thickness. */}
-      <div className="glass mx-auto w-full max-w-[1760px] rounded-[30px] p-2 sm:rounded-[36px] sm:p-3">
+      {/* Liquid-glass frame — a thin frosted rim round the footage, no
+          outline on its outer edge. EDIT: p-1 / sm:p-1.5 = rim thickness. */}
+      <div className="glass-rim mx-auto w-full max-w-[1760px] rounded-[26px] p-1 sm:rounded-[31px] sm:p-1.5">
       {/* Panel — square on phones, 16:9 on desktop.
           EDIT: rounded-[22px] = corner radius. */}
       <div className="relative isolate flex aspect-square min-h-0 w-full flex-col overflow-hidden rounded-[22px] bg-[#0e0e10] text-white sm:rounded-[26px] md:aspect-video">

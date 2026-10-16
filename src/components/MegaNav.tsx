@@ -409,8 +409,8 @@ export default function MegaNav({ nav }: { nav: { label: string; href: string }[
       >
         {active && (
           <div
-            // Liquid glass: frosted over the page (.glass in globals.css)
-            className={`${active.width} glass rounded-[26px] p-2`}
+            // Dark liquid glass: frosted over the page (.glass-menu in globals.css)
+            className={`${active.width} glass-menu rounded-[26px] p-2`}
             role="menu"
           >
             <div

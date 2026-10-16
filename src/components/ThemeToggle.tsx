@@ -59,17 +59,13 @@ export default function ThemeToggle() {
       aria-label={dark ? "Switch to light mode" : "Switch to dark mode"}
       onClick={toggle}
       data-on={shown ? "" : undefined}
-      // Liquid-glass switch: a frosted pill track with the mode's name, and
-      // an oversized glass knob that sits proud of the track's edge, its
-      // icon lit from inside. Styles live in globals.css (.lg-switch).
+      // Liquid-glass switch: a frosted pill track and a glass knob that
+      // sits just proud of the track's edge, its icon lit from inside. Styles live in globals.css (.lg-switch).
       // EDIT: size — the --lg-h custom property sets the track height;
       // everything else scales from it.
       className="lg-switch"
     >
-      <span className="lg-track" aria-hidden>
-        <span className="lg-label lg-label-dark">Dark</span>
-        <span className="lg-label lg-label-light">Light</span>
-      </span>
+      <span className="lg-track" aria-hidden />
       <span className="lg-knob" aria-hidden>
         <span className="lg-icon">
           {shown ? (

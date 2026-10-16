@@ -218,21 +218,23 @@ export default function WorkGridClient({
             title={b.title}
             className="group relative aspect-square"
           >
+            {/* Liquid-glass tile: a glass rim, the picture inset, a sheen on top */}
             <span
-              className="wg-drift absolute inset-0 block overflow-hidden rounded-xl sm:rounded-2xl lg:rounded-[22px] shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_8px_24px_-10px_rgba(0,0,0,0.45)] transition-transform duration-300 ease-out group-hover:scale-[1.08]"
+              className="wg-drift wg-glass absolute inset-0 block rounded-xl p-[4%] sm:rounded-2xl lg:rounded-[22px] transition-transform duration-300 ease-out group-hover:scale-[1.08]"
               style={{
-                // EDIT: swatch colors — vivid hue-to-hue radial gradients.
-                background: `radial-gradient(circle at 30% 25%, hsl(${b.hue} 92% 70%), hsl(${(b.hue + 38) % 360} 85% 52%) 55%, hsl(${(b.hue + 70) % 360} 80% 34%))`,
                 animationDelay: `${(i % 7) * -0.9}s`,
                 animationDuration: `${6 + (i % 5)}s`,
               }}
             >
-              {b.thumb && <Thumb src={b.thumb} fallback={b.thumbFallback} />}
-              {/* Play glyph on hover */}
-              <span className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-all duration-300 group-hover:bg-black/25 group-hover:opacity-100">
-                <svg width="22%" viewBox="0 0 24 24" fill="#fff" aria-hidden>
-                  <path d="M8 5v14l11-7z" />
-                </svg>
+              <span
+                className="relative block h-full w-full overflow-hidden rounded-lg sm:rounded-xl lg:rounded-[17px]"
+                style={{
+                  // EDIT: swatch colors — vivid hue-to-hue radial gradients.
+                  background: `radial-gradient(circle at 30% 25%, hsl(${b.hue} 92% 70%), hsl(${(b.hue + 38) % 360} 85% 52%) 55%, hsl(${(b.hue + 70) % 360} 80% 34%))`,
+                }}
+              >
+                {b.thumb && <Thumb src={b.thumb} fallback={b.thumbFallback} />}
+                <span aria-hidden className="wg-sheen pointer-events-none absolute inset-0 rounded-[inherit]" />
               </span>
             </span>
           </Link>

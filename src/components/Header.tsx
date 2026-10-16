@@ -199,7 +199,7 @@ export default function Header({ logo }: { logo?: string }) {
 
       {/* Mobile dropdown — drops from the top, sized to content */}
       <div
-        className={`glass absolute inset-x-2 top-full mt-2 origin-top overflow-hidden rounded-[26px] transition-all duration-300 ease-out lg:hidden ${
+        className={`glass-menu absolute inset-x-2 top-full mt-2 origin-top overflow-hidden rounded-[26px] transition-all duration-300 ease-out lg:hidden ${
           menuOpen
             ? "visible translate-y-0 opacity-100"
             : "pointer-events-none invisible -translate-y-3 opacity-0"
