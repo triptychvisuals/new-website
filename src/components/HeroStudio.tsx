@@ -25,17 +25,9 @@ export default function HeroStudio({
     // Inset in a container: dashed rules above/below, a small gutter, and a
     // rounded, beveled panel (see the bevel overlay at the end).
     <section className="relative isolate overflow-hidden border-b border-dashed border-hairline bg-background px-2 py-2 sm:px-4 sm:py-4">
-      {/* Ambient light behind the glass, so the frame has something to
-          catch — soft colour pools, painted once (no blur filter). */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 -z-10"
-        style={{
-          // EDIT: ambient glow colours behind the hero glass
-          background:
-            "radial-gradient(40% 55% at 18% 85%, rgb(229 54 31 / 0.22), transparent 70%), radial-gradient(45% 55% at 85% 15%, rgb(120 140 255 / 0.16), transparent 70%)",
-        }}
-      />
+      {/* Ambient light round the panel — takes its colours from the clip
+          that's playing (HeroReel samples it; .hero-ambient in globals.css). */}
+      <div aria-hidden className="hero-ambient pointer-events-none absolute inset-0 -z-10" />
       {/* Liquid-glass frame — a thin frosted rim round the footage, no
           outline on its outer edge. EDIT: p-1 / sm:p-1.5 = rim thickness. */}
       <div className="glass-rim mx-auto w-full max-w-[1760px] rounded-[26px] p-1 sm:rounded-[31px] sm:p-1.5">

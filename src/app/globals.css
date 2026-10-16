@@ -793,3 +793,21 @@ html.lenis body {
   .wo-num3d { animation: none; transform: perspective(900px) rotateX(10deg); }
 }
 
+
+/* Hero ambient glow: colour pools round the video panel, fed by HeroReel
+   (--amb-l / --amb-r / --amb-c sampled from the playing clip). The colours
+   are registered so they ease from one clip's light to the next.
+   EDIT: --amb-strength = how strong the glow is (0–1). */
+@property --amb-l { syntax: "<color>"; inherits: true; initial-value: rgb(229 54 31); }
+@property --amb-r { syntax: "<color>"; inherits: true; initial-value: rgb(120 140 255); }
+@property --amb-c { syntax: "<color>"; inherits: true; initial-value: rgb(160 90 140); }
+.hero-ambient {
+  --amb-strength: 0.55;
+  opacity: var(--amb-strength);
+  background:
+    radial-gradient(38% 70% at 0% 60%, var(--amb-l), transparent 75%),
+    radial-gradient(38% 70% at 100% 45%, var(--amb-r), transparent 75%),
+    radial-gradient(60% 40% at 50% 100%, var(--amb-c), transparent 80%),
+    radial-gradient(60% 30% at 50% 0%, var(--amb-c), transparent 80%);
+  transition: --amb-l 1.2s ease, --amb-r 1.2s ease, --amb-c 1.2s ease;
+}
