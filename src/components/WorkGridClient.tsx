@@ -57,7 +57,7 @@ function Thumb({ src, fallback }: { src: string; fallback?: string }) {
 }
 
 /**
- * The count in the middle, and liquid-glass player cards orbiting it on a
+ * The count in the middle, and liquid-glass thumbnails orbiting it on a
  * tilted ring. The orbit is pure CSS (globals.css, .wo-*): every card runs
  * the same compositor animation — round the ring, counter-turned so it
  * always faces you, fading as it passes behind — offset by a negative
@@ -235,43 +235,16 @@ export default function WorkGridClient({
   );
 }
 
-/** One glass player card: the studio mark, the still with title + artist,
- *  a progress line, and the transport row (decorative — the card is a link). */
-function PlayerCard({ c, i }: { c: OrbitCard; i: number }) {
-  // A different point in each "track", so the cards don't look cloned.
-  const through = `${18 + ((i * 37) % 64)}%`;
+/** One orbiting card: just the video's thumbnail, set in a glass rim. */
+function PlayerCard({ c }: { c: OrbitCard; i: number }) {
   return (
-    <>
-      <span className="flex items-center gap-1.5 text-[12px] font-medium text-white/90">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/triptych-logo.png" alt="" className="h-2.5 w-auto" />
-        Triptych
-      </span>
-      <span className="mt-3 flex items-center gap-3">
-        <span
-          className="relative h-14 w-14 shrink-0 overflow-hidden rounded-[10px] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.2)] sm:h-16 sm:w-16"
-          style={{ background: `radial-gradient(circle at 30% 25%, hsl(${c.hue} 92% 66%), hsl(${(c.hue + 38) % 360} 85% 48%) 55%, hsl(${(c.hue + 70) % 360} 80% 28%))` }}
-        >
-          {c.thumb && <Thumb src={c.thumb} fallback={c.thumbFallback} />}
-        </span>
-        <span className="min-w-0">
-          <span className="block truncate text-[15px] font-medium leading-tight text-white">{c.title}</span>
-          <span className="mt-1 block truncate text-[12px] text-white/65">{c.sub}</span>
-        </span>
-      </span>
-      <span aria-hidden className="relative mt-4 block h-[3px] rounded-full bg-white/25">
-        <span className="absolute inset-y-0 left-0 rounded-full bg-white/90" style={{ width: through }} />
-        <span className="absolute top-1/2 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white" style={{ left: through }} />
-      </span>
-      <span aria-hidden className="mt-3 flex items-center justify-between text-white/90">
-        <svg width="16" height="14" viewBox="0 0 16 14" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><path d="M1 3h3l7 8h4M1 11h3l2-2.3M9.5 5.3 11 3h4M13 1l2 2-2 2M13 9l2 2-2 2" /></svg>
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><rect x="1" y="1.5" width="2" height="11" rx="0.8" /><path d="M13 1.5v11L4.5 7z" /></svg>
-        <span className="grid h-9 w-9 place-items-center rounded-full bg-white text-[#141414] shadow-[0_4px_12px_-4px_rgba(0,0,0,0.5)]">
-          <svg width="12" height="13" viewBox="0 0 12 13" fill="currentColor"><path d="M2 1v11l9.5-5.5z" /></svg>
-        </span>
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><path d="M1 1.5v11L9.5 7z" /><rect x="11" y="1.5" width="2" height="11" rx="0.8" /></svg>
-        <svg width="16" height="14" viewBox="0 0 16 14" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><path d="M2 6V5a2 2 0 0 1 2-2h9M11 1l2 2-2 2M14 8v1a2 2 0 0 1-2 2H3M5 13l-2-2 2-2" /></svg>
-      </span>
-    </>
+    <span
+      className="relative block aspect-video w-full overflow-hidden rounded-[18px] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.18)]"
+      style={{ background: `radial-gradient(circle at 30% 25%, hsl(${c.hue} 92% 66%), hsl(${(c.hue + 38) % 360} 85% 48%) 55%, hsl(${(c.hue + 70) % 360} 80% 28%))` }}
+    >
+      {c.thumb && <Thumb src={c.thumb} fallback={c.thumbFallback} />}
+      {/* glass sheen across the picture */}
+      <span aria-hidden className="pointer-events-none absolute inset-0 rounded-[inherit] bg-[linear-gradient(135deg,rgba(255,255,255,0.22)_0%,rgba(255,255,255,0.04)_30%,rgba(255,255,255,0)_50%)] shadow-[inset_0_1px_0_rgba(255,255,255,0.35)]" />
+    </span>
   );
 }

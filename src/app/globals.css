@@ -597,7 +597,7 @@ html.lenis body {
 }
 
 /* ---------------------------------------------------------------------------
-   Work orbit (WorkGridClient): glass player cards circling the count.
+   Work orbit (WorkGridClient): glass-framed thumbnails circling the count.
    Every card runs the same transform + opacity animation (compositor-only)
    offset by a negative delay. EDIT: --r = ring radius, --k = card scale,
    --lift-k = vertical scatter, --tilt = how far the camera looks down.
@@ -616,7 +616,7 @@ html.lenis body {
   .wo-stage { --r: 360px; --k: 0.82; --lift-k: 0.9; height: 720px; }
 }
 @media (max-width: 639px) {
-  .wo-stage { --r: 190px; --k: 0.58; --lift-k: 0.95; height: 620px; perspective: 1100px; }
+  .wo-stage { --r: 190px; --k: 0.5; --lift-k: 0.95; height: 620px; perspective: 1100px; }
 }
 .wo-ring {
   position: absolute;
@@ -651,9 +651,9 @@ html.lenis body {
   left: 0;
   top: 0;
   display: block;
-  width: 250px;
-  padding: 16px 18px 14px;
-  border-radius: 26px;
+  width: 270px; /* EDIT: thumbnail card width (before --k) */
+  padding: 7px;
+  border-radius: 25px;
   color: #fff;
   /* Liquid glass, drawn (no backdrop blur on moving 3D cards): a smoked
      clear tint, thick lit rim, bright top edge, soft inner glow */

@@ -10,7 +10,7 @@ const CAPTION = "Projects completed";
 const CARDS = 10;
 
 /**
- * "Body of work" — the project count in the middle with liquid-glass player
+ * "Body of work" — the project count in the middle with liquid-glass
  * cards orbiting it, one per music video (projects with a YouTube id in
  * lib/projects.ts, newest first). Each card opens that project's page.
  */
