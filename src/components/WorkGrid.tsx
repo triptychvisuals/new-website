@@ -1,37 +1,19 @@
 import { projects } from "@/lib/projects";
 import { youtubeThumbs } from "@/lib/youtube";
-import WorkGridClient, { type OrbitCard } from "./WorkGridClient";
+import WorkGridClient from "./WorkGridClient";
 
-// EDIT: the headline number and its label in the middle of the orbit.
-const COUNT_LABEL = "500+";
-const CAPTION = "Projects completed";
-
-// How many different videos the orbits cycle through (the rings themselves
-// are set in WorkGridClient — they repeat these if they hold more).
-const CARDS = 36;
+// EDIT: how many blurred video stills crossfade behind the headline.
+const BACKDROPS = 7;
 
 /**
- * "Body of work" — the project count in the middle with liquid-glass
- * cards orbiting it, one per music video (projects with a YouTube id in
- * lib/projects.ts, newest first). Each card opens that project's page.
+ * "10 years strong" on a colour field made from the work itself: the small
+ * stills of the newest music videos (lib/projects.ts), blurred and
+ * crossfading as you scroll.
  */
 export default function WorkGrid() {
-  const withVideo = projects.filter((p) => p.youtube);
-  const cards: OrbitCard[] = Array.from({ length: Math.min(CARDS, Math.max(withVideo.length, 1)) }, (_, i) => {
-    const p = withVideo[i % Math.max(withVideo.length, 1)];
-    // Golden-angle hues: the swatch behind a still that hasn't loaded.
-    const hue = Math.round((i * 137.508) % 360);
-    if (!p) return { href: "/projects", title: "All projects", sub: "Triptych Studios", hue };
-    const [thumb, thumbFallback] = youtubeThumbs(p.youtube!);
-    return {
-      href: `/work/${p.slug}`,
-      title: p.title,
-      sub: [p.artist, p.year].filter(Boolean).join(" · "),
-      thumb,
-      thumbFallback,
-      hue,
-    };
-  });
-
-  return <WorkGridClient cards={cards} countLabel={COUNT_LABEL} caption={CAPTION} />;
+  const backdrops = projects
+    .filter((p) => p.youtube)
+    .slice(0, BACKDROPS)
+    .map((p) => youtubeThumbs(p.youtube!)[1]); // mqdefault — 320×180, no letterbox
+  return <WorkGridClient backdrops={backdrops} />;
 }

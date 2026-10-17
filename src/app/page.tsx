@@ -42,7 +42,7 @@ export default async function Home() {
         <HeroStudio tagline={content.tagline} />
         <PartnerCard />
         <SelectedWorks />
-        {/* The 6×6 "500+ projects" grid follows the Featured Work band */}
+        {/* "10 years strong" on the colour field, opening the timeline */}
         <WorkGrid />
         {/* Scrolling on: the page dims into the 2016 → 2026 timeline */}
         <Decade stills={decadeStills()} />

@@ -5,9 +5,6 @@ import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { decade } from "@/lib/about";
 import VideoGearIcon from "@/components/VideoGearIcon";
 
-// EDIT: header copy.
-const HEADLINE_TOP = "10 years";
-const HEADLINE_BOTTOM = "strong";
 // EDIT: how dark the rest of the page gets while the timeline is on screen.
 const DIM = 0.88;
 // EDIT: how lit a card is when it's furthest from "now" (0–1). The current
@@ -298,51 +295,6 @@ export default function Decade({ stills = {} }: { stills?: Record<string, string
         scrollTrigger: { trigger: root.current, start: "bottom 95%", end: "bottom 55%", scrub: true },
       });
 
-      // Headline. The giant outlined "10" draws itself stroke by stroke,
-      // then a band of iridescent light sweeps through the outline; "years"
-      // and "strong" flip up letter by letter out of a blur and a light
-      // runs along "strong". While it scrolls by, the "10" rises a little
-      // faster than the words (parallax) and the words drift in from the
-      // right — transforms only.
-      mm.add("(prefers-reduced-motion: no-preference)", () => {
-        const head = "[data-dc-head]";
-        const tl = gsap.timeline({ scrollTrigger: { trigger: head, start: "top 75%" } });
-        // EDIT: the outline's dash length — longer than any one stroke of
-        // the "10", so each draws in full
-        const DASH = 3400;
-        tl.fromTo(
-          "[data-dc-ten-stroke]",
-          { strokeDasharray: DASH, strokeDashoffset: DASH },
-          { strokeDashoffset: 0, duration: 2.4, ease: "power2.inOut" }
-        );
-        tl.fromTo("[data-dc-sweep]", { attr: { x1: -1400, x2: -600 } }, { attr: { x1: 1400, x2: 2200 }, duration: 1.8, ease: "power1.inOut" }, 1.2);
-        tl.from(
-          "[data-dc-char]",
-          {
-            yPercent: 115,
-            rotateX: -85,
-            opacity: 0,
-            filter: "blur(14px)",
-            transformOrigin: "50% 100%",
-            duration: 1.1,
-            ease: "power4.out",
-            stagger: 0.045,
-            clearProps: "filter",
-          },
-          0.35
-        );
-        // The light along "strong": each letter flashes white in a wave.
-        tl.to("[data-dc-shine]", { color: "#ffffff", duration: 0.25, stagger: 0.06, ease: "power1.out" }, ">-0.2").to(
-          "[data-dc-shine]",
-          { color: "rgb(255 255 255 / 0.45)", duration: 0.6, stagger: 0.06, ease: "power2.inOut" },
-          "<0.25"
-        );
-        // EDIT: parallax depth (how far the "10" and the words travel)
-        const scrub = { trigger: head, start: "top bottom", end: "bottom top", scrub: true };
-        gsap.fromTo("[data-dc-ten]", { yPercent: 18 }, { yPercent: -14, ease: "none", scrollTrigger: scrub });
-        gsap.fromTo("[data-dc-words]", { xPercent: 8 }, { xPercent: -4, ease: "none", scrollTrigger: scrub });
-      });
-
       ScrollTrigger.sort();
     }, root);
 
@@ -370,70 +322,9 @@ export default function Decade({ stills = {} }: { stills?: Record<string, string
             edge was a hard line) */}
         <div aria-hidden className="pointer-events-none absolute inset-x-0 -top-[40vh] h-[40vh] bg-gradient-to-b from-transparent to-[#0a0a0a]" />
 
-        {/* Headline */}
-        <div data-dc-head className="mx-auto max-w-[1760px] px-5 pb-10 pt-28 text-center sm:px-8 sm:pt-40">
-          {/* pb on each line leaves room for descenders (the g in "strong") */}
-          <h2
-            aria-label={`${HEADLINE_TOP} ${HEADLINE_BOTTOM}`}
-            className="relative flex flex-col items-center justify-center md:flex-row md:items-center md:gap-[2vw]"
-          >
-            {/* The "10" — huge, outline only, drawn in on arrival with a
-                sweep of iridescent light (gradient stroke, see <defs>).
-                EDIT: its size is the width on this span. */}
-            <span data-dc-ten aria-hidden className="block w-[min(92vw,620px)] will-change-transform md:w-[clamp(340px,44vw,820px)]">
-              <svg viewBox="0 0 1000 720" className="block h-auto w-full overflow-visible">
-                <defs>
-                  <linearGradient id="dc-ten-sweep" data-dc-sweep gradientUnits="userSpaceOnUse" x1="-1400" y1="0" x2="-600" y2="200">
-                    <stop offset="0" stopColor="#ffffff" stopOpacity="0.55" />
-                    <stop offset="0.35" stopColor="#ff8a3d" />
-                    <stop offset="0.45" stopColor="#fff3d6" />
-                    <stop offset="0.55" stopColor="#57d7ff" />
-                    <stop offset="0.65" stopColor="#ff4fa3" />
-                    <stop offset="1" stopColor="#ffffff" stopOpacity="0.55" />
-                  </linearGradient>
-                </defs>
-                <text
-                  data-dc-ten-stroke
-                  x="500"
-                  y="660"
-                  textAnchor="middle"
-                  fontSize="860"
-                  fontWeight="500"
-                  letterSpacing="-40"
-                  fill="none"
-                  stroke="url(#dc-ten-sweep)"
-                  strokeWidth="3"
-                  vectorEffect="non-scaling-stroke"
-                  className="font-sans"
-                >
-                  {tenOf(HEADLINE_TOP)}
-                </text>
-              </svg>
-            </span>
-
-            {/* The words, stacked beside it; letters flip in. */}
-            <span
-              data-dc-words
-              aria-hidden
-              className="-mt-[4vw] block text-center text-[clamp(3.5rem,13vw,7rem)] font-medium leading-[0.88] tracking-[-0.045em] will-change-transform md:mt-0 md:text-left md:text-[clamp(4rem,10vw,11rem)]"
-            >
-              <span className="block overflow-hidden pb-[0.04em] [perspective:900px]">
-                {restOf(HEADLINE_TOP).split("").map((ch, k) => (
-                  <span key={k} data-dc-char className="inline-block">
-                    {ch === " " ? "\u00a0" : ch}
-                  </span>
-                ))}
-              </span>
-              <span className="block overflow-hidden pb-[0.16em] text-white/45 [perspective:900px]">
-                {HEADLINE_BOTTOM.split("").map((ch, k) => (
-                  <span key={k} data-dc-char data-dc-shine className="inline-block">
-                    {ch === " " ? "\u00a0" : ch}
-                  </span>
-                ))}
-              </span>
-            </span>
-          </h2>
-        </div>
+        {/* (The "10 years strong" headline now opens the section before
+            this one — TenYears.tsx, on the colour field.) */}
+        <div className="pt-20 sm:pt-28" />
 
         {/* ── iPad / desktop: the spiral stage — pinned while the helix
             turns (.dc-stage in globals.css; hidden on phones) ── */}
@@ -516,10 +407,6 @@ export default function Decade({ stills = {} }: { stills?: Record<string, string
     </>
   );
 }
-
-/** "10 years" → "10" (drawn as the outline) and "years" (the words). */
-const tenOf = (text: string) => text.match(/^\s*(\d+)/)?.[1] ?? text;
-const restOf = (text: string) => text.replace(/^\s*\d+\s*/, "");
 
 /** Same golden-angle hues as the 500+ grid. */
 const hueFor = (i: number) => Math.round((i * 137.508) % 360);
