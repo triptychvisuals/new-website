@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { haptic } from "@/lib/haptics";
 
 /**
  * Theme switch — a glass capsule with a sun and a moon; a bead slides behind
@@ -32,6 +33,7 @@ export default function ThemeToggle() {
   const shown = dark || forced;
 
   const toggle = () => {
+    haptic("tap");
     const next = !dark;
     setDark(next);
     const el = document.documentElement;

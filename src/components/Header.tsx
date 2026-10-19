@@ -5,6 +5,7 @@ import { useState } from "react";
 import { site } from "@/lib/site";
 import ThemeToggle from "@/components/ThemeToggle";
 import MegaNav from "@/components/MegaNav";
+import { haptic } from "@/lib/haptics";
 
 /**
  * Sticky header — a floating liquid-glass pill:
@@ -95,7 +96,14 @@ function LiquidButton({
   children: React.ReactNode;
 }) {
   return (
-    <a href={href} onClick={onClick} className="cta-liquid group">
+    <a
+      href={href}
+      onClick={() => {
+        haptic("tap");
+        onClick?.();
+      }}
+      className="cta-liquid group"
+    >
       <span aria-hidden className="cta-glow">
         <span className="cta-spin" />
       </span>
@@ -170,7 +178,10 @@ export default function Header({ logo }: { logo?: string }) {
             <ThemeToggle />
             <button
               type="button"
-              onClick={() => setMenuOpen((o) => !o)}
+              onClick={() => {
+                haptic("tap");
+                setMenuOpen((o) => !o);
+              }}
               aria-label={menuOpen ? "Close menu" : "Open menu"}
               aria-expanded={menuOpen}
               className="relative flex h-[18px] w-7 flex-col items-end justify-center"

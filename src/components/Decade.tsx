@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { decade } from "@/lib/about";
 import VideoGearIcon from "@/components/VideoGearIcon";
+import { haptic } from "@/lib/haptics";
 
 // EDIT: how dark the rest of the page gets while the timeline is on screen.
 const DIM = 0.88;
@@ -164,6 +165,8 @@ export default function Decade({ stills = {} }: { stills?: Record<string, string
           const nodesOn = Math.floor(p + 0.02);
           if (nodesOn !== litNodes) {
             nodes.forEach((n, i) => n.toggleAttribute("data-lit", i <= nodesOn));
+            // A tap under the finger as each year's bead is reached (tablets)
+            if (litNodes >= 0) haptic(nodesOn === last ? "bump" : "tick");
             litNodes = nodesOn;
           }
           const year = Math.round(p);
@@ -244,13 +247,22 @@ export default function Decade({ stills = {} }: { stills?: Record<string, string
           { y: () => line.current?.offsetHeight ?? 0, ease: "none", scrollTrigger: { ...spine, invalidateOnRefresh: true } }
         );
 
-        gsap.utils.toArray<HTMLElement>("[data-dc-row]").forEach((row) => {
+        const rows = gsap.utils.toArray<HTMLElement>("[data-dc-row]");
+        rows.forEach((row) => {
           // Node ignites as the tip crosses it.
           ScrollTrigger.create({
             trigger: row.querySelector("[data-dc-dot]"),
             start: `center ${NOW_LINE}`,
-            onEnter: () => row.toggleAttribute("data-on", true),
-            onLeaveBack: () => row.toggleAttribute("data-on", false),
+            // Each bead taps as the line reaches it — both ways (the last
+            // year, 2026, is a double tap).
+            onEnter: () => {
+              row.toggleAttribute("data-on", true);
+              haptic(row === rows[rows.length - 1] ? "bump" : "tick");
+            },
+            onLeaveBack: () => {
+              row.toggleAttribute("data-on", false);
+              haptic("tick");
+            },
           });
           // Card slides in, and brightens from CARD_MIN_LIGHT as it rises
           // to "now" (opacity + transform only — no repaints).
