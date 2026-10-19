@@ -3,7 +3,6 @@
 import { useEffect, useRef } from "react";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { decade } from "@/lib/about";
-import VideoGearIcon from "@/components/VideoGearIcon";
 import { haptic } from "@/lib/haptics";
 
 // EDIT: how dark the rest of the page gets while the timeline is on screen.
@@ -54,12 +53,7 @@ const NOW_LINE = "60%";
  *
  * Layering: dim layer z-38 < this section z-39 < header z-40.
  */
-/**
- * `stills`: real frames for the cards, keyed by year ("2019" → "/decade/
- * 2019.jpg"); page.tsx reads them from /public/decade. Years without one
- * show the colour art with a line drawing of video gear.
- */
-export default function Decade({ stills = {} }: { stills?: Record<string, string> }) {
+export default function Decade() {
   const root = useRef<HTMLElement>(null);
   const dim = useRef<HTMLDivElement>(null);
   // spiral
@@ -368,7 +362,7 @@ export default function Decade({ stills = {} }: { stills?: Record<string, string
             ))}
 
             {decade.map((d, i) => (
-              <Card key={d.year} d={d} i={i} still={stills[d.year]} className="dc-card" shade />
+              <Card key={d.year} d={d} i={i} className="dc-card" shade />
             ))}
           </div>
 
@@ -410,7 +404,7 @@ export default function Decade({ stills = {} }: { stills?: Record<string, string
                   aria-hidden
                   className="relative z-10 col-start-1 row-start-1 mx-auto h-[20px] w-[20px] rounded-full bg-[radial-gradient(circle_at_35%_28%,rgba(255,255,255,0.7),rgba(255,255,255,0)_42%),radial-gradient(circle,#232325,#141416)] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.3),inset_0_-3px_6px_rgba(0,0,0,0.4)] transition-all duration-500 group-data-[on]/row:scale-110 group-data-[on]/row:bg-[radial-gradient(circle_at_35%_28%,rgba(255,255,255,0.85),rgba(255,255,255,0)_42%),radial-gradient(circle,#ff7a5e,var(--accent)_70%)] group-data-[on]/row:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.45),0_0_0_6px_rgba(229,54,31,0.18),0_0_22px_rgba(229,54,31,0.6)]"
                 />
-                <Card d={d} i={i} still={stills[d.year]} className="col-start-2 row-start-1 will-change-[opacity,transform]" />
+                <Card d={d} i={i} className="col-start-2 row-start-1 will-change-[opacity,transform]" />
               </li>
             ))}
           </ol>
@@ -448,22 +442,18 @@ const washFor = (i: number) => {
   ].join(", ");
 };
 
-/** One year's card — same in the spiral and the phone list. A liquid-glass
- *  window: the picture inset in a frosted frame with glass chips over it
- *  (chapter + more), the year's title on the footage,
- *  and a glass control bar underneath carrying the year's story. The frame
- *  is .glass-faux (no backdrop blur — these are moving 3D layers). */
+/** One year's card — same in the spiral and the phone list. Text only:
+ *  the year huge, the chapter's title and its story, on a glass slab with
+ *  a thin bar of that year's colour down the side. .glass-faux (no
+ *  backdrop blur — these are moving 3D layers). */
 function Card({
   d,
   i,
-  still,
   className = "",
   shade = false,
 }: {
   d: (typeof decade)[number];
   i: number;
-  /** A real frame for this year (replaces the colour art + gear drawing). */
-  still?: string;
   className?: string;
   /** Spiral cards dim via this dark layer (set from JS) instead of opacity. */
   shade?: boolean;
@@ -472,49 +462,17 @@ function Card({
   return (
     <article
       data-dc-card
-      className={`glass-faux relative overflow-hidden rounded-[26px] p-1.5 sm:p-2 ${className}`}
+      className={`glass-faux relative overflow-hidden rounded-[26px] px-6 py-6 sm:px-8 sm:py-7 ${className}`}
     >
-      {/* The footage */}
-      <div className="relative aspect-[16/9] w-full overflow-hidden rounded-[20px]" style={{ background: artFor(i) }}>
-        {still ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={still} alt="" loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover" />
-        ) : (
-          // EDIT: the placeholder gear drawing — size / position / strength
-          <VideoGearIcon index={i} className="absolute right-[7%] top-[46%] h-[44%] w-auto -translate-y-1/2 text-white opacity-90" />
-        )}
-        <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-black/20" />
+      {/* The year's colour, as a thin bar down the left edge */}
+      <span aria-hidden className="absolute bottom-6 left-0 top-6 w-[3px] rounded-r-full" style={{ background: artFor(i) }} />
 
-        {/* Top: chapter chip + more */}
-        <span className="glass-chip absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[12px] font-medium sm:left-4 sm:top-4 sm:text-[13px]">
-          <svg aria-hidden width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
-            <path d="M7.5 1.5h3v3M4.5 10.5h-3v-3M10.5 1.5 7 5M1.5 10.5 5 7" />
-          </svg>
-          Chapter {chapter}
-        </span>
-        <span aria-hidden className="glass-chip absolute right-3 top-3 grid h-8 w-8 place-items-center rounded-full sm:right-4 sm:top-4">
-          <svg width="14" height="4" viewBox="0 0 14 4" fill="currentColor"><circle cx="2" cy="2" r="1.5" /><circle cx="7" cy="2" r="1.5" /><circle cx="12" cy="2" r="1.5" /></svg>
-        </span>
-
-        {/* Bottom: title + year */}
-        <div className="absolute inset-x-0 bottom-0 px-4 pb-3 sm:px-5 sm:pb-4">
-          <h3 className="text-[clamp(1.15rem,2vw,1.55rem)] font-medium leading-tight tracking-tight text-white">{d.title}</h3>
-          <p className="mt-1 text-[13px] text-white/70">{d.year} · Year {chapter} of {decade.length}</p>
-        </div>
+      <div className="flex items-baseline justify-between gap-4">
+        <span className="text-[clamp(2.75rem,5vw,4.5rem)] font-medium leading-none tracking-[-0.04em] text-white tabular-nums">{d.year}</span>
+        <span className="text-[13px] font-medium text-white/50">Chapter {chapter} / {decade.length}</span>
       </div>
-
-      {/* The control bar — the year's story */}
-      <div className="mt-1.5 flex items-center gap-3 rounded-[18px] p-2 pr-4 sm:mt-2 sm:gap-4">
-        <span aria-hidden className="hidden shrink-0 items-center gap-3 pl-2 text-white/85 sm:flex">
-          <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><path d="M8 1v10L1 6zM17 1v10l-7-5z" /></svg>
-          <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><path d="M1 1v10l7-5zM10 1v10l7-5z" /></svg>
-        </span>
-        <span aria-hidden className="h-11 w-11 shrink-0 rounded-[12px] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.18)]" style={{ background: still ? `center / cover url(${still})` : artFor(i) }} />
-        <span className="min-w-0 flex-1">
-          <span className="block text-[12px] font-medium text-[color:var(--accent)]">{d.year}</span>
-          <span className="mt-0.5 block text-[14px] leading-snug text-white/75">{d.body}</span>
-        </span>
-      </div>
+      <h3 className="mt-5 text-[clamp(1.25rem,2vw,1.7rem)] font-medium leading-tight tracking-tight text-white">{d.title}</h3>
+      <p className="mt-2.5 text-[15px] leading-relaxed text-white/70 sm:text-[16px]">{d.body}</p>
 
       {shade && (
         <span data-dc-shade aria-hidden className="pointer-events-none absolute inset-0 bg-[#050505] opacity-0 will-change-[opacity]" />
