@@ -472,10 +472,10 @@ function Card({
   return (
     <article
       data-dc-card
-      className={`glass-faux relative overflow-hidden rounded-[30px] p-2.5 sm:p-3 ${className}`}
+      className={`glass-faux relative overflow-hidden rounded-[26px] p-1.5 sm:p-2 ${className}`}
     >
       {/* The footage */}
-      <div className="relative aspect-[16/9] w-full overflow-hidden rounded-[22px]" style={{ background: artFor(i) }}>
+      <div className="relative aspect-[16/9] w-full overflow-hidden rounded-[20px]" style={{ background: artFor(i) }}>
         {still ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={still} alt="" loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover" />
@@ -504,7 +504,7 @@ function Card({
       </div>
 
       {/* The control bar — the year's story */}
-      <div className="glass-faux mt-2.5 flex items-center gap-3 rounded-[20px] p-2 pr-4 sm:mt-3 sm:gap-4">
+      <div className="mt-1.5 flex items-center gap-3 rounded-[18px] p-2 pr-4 sm:mt-2 sm:gap-4">
         <span aria-hidden className="hidden shrink-0 items-center gap-3 pl-2 text-white/85 sm:flex">
           <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><path d="M8 1v10L1 6zM17 1v10l-7-5z" /></svg>
           <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><path d="M1 1v10l7-5zM10 1v10l7-5z" /></svg>

@@ -1,5 +1,6 @@
 // Home — studio hero + "Selected Works" gallery. On phones the About page's
 // content is inlined below the gallery so the whole site is one scroll.
+import type { Viewport } from "next";
 import Header from "@/components/Header";
 import HeroStudio from "@/components/HeroStudio";
 import PartnerCard from "@/components/PartnerCard";
@@ -29,6 +30,10 @@ function decadeStills(): Record<string, string> {
   }
   return out;
 }
+
+// The hero footage runs to the top of the screen on phones — the status
+// bar (clock, battery) goes black to match. Other pages take the page colour.
+export const viewport: Viewport = { themeColor: "#000000" };
 
 export default async function Home() {
   // Portal content (empty when the portal is unreachable — the page then

@@ -154,7 +154,9 @@ export default function Header({ logo }: { logo?: string }) {
   return (
     // data-site-header: Decade sets data-theme="dark" here while the
     // timeline is on screen, re-theming everything inside (menus included).
-    <header data-site-header className="sticky top-0 z-40 px-3 pt-3 sm:px-5">
+    // Phones: -mb pulls the hero up under the floating pill (its height +
+    // top gap), so the footage runs to the top of the screen.
+    <header data-site-header className="sticky top-0 z-40 -mb-[68px] px-3 pt-3 sm:mb-0 sm:px-5">
       {/* EDIT: max-w-[1240px] = how wide the pill gets on big screens */}
       <div className="nav-pill relative mx-auto flex h-14 max-w-[1240px] items-center rounded-[18px] pl-5 pr-2 sm:pl-6 lg:h-[60px] lg:rounded-[20px]">
         {/* Desktop: logo | links ........ switch + CTA */}

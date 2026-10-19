@@ -73,7 +73,7 @@ export default function TenYears() {
       {/* The "10" — outline only, drawn in with a sweep of iridescent light.
           EDIT: its size is the width on this span. */}
       <span data-ty-ten aria-hidden className="block w-[min(96vw,760px)] will-change-transform md:w-[clamp(420px,56vw,1100px)]">
-        <svg viewBox="0 0 1000 720" className="block h-auto w-full overflow-visible drop-shadow-[0_10px_40px_rgba(0,0,0,0.25)]">
+        <svg viewBox="0 0 1000 720" className="block h-auto w-full overflow-visible">
           <defs>
             <linearGradient id="ty-sweep" data-ty-sweep gradientUnits="userSpaceOnUse" x1="-1400" y1="0" x2="-600" y2="200">
               <stop offset="0" stopColor="#ffffff" />

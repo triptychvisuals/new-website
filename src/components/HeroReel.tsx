@@ -58,7 +58,8 @@ export default function HeroReel() {
   useEffect(() => {
     const el = track.current;
     const host = el?.closest("section")?.querySelector<HTMLElement>(".hero-ambient");
-    if (!el || !host || !onScreen) return;
+    // The glow is hidden on phones — don't sample for nothing there.
+    if (!el || !host || !onScreen || host.offsetParent === null) return;
     const canvas = document.createElement("canvas");
     canvas.width = 16;
     canvas.height = 9;
@@ -100,7 +101,7 @@ export default function HeroReel() {
     };
     sample();
     // EDIT: how often the glow re-reads the video (ms)
-    const id = setInterval(sample, 600);
+    const id = setInterval(sample, 800);
     return () => clearInterval(id);
   }, [active, onScreen]);
 
@@ -131,7 +132,9 @@ export default function HeroReel() {
               muted
               loop
               playsInline
-              preload={i <= 1 ? "auto" : "metadata"}
+              // Only the first clip is buffered up front; the effect above
+              // readies the next one as each plays (keeps phone data + CPU down)
+              preload={i === 0 ? "auto" : "metadata"}
               aria-hidden
             />
           ))}

@@ -24,16 +24,20 @@ export default function HeroStudio({
   return (
     // Inset in a container: dashed rules above/below, a small gutter, and a
     // rounded, beveled panel (see the bevel overlay at the end).
-    <section className="relative isolate overflow-hidden border-b border-dashed border-hairline bg-background px-2 py-2 sm:px-4 sm:py-4">
+    // Phones: the footage runs edge to edge and up under the floating header
+    // (the header pulls it up by its own height), on black — so with the
+    // page's theme-colour (page.tsx) the status bar is black too, and there
+    // are no visible edges. From sm up it's inset in the glass frame.
+    <section className="relative isolate overflow-hidden border-b border-dashed border-hairline bg-black sm:bg-background sm:px-4 sm:py-4">
       {/* Ambient light round the panel — takes its colours from the clip
           that's playing (HeroReel samples it; .hero-ambient in globals.css). */}
-      <div aria-hidden className="hero-ambient pointer-events-none absolute inset-0 -z-10" />
+      <div aria-hidden className="hero-ambient pointer-events-none absolute inset-0 -z-10 hidden sm:block" />
       {/* Liquid-glass frame — a thin frosted rim round the footage, no
-          outline on its outer edge. EDIT: p-1 / sm:p-1.5 = rim thickness. */}
-      <div className="glass-rim mx-auto w-full max-w-[1760px] rounded-[26px] p-1 sm:rounded-[31px] sm:p-1.5">
-      {/* Panel — square on phones, 16:9 on desktop.
-          EDIT: rounded-[22px] = corner radius. */}
-      <div className="relative isolate flex aspect-square min-h-0 w-full flex-col overflow-hidden rounded-[22px] bg-[#0e0e10] text-white sm:rounded-[26px] md:aspect-video">
+          outline on its outer edge. EDIT: sm:p-1.5 = rim thickness. */}
+      <div className="glass-rim mx-auto w-full max-w-[1760px] sm:rounded-[31px] sm:p-1.5">
+      {/* Panel — tall on phones, 16:9 on desktop.
+          EDIT: sm:rounded-[26px] = corner radius. */}
+      <div className="relative isolate flex aspect-[3/4] min-h-0 w-full flex-col overflow-hidden bg-[#0e0e10] text-white sm:aspect-square sm:rounded-[26px] md:aspect-video">
         {/* Background: horizontal reel carousel (clips cycle every 2.5s with
             dots), a legibility overlay, and film grain. EDIT clips in HeroReel. */}
         <HeroReel />
@@ -48,7 +52,7 @@ export default function HeroStudio({
         />
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-0 -z-10 opacity-[0.12] mix-blend-soft-light"
+          className="pointer-events-none absolute inset-0 -z-10 hidden opacity-[0.12] mix-blend-soft-light sm:block"
           style={{
             backgroundImage:
               "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
@@ -75,7 +79,7 @@ export default function HeroStudio({
         {/* Top-left glass chip — straight to the work. */}
         <Link
           href="/projects"
-          className="glass-dark absolute left-3 top-3 z-20 inline-flex items-center gap-2 rounded-full px-4 py-2 text-[14px] font-medium transition-transform duration-200 hover:scale-[1.03] sm:left-5 sm:top-5"
+          className="glass-dark absolute bottom-5 left-4 z-20 inline-flex items-center gap-2 rounded-full px-4 py-2 text-[14px] font-medium transition-transform duration-200 hover:scale-[1.03] sm:bottom-auto sm:left-5 sm:top-5"
         >
           <svg aria-hidden width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
             <path d="M7.5 1.5h3v3M4.5 10.5h-3v-3M10.5 1.5 7 5M1.5 10.5 5 7" />
@@ -92,7 +96,7 @@ export default function HeroStudio({
             under the video, hence the overlay. */}
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-0 z-20 rounded-[22px] sm:rounded-[26px]"
+          className="pointer-events-none absolute inset-0 z-20 hidden rounded-[26px] sm:block"
           style={{
             boxShadow:
               "inset 0 0 0 1px rgba(255,255,255,0.10), inset 0 1px 0 rgba(255,255,255,0.22), inset 0 -1px 0 rgba(0,0,0,0.5), inset 0 0 40px rgba(0,0,0,0.35)",
