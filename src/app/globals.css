@@ -707,3 +707,106 @@ html.lenis body {
     radial-gradient(60% 30% at 50% 0%, var(--amb-c), transparent 80%);
   transition: --amb-l 1.2s ease, --amb-r 1.2s ease, --amb-c 1.2s ease;
 }
+
+/* ---------------------------------------------------------------------------
+   Accordion gallery (AccordionGallery.tsx). Panels share one row by
+   flex-grow (set inline from the active index) and ease between sizes;
+   on phones the row becomes a column of the same height.
+   EDIT: --acc-h (inline) = height; --acc-gap = space between panels.
+   --------------------------------------------------------------------------- */
+.acc-gallery {
+  --acc-gap: 8px;
+  display: flex;
+  gap: var(--acc-gap);
+  height: var(--acc-h);
+}
+.acc-panel {
+  position: relative;
+  flex-basis: 0;
+  min-width: 0;
+  overflow: hidden;
+  border-radius: 22px;
+  background: #111;
+  transition: flex-grow 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  /* the glass rim */
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.12), inset 0 1px 0 rgb(255 255 255 / 0.3);
+}
+.acc-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1), filter 0.5s ease;
+  filter: saturate(0.85) brightness(0.9);
+}
+.acc-panel[data-open] .acc-img {
+  filter: none;
+}
+.acc-panel:hover .acc-img {
+  filter: none;
+}
+.acc-shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgb(0 0 0 / 0.65), rgb(0 0 0 / 0) 55%);
+  pointer-events: none;
+}
+.acc-label {
+  position: absolute;
+  left: 14px;
+  bottom: 14px;
+  max-width: calc(100% - 28px);
+  padding: 10px 16px;
+  border-radius: 16px;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.35s ease, transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+.acc-panel[data-open] .acc-label {
+  opacity: 1;
+  transform: none;
+  transition-delay: 0.15s;
+}
+.acc-side {
+  position: absolute;
+  left: 50%;
+  bottom: 18px;
+  transform: translateX(-50%) rotate(180deg);
+  writing-mode: vertical-rl;
+  white-space: nowrap;
+  font-size: 14px;
+  font-weight: 500;
+  color: rgb(255 255 255 / 0.85);
+  opacity: 1;
+  transition: opacity 0.25s ease;
+  pointer-events: none;
+}
+.acc-panel[data-open] .acc-side {
+  opacity: 0;
+}
+@media (max-width: 639px) {
+  .acc-gallery {
+    flex-direction: column;
+    --acc-gap: 6px;
+  }
+  .acc-panel {
+    min-height: 0;
+    border-radius: 18px;
+  }
+  .acc-side {
+    left: 16px;
+    bottom: auto;
+    top: 50%;
+    transform: translateY(-50%);
+    writing-mode: horizontal-tb;
+  }
+  .acc-label {
+    left: 12px;
+    bottom: 12px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .acc-panel, .acc-img, .acc-label { transition: none; }
+}

@@ -1,4 +1,7 @@
 import Link from "next/link";
+import AccordionGallery from "@/components/AccordionGallery";
+import { projects } from "@/lib/projects";
+import { youtubeThumbs } from "@/lib/youtube";
 
 // EDIT: featured-work band copy ------------------------------------------------
 const META_LEFT = "© All Rights Reserved";
@@ -8,14 +11,25 @@ const STATEMENT_1 =
 const STATEMENT_2_LEAD =
   "A modern approach to creative work — every frame executed with intent, continuously refined, and perfectly aligned with ";
 const STATEMENT_2_ACCENT = "your story."; // accent-underlined tail
+// EDIT: the accordion gallery under the title — how many projects, and which
+// one starts open. Projects with a YouTube video, newest first.
+const GALLERY_COUNT = 5;
+const GALLERY_DEFAULT = 2;
 // ------------------------------------------------------------------------------
 
 /**
  * Featured-work band — full-bleed (no side margins): meta row, the
- * oversized "Featured© Work" line, then bold
+ * oversized "Featured© Work" line, the accordion gallery, then bold
  * uppercase statements with a vertical /WORK label and a SEE WORKS pill.
  */
 export default function SelectedWorks() {
+  const gallery = projects
+    .filter((p) => p.youtube)
+    .slice(0, GALLERY_COUNT)
+    .map((p) => {
+      const [image, fallback] = youtubeThumbs(p.youtube!);
+      return { image, fallback, label: p.title, sub: [p.artist, p.year].filter(Boolean).join(" · "), link: `/work/${p.slug}` };
+    });
   return (
     <section aria-label="Featured work" className="bg-background text-foreground">
       {/* Meta row */}
@@ -33,6 +47,11 @@ export default function SelectedWorks() {
           </span>{" "}
           Work
         </h2>
+      </div>
+
+      {/* Accordion gallery — hover a project to open it */}
+      <div className="mx-auto max-w-[1760px] px-3 pt-3 sm:px-4 sm:pt-4">
+        <AccordionGallery items={gallery} defaultIndex={GALLERY_DEFAULT} expandRatio={0.52} trigger="hover" />
       </div>
 
       {/* Statements */}
