@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import HeroStudio from "@/components/HeroStudio";
 import PartnerCard from "@/components/PartnerCard";
 import SelectedWorks from "@/components/SelectedWorks";
+import FeaturedWall from "@/components/FeaturedWall";
 import WorkGrid from "@/components/WorkGrid";
 import Decade from "@/components/Decade";
 import AboutResult from "@/components/about/AboutResult";
@@ -30,6 +31,8 @@ export default async function Home() {
         <HeroStudio tagline={content.tagline} />
         <PartnerCard />
         <SelectedWorks />
+        {/* A wall of project stills drifting past, under Featured Work */}
+        <FeaturedWall />
         {/* "10 years strong" on the colour field, opening the timeline */}
         <WorkGrid />
         {/* Scrolling on: the page dims into the 2016 → 2026 timeline */}
