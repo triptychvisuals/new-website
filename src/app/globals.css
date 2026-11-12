@@ -443,7 +443,7 @@ html.lenis body {
    EDIT: --seg = one slot's size (the capsule is two of them).
    --------------------------------------------------------------------------- */
 .seg-switch {
-  --seg: 26px;
+  --seg: 22px;
   position: relative;
   display: inline-flex;
   flex-shrink: 0;
@@ -612,7 +612,7 @@ html.lenis body {
 .cta-liquid {
   --cta-speed: 10s;
   --cta-ring: 2px;
-  --cta-radius: 14px; /* EDIT: corner radius — matches the header's rounded square */
+  --cta-radius: 12px; /* EDIT: corner radius — matches the header's rounded square */
   position: relative;
   isolation: isolate;
   display: inline-flex;

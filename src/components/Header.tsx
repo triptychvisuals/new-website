@@ -110,7 +110,7 @@ function LiquidButton({
       <span aria-hidden className="cta-ring">
         <span className="cta-spin" />
       </span>
-      <span className={`cta-face ${small ? "px-4 py-2 text-[14px]" : "px-5 py-2.5 text-[15px]"}`}>{children}</span>
+      <span className={`cta-face ${small ? "px-4 py-2 text-[14px]" : "px-4 py-2 text-[13.5px]"}`}>{children}</span>
     </a>
   );
 }
@@ -134,12 +134,12 @@ function Logo({
       <img
         src={src}
         alt=""
-        className={`h-4 w-auto lg:h-5 ${isDefault ? "[filter:brightness(0)] dark:[filter:none]" : ""}`}
+        className={`h-4 w-auto ${isDefault ? "[filter:brightness(0)] dark:[filter:none]" : ""}`}
       />
       {/* EDIT: wordmark — sits right of the mark, ® floated above its end */}
-      <span className="relative whitespace-nowrap pr-2 text-[15px] font-medium leading-none tracking-tight text-foreground lg:pr-2.5 lg:text-[18px]">
+      <span className="relative whitespace-nowrap pr-2 text-[15px] font-medium leading-none tracking-tight text-foreground lg:pr-2.5 lg:text-[16px]">
         Triptych Studios
-        <span aria-hidden className="absolute -top-1.5 right-0 text-[8px] leading-none lg:-top-2 lg:text-[10px]">
+        <span aria-hidden className="absolute -top-1.5 right-0 text-[8px] leading-none lg:-top-1.5 lg:text-[9px]">
           ®
         </span>
       </span>
@@ -158,7 +158,7 @@ export default function Header({ logo }: { logo?: string }) {
     // top gap), so the footage runs to the top of the screen.
     <header data-site-header className="sticky top-0 z-40 -mb-[68px] px-3 pt-3 sm:mb-0 sm:px-5">
       {/* EDIT: max-w-[1240px] = how wide the pill gets on big screens */}
-      <div className="nav-pill relative mx-auto flex h-14 max-w-[1240px] items-center rounded-[18px] pl-5 pr-2 sm:pl-6 lg:h-[60px] lg:rounded-[20px]">
+      <div className="nav-pill relative mx-auto flex h-14 max-w-[1240px] items-center rounded-[18px] pl-5 pr-2 sm:pl-6 lg:h-[52px] lg:rounded-[18px]">
         {/* Desktop: logo | links ........ switch + CTA */}
         <div className="hidden min-w-0 flex-1 items-center lg:flex">
           <Logo src={logo} />

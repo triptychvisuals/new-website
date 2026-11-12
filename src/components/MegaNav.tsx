@@ -202,14 +202,15 @@ function Icon({ name }: { name: IconName }) {
 /** Up/down chevron pair, like a select affordance. */
 function Chevrons() {
   return (
-    <svg width="10" height="14" viewBox="0 0 10 14" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden className="opacity-60">
+    <svg width="9" height="12" viewBox="0 0 10 14" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden className="opacity-60">
       <path d="M2 5l3-3 3 3M2 9l3 3 3-3" />
     </svg>
   );
 }
 
+// EDIT: the nav links' size
 const triggerCls =
-  "inline-flex items-center gap-2 whitespace-nowrap rounded-xl border px-3.5 py-2 text-[15px] font-medium tracking-tight text-foreground transition-colors";
+  "inline-flex items-center gap-1.5 whitespace-nowrap rounded-lg border px-3 py-1.5 text-[13.5px] font-medium tracking-tight text-foreground transition-colors";
 
 function MenuItem({
   item,
