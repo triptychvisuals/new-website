@@ -1,6 +1,8 @@
 import fs from "node:fs";
 import path from "node:path";
 import { clients } from "@/lib/projects";
+import { IMPACT_STATS } from "@/lib/stats";
+import LiveViews from "./LiveViews";
 
 // EDIT: partner order in the loop (names come from lib/projects clients).
 const PARTNERS = clients;
@@ -55,15 +57,15 @@ function logoFor(
 // the section — left, top — plus how long its slow bob takes (s). Tiles
 // past the list's length are skipped; extra logos reuse the last spots.
 const SPOTS: [number, number, number][] = [
-  [8, 22, 7],
-  [84, 14, 8],
-  [22, 8, 8.5],
-  [90, 46, 6.8],
-  [12, 60, 9],
-  [72, 72, 9.4],
-  [26, 76, 7.5],
-  [68, 6, 7.2],
-  [4, 42, 6.5],
+  [7, 16, 7],
+  [85, 12, 8],
+  [16, 4, 8.5],
+  [90, 40, 6.8],
+  [9, 64, 9],
+  [84, 70, 9.4],
+  [4, 40, 7.5],
+  [76, 2, 7.2],
+  [14, 86, 6.5],
 ];
 
 /**
@@ -89,7 +91,7 @@ export default function PartnerCard() {
     );
 
   return (
-    <section aria-label="Labels we work with" className="relative overflow-hidden bg-background px-5 py-20 sm:py-28 lg:min-h-[640px] lg:py-0">
+    <section aria-label="Labels we work with" className="relative overflow-hidden bg-background px-5 py-20 sm:py-28 lg:min-h-[900px] lg:py-0">
       {/* Desktop: tiles floating round the headline */}
       <div aria-hidden className="absolute inset-0 hidden lg:block">
         {items.map((it, i) => {
@@ -106,7 +108,7 @@ export default function PartnerCard() {
         })}
       </div>
 
-      <div className="relative mx-auto flex max-w-[760px] flex-col items-center text-center lg:min-h-[640px] lg:justify-center">
+      <div className="relative mx-auto flex max-w-[760px] flex-col items-center text-center lg:min-h-[900px] lg:justify-center lg:py-24">
         {/* Phones / tablets: the tiles in rows of four above — the studio's
             own mark rounds out the last row (EDIT: drop it once there's an
             eighth label logo in /public/partners). */}
@@ -131,7 +133,20 @@ export default function PartnerCard() {
         <p className="mt-6 max-w-[520px] text-[17px] leading-relaxed text-muted">
           Music videos and campaigns made with artists across the major labels, from treatment to final grade.
         </p>
-        <div className="mt-9 flex flex-wrap justify-center gap-3">
+
+        {/* The live counter, then the headline numbers (EDIT: lib/stats.ts) */}
+        <div className="mt-14 w-full">
+          <LiveViews />
+        </div>
+        <dl className="mt-12 grid w-full grid-cols-2 gap-px overflow-hidden rounded-[20px] bg-hairline sm:grid-cols-4">
+          {IMPACT_STATS.map((st) => (
+            <div key={st.label} className="flex flex-col-reverse justify-end bg-surface px-4 py-6">
+              <dt className="mt-2 text-[14px] leading-snug text-muted">{st.label}</dt>
+              <dd className="text-[clamp(1.75rem,3vw,2.5rem)] font-medium leading-none tracking-[-0.03em]">{st.value}</dd>
+            </div>
+          ))}
+        </dl>
+        <div className="mt-10 flex flex-wrap justify-center gap-3">
           <a href="/projects" className="inline-flex h-11 items-center gap-1.5 rounded-full bg-foreground px-6 text-[15px] font-medium text-background transition-colors hover:bg-foreground/85">
             See the work <span aria-hidden>↓</span>
           </a>
