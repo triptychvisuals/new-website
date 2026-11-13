@@ -16,7 +16,7 @@ export const musicVideos: YouTubeVideo[] = projects
  * Thumbnail URLs, best first. sddefault (640×480) is plenty for a ~170px
  * tile on a retina screen and a fifth of maxres' weight to download and
  * decode — but it's 4:3 with the 16:9 frame letterboxed inside, so the tile
- * zooms it 4/3 to crop the bars off (see Thumb in WorkGridClient). mqdefault
+ * zooms it 4/3 to crop the bars off. mqdefault
  * (320×180, no bars) is the fallback for the odd upload without an SD still.
  */
 export function youtubeThumbs(id: string): [string, string] {
