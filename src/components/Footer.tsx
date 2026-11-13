@@ -2,136 +2,125 @@ import Link from "next/link";
 import { site } from "@/lib/site";
 import { socials } from "@/lib/about";
 
-/* EDIT: footer legal links (the Navigation column mirrors the header via site.nav) */
-const legal = [
-  { label: "Privacy Policy", href: "/privacy" },
-  { label: "Terms of Service", href: "/terms" },
-  { label: "Disclaimer", href: "/disclaimer" },
-  { label: "Contact", href: "/contact" },
+// EDIT: the footer's columns — heading, then links. External links open in
+// a new tab; a social with no address yet ("#") is left out.
+const COLUMNS: { heading: string; links: { label: string; href: string }[] }[] = [
+  {
+    heading: "Work",
+    links: [
+      { label: "Projects", href: "/projects" },
+      { label: "Store", href: "/store" },
+    ],
+  },
+  {
+    heading: "Studio",
+    links: [
+      { label: "Who we are", href: "/who-we-are" },
+      { label: "Services & partners", href: "/services" },
+      { label: "Philosophy", href: "/philosophy" },
+      { label: "Testimonials", href: "/testimonials" },
+    ],
+  },
+  {
+    heading: "Press",
+    links: [
+      { label: "In the news", href: "/press" },
+      { label: "Press kit", href: "/press/kit" },
+    ],
+  },
+  {
+    heading: "Contact",
+    links: [
+      { label: "Start a project", href: site.contactUrl },
+      { label: "Contact", href: "/contact" },
+      { label: site.email, href: `mailto:${site.email}` },
+    ],
+  },
 ];
 
-const colHead = "font-mono text-[11px] uppercase tracking-[0.15em] text-muted";
-const colLink =
-  "text-lg text-foreground/70 transition-colors hover:text-foreground";
+// EDIT: the legal links along the bottom.
+const LEGAL = [
+  { label: "Privacy", href: "/privacy" },
+  { label: "Terms", href: "/terms" },
+  { label: "Disclaimer", href: "/disclaimer" },
+];
+
+const isExternal = (href: string) => /^(https?:|mailto:)/.test(href);
+
+function FooterLink({ href, children, className }: { href: string; children: React.ReactNode; className: string }) {
+  return isExternal(href) ? (
+    <a href={href} className={className} {...(href.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}>
+      {children}
+    </a>
+  ) : (
+    <Link href={href} className={className}>
+      {children}
+    </Link>
+  );
+}
 
 /**
- * Global footer (Spector-style): oversized wordmark + tagline, newsletter,
- * link columns, and a studio/contact strip. Rendered on every page via layout.
+ * Global footer, flat: the mark and a line about the studio on the left,
+ * short link columns to the right (small muted headings, plain links), and
+ * a bottom row with the copyright, the address, the legal links and the
+ * socials.
  */
 export default function Footer() {
+  const link = "text-[15px] text-foreground/80 transition-colors hover:text-foreground [overflow-wrap:anywhere]";
+  const liveSocials = socials.filter((s) => s.href && s.href !== "#");
   return (
-    <footer className="border-t border-hairline px-5 pt-12 sm:px-8">
-      {/* Newsletter + link columns */}
-      <div className="mx-auto grid max-w-[1760px] grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1fr]">
-        {/* Newsletter */}
-        <div>
-          <div className="flex items-start gap-4">
-            <h3 className="text-3xl font-normal tracking-tight text-foreground">
-              Newsletter
-            </h3>
-            <p className="max-w-[18ch] border-l border-hairline pl-4 text-sm text-muted">
-              Stay informed about our latest news and updates.
-            </p>
+    <footer className="border-t border-hairline bg-background px-5 pt-16 text-foreground sm:pt-20 lg:px-10">
+      <div className="mx-auto grid max-w-[1760px] grid-cols-2 gap-x-6 gap-y-10 sm:gap-12 lg:grid-cols-[minmax(0,1.3fr)_repeat(4,minmax(0,1fr))]">
+        {/* The studio — full width on phones, above the columns */}
+        <div className="col-span-2 lg:col-span-1">
+          <Link href="/" aria-label="Triptych Studios — home" className="inline-flex items-center gap-2.5">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/triptych-logo.png" alt="" className="h-5 w-auto [filter:brightness(0)] dark:[filter:none]" />
+            <span className="text-[17px] font-medium tracking-tight">Triptych Studios</span>
+          </Link>
+          {/* EDIT: the line under the mark */}
+          <p className="mt-5 max-w-[320px] text-[15px] leading-relaxed text-muted">
+            A creative studio in Chicago making music videos, commercials and brand films. Imagination in Motion.
+          </p>
+        </div>
+
+        {/* The columns */}
+        {COLUMNS.map((c) => (
+          <div key={c.heading}>
+            <p className="text-[14px] text-muted">{c.heading}</p>
+            <ul className="mt-4 space-y-2.5">
+              {c.links.map((l) => (
+                <li key={l.label}>
+                  <FooterLink href={l.href} className={link}>
+                    {l.label}
+                    {l.href.startsWith("http") && <span aria-hidden> ↗</span>}
+                  </FooterLink>
+                </li>
+              ))}
+            </ul>
           </div>
-          {/* EDIT: wire inputs to your email provider */}
-          <div className="mt-8 max-w-sm space-y-4">
-            <input
-              type="text"
-              placeholder="Your Name"
-              className="w-full border-b border-hairline bg-transparent pb-2 text-sm outline-none placeholder:text-muted focus:border-foreground"
-            />
-            <input
-              type="email"
-              placeholder="Your Email"
-              className="w-full border-b border-hairline bg-transparent pb-2 text-sm outline-none placeholder:text-muted focus:border-foreground"
-            />
-            <div className="flex items-start gap-4 pt-2">
-              <button
-                type="button"
-                className="inline-flex items-center gap-2 text-lg text-foreground"
-              >
-                Subscribe <span className="text-accent">→</span>
-              </button>
-              <p className="max-w-[22ch] font-mono text-[10px] uppercase leading-relaxed text-muted">
-                One email when it&apos;s worth your time. That&apos;s the deal.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Navigation */}
-        <div>
-          <p className={colHead}>Navigation</p>
-          <ul className="mt-5 space-y-2">
-            {site.nav.map((l) => (
-              <li key={l.label}>
-                <Link href={l.href} className={colLink}>
-                  {l.label}
-                  {l.label.toLowerCase() === "store" && (
-                    <span aria-hidden> ↗</span>
-                  )}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {/* Legal */}
-        <div>
-          <p className={colHead}>Legal</p>
-          <ul className="mt-5 space-y-2">
-            {legal.map((l) => (
-              <li key={l.label}>
-                <Link href={l.href} className={colLink}>
-                  {l.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {/* Social */}
-        <div>
-          <p className={colHead}>Social</p>
-          <ul className="mt-5 space-y-2">
-            {socials.map((l) => (
-              <li key={l.label}>
-                <a href={l.href} className={colLink}>
-                  {l.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
+        ))}
       </div>
 
-      {/* Studio + contact strip */}
-      <div className="mx-auto mt-12 grid max-w-[1760px] grid-cols-1 gap-10 border-t border-hairline py-8 md:grid-cols-3">
-        <div>
-          <p className="text-xl leading-snug text-foreground">
-            <span className="text-accent">{site.name}</span> is a creative studio
-            based in Chicago. {/* EDIT: city */}
-          </p>
-          <div className="mt-4 h-px w-8 bg-accent" />
-          <p className="mt-4 text-sm text-muted">
-            {/* EDIT */}
-            Strategy, film, and post are handled in-house.
-          </p>
+      {/* Bottom row */}
+      <div className="mx-auto mt-16 flex max-w-[1760px] flex-col gap-4 border-t border-hairline py-8 text-[14px] text-muted lg:flex-row lg:items-center lg:justify-between">
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
+          <span>© 2016–{new Date().getFullYear()} Triptych Studios</span>
+          <span>
+            {site.street}, {site.city}, {site.region} {site.postalCode}
+          </span>
         </div>
-
-        <div>
-          <p className="text-xs text-muted">
-            © 2016–2026 {site.name}. All work, all rights. {/* EDIT */}
-          </p>
-        </div>
-
-        <div className="flex items-start md:justify-end">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/triptych-logo.png"
-            alt="Triptych"
-            className="h-9 w-auto [filter:brightness(0)] dark:[filter:none]"
-          />
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
+          {LEGAL.map((l) => (
+            <Link key={l.href} href={l.href} className="transition-colors hover:text-foreground">
+              {l.label}
+            </Link>
+          ))}
+          {liveSocials.map((s) => (
+            <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-foreground">
+              {s.label} <span aria-hidden>↗</span>
+            </a>
+          ))}
         </div>
       </div>
     </footer>

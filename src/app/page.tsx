@@ -1,5 +1,5 @@
-// Home — studio hero + "Selected Works" gallery. On phones the About page's
-// content is inlined below the gallery so the whole site is one scroll.
+// Home — the reel, the latest release, the labels, the reels, the
+// timeline, and a closing invitation to start a project.
 import type { Viewport } from "next";
 import Header from "@/components/Header";
 import HeroStudio from "@/components/HeroStudio";
@@ -7,10 +7,7 @@ import LatestCards from "@/components/LatestCards";
 import PartnerCard from "@/components/PartnerCard";
 import SelectedWorks from "@/components/SelectedWorks";
 import Decade from "@/components/Decade";
-import AboutResult from "@/components/about/AboutResult";
-import AboutStatement from "@/components/about/AboutStatement";
-import AboutTestimonial from "@/components/about/AboutTestimonial";
-import AboutCTA from "@/components/about/AboutCTA";
+import ClosingCTA from "@/components/ClosingCTA";
 import Footer from "@/components/Footer";
 import { getSiteContent } from "@/lib/siteContent";
 
@@ -36,15 +33,8 @@ export default async function Home() {
         {/* The 2016 → 2026 timeline */}
         <Decade />
 
-        {/* Phones only: the About page inline, right under the third reel, so
-            the mobile menu can scroll here instead of loading another page.
-            Desktop keeps the standalone /about route. */}
-        <div id="about" className="scroll-mt-24 sm:hidden">
-          <AboutResult />
-          <AboutStatement />
-          <AboutTestimonial />
-          <AboutCTA />
-        </div>
+        {/* Then: an invitation to start a project, and three ways onward */}
+        <ClosingCTA />
 
       </main>
       <Footer />
