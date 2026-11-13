@@ -17,8 +17,8 @@ export type AccordionItem = {
 /**
  * Accordion gallery: a row of picture panels; the active one opens wide,
  * the rest squeeze beside it. Hover opens a panel (tap on a phone, where a
- * second tap follows its link); the open one carries its name in a glass
- * chip, the closed ones carry theirs down the edge. Only flex-grow and
+ * second tap follows its link); the open one carries its name bottom-left,
+ * the closed ones carry theirs down the edge. Only flex-grow and
  * opacity animate. Phones stack the panels and open them tall instead.
  *
  *   items        the pictures, labels and links
@@ -99,10 +99,10 @@ export default function AccordionGallery({
               className={`acc-img ${letterboxed ? "scale-[1.34]" : ""}`}
             />
             <span aria-hidden className="acc-shade" />
-            {/* Open: a glass chip with the name. Closed: the name down the edge. */}
-            <span className="acc-label glass-dark">
-              <span className="block text-[15px] font-medium leading-tight sm:text-[17px]">{it.label}</span>
-              {it.sub && <span className="mt-0.5 block text-[12px] text-white/70 sm:text-[13px]">{it.sub}</span>}
+            {/* Open: the name bottom-left. Closed: the name down the edge. */}
+            <span className="acc-label">
+              <span className="block text-[20px] font-medium leading-tight tracking-[-0.01em] sm:text-[26px]">{it.label}</span>
+              {it.sub && <span className="mt-1 block text-[13px] text-white/70 sm:text-[14px]">{it.sub}</span>}
             </span>
             <span className="acc-side">{it.label}</span>
           </Link>

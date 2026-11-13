@@ -3,6 +3,7 @@
 import type { Viewport } from "next";
 import Header from "@/components/Header";
 import HeroStudio from "@/components/HeroStudio";
+import LatestCards from "@/components/LatestCards";
 import PartnerCard from "@/components/PartnerCard";
 import SelectedWorks from "@/components/SelectedWorks";
 import FeaturedWall from "@/components/FeaturedWall";
@@ -27,8 +28,11 @@ export default async function Home() {
   return (
     <>
       <main className="relative min-h-screen">
-        <Header logo={content.logo} />
+        <Header logo={content.logo} overlay />
         <HeroStudio tagline={content.tagline} />
+        {/* The newest release, big, and the one before it */}
+        <LatestCards />
+        {/* The labels, floating round a headline */}
         <PartnerCard />
         <SelectedWorks />
         {/* A wall of project stills drifting past, under Featured Work */}

@@ -4,33 +4,18 @@ import { useEffect, useRef, useState } from "react";
 import { haptic } from "@/lib/haptics";
 
 /**
- * Theme switch — a glass capsule with a sun and a moon; a bead slides behind
- * the active mode. Sets data-theme on <html> (kept for the visit).
+ * Theme switch — a plain icon button. Sets data-theme on <html> (kept for
+ * the visit). The site starts dark (layout.tsx).
  */
 export default function ThemeToggle() {
   const btn = useRef<HTMLButtonElement>(null);
   const [dark, setDark] = useState(false);
-  // The header is forced dark while the timeline section is on screen —
-  // the knob follows it there, without touching the saved preference.
-  const [forced, setForced] = useState(false);
 
   useEffect(() => {
-    const header = btn.current?.closest<HTMLElement>("[data-site-header]");
-    const sync = () => setForced(header?.getAttribute("data-theme") === "dark");
-    // Read the saved theme + the header's state on the next frame (after
-    // hydration), then follow the header as the timeline toggles it.
-    const first = requestAnimationFrame(() => {
-      setDark(document.documentElement.getAttribute("data-theme") === "dark");
-      sync();
-    });
-    const mo = new MutationObserver(sync);
-    if (header) mo.observe(header, { attributes: true, attributeFilter: ["data-theme"] });
-    return () => {
-      cancelAnimationFrame(first);
-      mo.disconnect();
-    };
+    // Read the saved theme on the next frame (after hydration).
+    const first = requestAnimationFrame(() => setDark(document.documentElement.getAttribute("data-theme") === "dark"));
+    return () => cancelAnimationFrame(first);
   }, []);
-  const shown = dark || forced;
 
   const toggle = () => {
     haptic("tap");
@@ -38,7 +23,7 @@ export default function ThemeToggle() {
     setDark(next);
     const el = document.documentElement;
     // sessionStorage so the choice follows them across pages this visit, but
-    // the next visit starts light again.
+    // the next visit starts dark again.
     if (next) {
       el.setAttribute("data-theme", "dark");
       try {
@@ -60,23 +45,19 @@ export default function ThemeToggle() {
       aria-checked={dark}
       aria-label={dark ? "Switch to light mode" : "Switch to dark mode"}
       onClick={toggle}
-      data-on={shown ? "" : undefined}
-      // Glass capsule: sun | moon, with a lit bead behind the active one.
-      // Styles in globals.css (.seg-switch); EDIT: size via --seg there.
-      className="seg-switch"
+      // A plain icon button: the moon on light, the sun on dark.
+      className="grid h-10 w-10 place-items-center rounded-full text-foreground transition-colors hover:bg-foreground/[0.08]"
     >
-      <span className="seg-bead" aria-hidden />
-      <span className="seg-icon seg-sun" aria-hidden>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
-          <circle cx="12" cy="12" r="4" fill="currentColor" />
-          <path d="M12 2v2M12 20v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M2 12h2M20 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4" />
+      {dark ? (
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" aria-hidden>
+          <circle cx="12" cy="12" r="4" />
+          <path d="M12 2.5v2M12 19.5v2M4.6 4.6l1.4 1.4M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4L6 18M18 6l1.4-1.4" />
         </svg>
-      </span>
-      <span className="seg-icon seg-moon" aria-hidden>
-        <svg viewBox="0 0 24 24" fill="currentColor">
-          <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
+      ) : (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" aria-hidden>
+          <path d="M20.5 13.2A8.5 8.5 0 1 1 10.8 3.5a6.6 6.6 0 0 0 9.7 9.7z" />
         </svg>
-      </span>
+      )}
     </button>
   );
 }

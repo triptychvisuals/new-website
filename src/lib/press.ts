@@ -78,10 +78,10 @@ export const downloads: { label: string; file: string; note: string; dark: boole
 
 // EDIT: brand colours.
 export const brandColors: { name: string; hex: string }[] = [
-  { name: "Black", hex: "#0A0A0A" },
-  { name: "Paper", hex: "#F4F2EC" },
+  { name: "Black", hex: "#000000" },
+  { name: "White", hex: "#FFFFFF" },
   { name: "Signal red", hex: "#E5361F" },
-  { name: "Grey", hex: "#7A7A7A" },
+  { name: "Charcoal", hex: "#161616" },
 ];
 
 // EDIT: how to write the name.

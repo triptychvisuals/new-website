@@ -238,7 +238,7 @@ export default async function PressKitPage() {
                   ))}
                 </div>
                 <p className="mt-8 border-t border-hairline pt-6 text-[14px] text-muted">Typeface</p>
-                <p className="mt-2 text-2xl">Google Sans</p>
+                <p className="mt-2 text-2xl">DM Sans</p>
                 <p className="text-[13px] text-muted">Regular, Medium</p>
               </div>
             </Reveal>

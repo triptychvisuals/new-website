@@ -87,11 +87,11 @@ export default function RootLayout({
     // data-theme on <html> before React hydrates — an expected mismatch.
     <html lang="en" className="h-full antialiased" suppressHydrationWarning>
       <head>
-        {/* Google Sans — site typeface (EDIT weights in the css2 URL) */}
+        {/* DM Sans — site typeface (EDIT: family / weights in the css2 URL) */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap"
+          href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..700;1,9..40,400&display=swap"
           rel="stylesheet"
         />
         <script
@@ -100,13 +100,13 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full bg-background text-foreground">
-        {/* Every visit starts on the light theme — dark is only ever set by
+        {/* Every visit starts on the dark theme — light is only ever set by
             clicking the toggle. sessionStorage (not localStorage) keeps that
             choice while browsing between pages, then clears on the next visit.
             Applied before paint so there's no flash. */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `try{if(sessionStorage.getItem('theme')==='dark'){document.documentElement.setAttribute('data-theme','dark')}}catch(e){}`,
+            __html: `try{if(sessionStorage.getItem('theme')!=='light'){document.documentElement.setAttribute('data-theme','dark')}}catch(e){document.documentElement.setAttribute('data-theme','dark')}`,
           }}
         />
         {/*

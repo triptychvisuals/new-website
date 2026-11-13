@@ -1,20 +1,22 @@
 import Link from "next/link";
 import HeroReel from "@/components/HeroReel";
 
+// EDIT: the pills under the headline — quick ways into the site.
+const PILLS = [
+  { label: "See the work", href: "/projects" },
+  { label: "Who we are", href: "/who-we-are" },
+  { label: "Services", href: "/services" },
+  { label: "Press", href: "/press" },
+  { label: "Store", href: "/store" },
+];
+
 /**
- * Dark "studio" hero panel — a rounded near-black video panel inset in the
- * page. Deliberately text-free: the reel carousel carries it, with only the
- * plus-mark crosshairs as decoration. Partner logos live in the card below.
+ * The hero: the reel full-bleed across the top of the page, under the
+ * see-through header, with the tagline and a row of pills in the middle —
+ * in the spirit of a landing page that opens on one question and a few
+ * ways in. The footage fades into the page at the bottom. Type is always
+ * white here (the footage is dark), whatever the page's theme.
  */
-
-function Plus() {
-  return (
-    <span aria-hidden className="select-none text-3xl font-extralight leading-none text-white/25">
-      +
-    </span>
-  );
-}
-
 export default function HeroStudio({
   // EDIT: authored tagline — the portal's tagline replaces it when set.
   tagline = "Imagination in Motion",
@@ -22,87 +24,39 @@ export default function HeroStudio({
   tagline?: string;
 }) {
   return (
-    // Inset in a container: dashed rules above/below, a small gutter, and a
-    // rounded, beveled panel (see the bevel overlay at the end).
-    // Phones: the footage runs edge to edge and up under the floating header
-    // (the header pulls it up by its own height), on black — so with the
-    // page's theme-colour (page.tsx) the status bar is black too, and there
-    // are no visible edges. From sm up it's inset in the glass frame.
-    <section className="relative isolate overflow-hidden border-b border-dashed border-hairline bg-black sm:bg-background sm:px-4 sm:py-4">
-      {/* Ambient light round the panel — takes its colours from the clip
-          that's playing (HeroReel samples it; .hero-ambient in globals.css). */}
-      <div aria-hidden className="hero-ambient pointer-events-none absolute inset-0 -z-10 hidden sm:block" />
-      {/* Liquid-glass frame — a thin frosted rim round the footage, no
-          outline on its outer edge. EDIT: sm:p-1.5 = rim thickness. */}
-      <div className="glass-rim mx-auto w-full max-w-[1760px] sm:rounded-[31px] sm:p-1.5">
-      {/* Panel — tall on phones, 16:9 on desktop.
-          EDIT: sm:rounded-[26px] = corner radius. */}
-      <div className="relative isolate flex aspect-[3/4] min-h-0 w-full flex-col overflow-hidden bg-[#0e0e10] text-white sm:aspect-square sm:rounded-[26px] md:aspect-video">
-        {/* Background: horizontal reel carousel (clips cycle every 2.5s with
-            dots), a legibility overlay, and film grain. EDIT clips in HeroReel. */}
-        <HeroReel />
-        {/* Darken top + bottom so the white text / card stay readable */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 -z-10"
-          style={{
-            background:
-              "linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.24) 35%, rgba(0,0,0,0.28) 62%, rgba(0,0,0,0.62) 100%)",
-          }}
-        />
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 -z-10 hidden opacity-[0.12] mix-blend-soft-light sm:block"
-          style={{
-            backgroundImage:
-              "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
-          }}
-        />
+    // EDIT: the hero's height — most of the first screen
+    <section className="relative isolate flex h-[78svh] min-h-[520px] items-center justify-center overflow-hidden bg-black text-white lg:h-[88svh]">
+      {/* The reel (clips cycle every few seconds — EDIT clips in HeroReel) */}
+      <HeroReel />
+      {/* Shade: darker at the top for the header, a dim middle for the
+          headline, and a fade into the page at the bottom. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 -z-10"
+        style={{
+          background:
+            "linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.25) 22%, rgba(0,0,0,0.35) 55%, rgba(0,0,0,0.55) 82%, var(--background) 100%)",
+        }}
+      />
 
-        {/* No visible text sits on the hero video. The page still needs one
-            h1 for search engines / screen readers, so the tagline stays as
-            screen-reader-only copy (and the portal can still drive it). */}
-        <h1 className="sr-only">{tagline}</h1>
-        <div className="flex-1" />
-
-        {/* Plus-mark crosshairs */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-x-10 top-[60%] hidden justify-between lg:flex"
-        >
-          <Plus />
-          <Plus />
-          <Plus />
-          <Plus />
-        </div>
-
-        {/* Top-left glass chip — straight to the work. */}
-        <Link
-          href="/projects"
-          className="glass-dark absolute bottom-5 left-4 z-20 inline-flex items-center gap-2 rounded-full px-4 py-2 text-[14px] font-medium transition-transform duration-200 hover:scale-[1.03] sm:bottom-auto sm:left-5 sm:top-5"
-        >
-          <svg aria-hidden width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
-            <path d="M7.5 1.5h3v3M4.5 10.5h-3v-3M10.5 1.5 7 5M1.5 10.5 5 7" />
-          </svg>
-          See the work
-        </Link>
-
-        {/* Bottom band — keeps the panel's proportions. */}
-        <div className="relative p-6 sm:p-8 md:p-10" />
-
-        {/* Bevel — sits above the video: a hairline inner border, a lit top
-            edge, and a soft inner shadow so the footage reads as set into a
-            container. Inset shadows on the panel itself would be painted
-            under the video, hence the overlay. */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 z-20 hidden rounded-[26px] sm:block"
-          style={{
-            boxShadow:
-              "inset 0 0 0 1px rgba(255,255,255,0.10), inset 0 1px 0 rgba(255,255,255,0.22), inset 0 -1px 0 rgba(0,0,0,0.5), inset 0 0 40px rgba(0,0,0,0.35)",
-          }}
-        />
-      </div>
+      <div className="relative flex w-full max-w-[920px] flex-col items-center px-5 text-center">
+        {/* EDIT: the headline size */}
+        <h1 className="text-[clamp(2.25rem,5.2vw,4.5rem)] font-medium leading-[1.05] tracking-[-0.03em]">{tagline}</h1>
+        <p className="mt-4 max-w-[560px] text-[16px] leading-relaxed text-white/75 sm:text-[18px]">
+          {/* EDIT: the line under the headline */}
+          Music videos, commercials and brand films from Chicago since 2016.
+        </p>
+        <nav aria-label="Quick links" className="mt-8 flex flex-wrap justify-center gap-2.5">
+          {PILLS.map((p) => (
+            <Link
+              key={p.href}
+              href={p.href}
+              className="rounded-full border border-white/30 bg-black/25 px-4 py-2 text-[14px] font-medium text-white/90 transition-colors hover:border-white/60 hover:bg-white/10 hover:text-white sm:px-5 sm:py-2.5 sm:text-[15px]"
+            >
+              {p.label}
+            </Link>
+          ))}
+        </nav>
       </div>
     </section>
   );

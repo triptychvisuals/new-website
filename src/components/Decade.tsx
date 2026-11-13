@@ -21,12 +21,12 @@ const STEP_DEG = 45; // turn between one year's card and the next
 const SCROLL_PER_YEAR = 420; // px of scrolling to bring the next year round
 const TILT_DEG = 7; // camera looks slightly down onto the spiral
 const GAP = 0.32; // empty space between one card and the next, × card height
-const NODE_ABOVE = 52; // px the glass line + year beads run above each card's top
+const NODE_ABOVE = 52; // px the line + year dots run above each card's top
 // EDIT: how strongly the current card's colours wash over the whole stage
 // behind the spiral (0–1). Fades to the next year's as each comes round
 // (fade time: .dc-wash in globals.css).
 const WASH = 0.55;
-// The glass line is straight pieces bent round the helix; each is its own
+// The line is straight pieces bent round the helix; each is its own
 // 3D layer, so keep the count modest.
 const SEGS_PER_YEAR = 6;
 
@@ -378,12 +378,12 @@ export default function Decade() {
 
         {/* ── Phones (and reduced motion): the straight timeline ── */}
         <div className="dc-list relative mx-auto max-w-[640px] px-5 sm:px-8">
-          {/* Spine: a liquid-glass tube. The lit copy sits in a window that
-              slides down while the tube inside slides up by the same amount
-              — so the accent pours in top-down using transforms only. */}
-          <div ref={line} aria-hidden className="glass-tube-v absolute bottom-0 left-[27px] top-0 sm:left-[39px]">
+          {/* Spine: a thin line. The lit copy sits in a window that slides
+              down while the line inside slides up by the same amount — so
+              the accent draws in top-down using transforms only. */}
+          <div ref={line} aria-hidden className="tl-line absolute bottom-0 left-[31px] top-0 sm:left-[43px]">
             <div ref={fill} className="dc-fill dc-fill-window absolute inset-0 overflow-hidden will-change-transform">
-              <div data-dc-fill-inner className="glass-tube-v glass-tube-v--lit dc-fill-inner absolute inset-0 will-change-transform" />
+              <div data-dc-fill-inner className="tl-line tl-line--lit dc-fill-inner absolute inset-0 will-change-transform" />
             </div>
             <div
               ref={comet}
@@ -402,7 +402,7 @@ export default function Decade() {
                 <span
                   data-dc-dot
                   aria-hidden
-                  className="relative z-10 col-start-1 row-start-1 mx-auto h-[20px] w-[20px] rounded-full bg-[radial-gradient(circle_at_35%_28%,rgba(255,255,255,0.7),rgba(255,255,255,0)_42%),radial-gradient(circle,#232325,#141416)] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.3),inset_0_-3px_6px_rgba(0,0,0,0.4)] transition-all duration-500 group-data-[on]/row:scale-110 group-data-[on]/row:bg-[radial-gradient(circle_at_35%_28%,rgba(255,255,255,0.85),rgba(255,255,255,0)_42%),radial-gradient(circle,#ff7a5e,var(--accent)_70%)] group-data-[on]/row:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.45),0_0_0_6px_rgba(229,54,31,0.18),0_0_22px_rgba(229,54,31,0.6)]"
+                  className="relative z-10 col-start-1 row-start-1 mx-auto h-[14px] w-[14px] rounded-full bg-background shadow-[inset_0_0_0_2px_var(--hairline)] transition-all duration-500 group-data-[on]/row:bg-[color:var(--accent)] group-data-[on]/row:shadow-none"
                 />
                 <Card d={d} i={i} className="col-start-2 row-start-1 will-change-[opacity,transform]" />
               </li>
@@ -443,9 +443,8 @@ const washFor = (i: number) => {
 };
 
 /** One year's card — same in the spiral and the phone list. Text only:
- *  the year huge, the chapter's title and its story, on a glass slab with
- *  a thin bar of that year's colour down the side. .glass-faux (no
- *  backdrop blur — these are moving 3D layers). */
+ *  the year huge, the chapter's title and its story, on a flat charcoal
+ *  card with a thin bar of that year's colour down the side. */
 function Card({
   d,
   i,
@@ -462,7 +461,7 @@ function Card({
   return (
     <article
       data-dc-card
-      className={`glass-faux relative overflow-hidden rounded-[26px] px-6 py-6 sm:px-8 sm:py-7 ${className}`}
+      className={`relative overflow-hidden rounded-[24px] bg-[#161616] px-6 py-6 sm:px-8 sm:py-7 ${className}`}
     >
       {/* The year's colour, as a thin bar down the left edge */}
       <span aria-hidden className="absolute bottom-6 left-0 top-6 w-[3px] rounded-r-full" style={{ background: artFor(i) }} />

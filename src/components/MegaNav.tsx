@@ -7,11 +7,11 @@ import { youtubePoster } from "@/lib/youtube";
 import { site } from "@/lib/site";
 
 /**
- * Desktop nav: pill-shaped triggers with an up/down chevron that open a
- * dropdown panel — a column grid with titles + one-line descriptions (and
- * optional column headings, icons, and a footer row). Opens on hover with a
- * short grace period, toggles on click, closes on Escape / outside click.
- * Panel colors run on theme tokens so it follows light/dark mode.
+ * Desktop nav: plain text links that open a full-width panel under the
+ * header — the menu's main destinations in large type down the left, short
+ * lists to their right — while the page behind dims and blurs. Opens on
+ * hover with a short grace period, toggles on click, closes on Escape /
+ * outside click. Colours run on theme tokens so it follows light/dark.
  *
  * The Projects panel's last column is a live preview: hovering (or
  * focusing) a project name plays that project's clip in a small player.
@@ -33,21 +33,22 @@ type Item = {
   title: string;
   desc: string;
   href: string;
-  icon?: IconName;
   external?: boolean;
   preview?: Preview;
   /** Wears the NEW badge (see NEWEST_SLUG). */
   isNew?: boolean;
 };
-type Column = { heading?: string; items: Item[]; kind?: "preview" };
+type Group = { heading: string; items: Item[] };
+/**
+ * One dropdown: a full-width panel under the header. The `big` group runs
+ * down the left in large type (the menu's main destinations); the `side`
+ * groups sit to its right in small type; `preview` adds the project player.
+ */
 type Menu = {
-  label: string;
-  columns: Column[];
-  footer?: { cta: { label: string; href: string }; links: { label: string; href: string }[] };
-  /** EDIT: panel width — wide for the projects grid, narrower for the rest. */
-  width: string;
-  /** Optional CSS grid-template-columns (defaults to equal columns). */
-  template?: string;
+  big: Group;
+  side: Group[];
+  preview?: boolean;
+  cta?: { label: string; href: string };
 };
 
 // EDIT: the Chicago Reader feature (also linked from the About press card).
@@ -110,139 +111,97 @@ const projectRange = (from: number, to: number) =>
 // with no entry here (e.g. Store) renders as a plain link.
 const MENUS: Record<string, Menu> = {
   Projects: {
-    label: "Projects",
-    width: "w-[min(1080px,calc(100vw-48px))]",
-    // EDIT: the preview column runs a touch wider than the name lists.
-    template: "minmax(0,1fr) minmax(0,1fr) minmax(0,1.25fr)",
-    columns: [
-      { heading: "Featured", items: projectRange(0, 4) },
-      { heading: "Recent", items: projectRange(4, 8) },
-      { heading: "Preview", items: [], kind: "preview" },
-    ],
-    footer: {
-      cta: { label: "See all projects", href: "/projects" },
-      links: [
-        { label: "Press", href: "/press" },
-        { label: "Contact", href: site.contactUrl },
-      ],
-    },
+    big: { heading: "Featured work", items: projectRange(0, 4) },
+    side: [{ heading: "Recent", items: projectRange(4, 9) }],
+    preview: true,
+    cta: { label: "See all projects", href: "/projects" },
   },
   About: {
-    label: "About",
-    width: "w-[min(900px,calc(100vw-48px))]",
-    columns: [
+    big: {
+      heading: "The studio",
+      items: [
+        { title: "Who we are", desc: "", href: "/who-we-are" },
+        { title: "Services & partners", desc: "", href: "/services" },
+        { title: "Philosophy", desc: "", href: "/philosophy" },
+        { title: "Testimonials", desc: "", href: "/testimonials" },
+      ],
+    },
+    side: [
       {
+        heading: "Work with us",
         items: [
-          { title: "Who we are", desc: "The studio, the people, and the process", href: "/who-we-are", icon: "spark" },
-          { title: "Services & partners", desc: "Music video, commercial, and brand film for the labels we work with", href: "/services", icon: "globe" },
+          { title: "Start a project", desc: "", href: site.contactUrl, external: true },
+          { title: "Contact", desc: "", href: "/contact" },
         ],
       },
       {
+        heading: "More",
         items: [
-          { title: "Philosophy", desc: "How we think about every frame we make", href: "/philosophy", icon: "film" },
-          { title: "Testimonials", desc: "What collaborators say — and a note from our founder", href: "/testimonials", icon: "quote" },
-        ],
-      },
-      {
-        items: [
-          { title: "Contact", desc: "Start a project with Triptych Studios", href: site.contactUrl, icon: "mail" },
+          { title: "All projects", desc: "", href: "/projects" },
+          { title: "Store", desc: "", href: "/store" },
         ],
       },
     ],
   },
   Press: {
-    label: "Press",
-    width: "w-[min(900px,calc(100vw-48px))]",
-    columns: [
+    big: {
+      heading: "Press",
+      items: [
+        { title: "In the news", desc: "", href: "/press" },
+        { title: "Press kit", desc: "", href: "/press/kit" },
+      ],
+    },
+    side: [
       {
-        items: [
-          { title: "In the news", desc: "Features and coverage of the studio", href: "/press", icon: "bolt" },
-          { title: "Press kit", desc: "Bios, facts, logos, and credits", href: "/press/kit", icon: "spark" },
-        ],
+        heading: "Featured in",
+        items: [{ title: "Chicago Reader", desc: "", href: PRESS_URL, external: true }],
       },
       {
-        items: [
-          { title: "Chicago Reader", desc: "Featured: Lawrence “Law” Mahone of Triptych", href: PRESS_URL, icon: "news", external: true },
-        ],
+        heading: "Press contact",
+        items: [{ title: site.pressEmail, desc: "", href: `mailto:${site.pressEmail}`, external: true }],
       },
     ],
   },
 };
 
-/* ── icons (stroke, currentColor) ───────────────────────────────────────── */
-type IconName = "spark" | "globe" | "bolt" | "film" | "quote" | "mail" | "news";
-const ICON_PATHS: Record<IconName, string> = {
-  spark: "M12 3v4M12 17v4M3 12h4M17 12h4M12 8l1.5 2.5L16 12l-2.5 1.5L12 16l-1.5-2.5L8 12l2.5-1.5z",
-  globe: "M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM3.5 9h17M3.5 15h17M12 3c2.5 2.5 2.5 15.5 0 18M12 3c-2.5 2.5-2.5 15.5 0 18",
-  bolt: "M13 2 4 14h7l-1 8 9-12h-7z",
-  film: "M4 4h16v16H4zM8 4v16M16 4v16M4 9h4M4 15h4M16 9h4M16 15h4",
-  quote: "M7 7h4v4c0 3-1.5 5-4 6M14 7h4v4c0 3-1.5 5-4 6",
-  mail: "M3 6h18v12H3zM3 7l9 6 9-6",
-  news: "M4 5h13v14H6a2 2 0 0 1-2-2zM17 9h3v8a2 2 0 0 1-2 2M8 9h5M8 13h5",
-};
-function Icon({ name }: { name: IconName }) {
-  return (
-    <svg
-      width="20"
-      height="20"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-      className="nav-icon mt-0.5 shrink-0 text-foreground/70"
-    >
-      <path d={ICON_PATHS[name]} />
-    </svg>
-  );
-}
-
-/** Up/down chevron pair, like a select affordance. */
-function Chevrons() {
-  return (
-    <svg width="9" height="12" viewBox="0 0 10 14" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden className="opacity-60">
-      <path d="M2 5l3-3 3 3M2 9l3 3 3-3" />
-    </svg>
-  );
-}
-
-// EDIT: the nav links' size
+// EDIT: the nav links' size + weight
 const triggerCls =
-  "inline-flex items-center gap-1.5 whitespace-nowrap rounded-lg border px-3 py-1.5 text-[13.5px] font-medium tracking-tight text-foreground transition-colors";
+  "inline-flex items-center whitespace-nowrap px-3 py-2 text-[14px] font-normal tracking-[-0.005em] transition-colors";
 
 function MenuItem({
   item,
+  size,
   onPick,
   onPreview,
   previewing = false,
 }: {
   item: Item;
+  size: "big" | "small";
   onPick: () => void;
   onPreview?: (p: Preview) => void;
-  /** This item's clip is the one playing — keep its row lit. */
+  /** This item's clip is the one playing — keep it lit. */
   previewing?: boolean;
 }) {
+  // EDIT: the big links' size (the left column) and the small links'
+  const cls =
+    size === "big"
+      ? `flex items-center gap-3 py-1 text-[clamp(28px,2.5vw,40px)] font-normal leading-[1.2] tracking-[-0.02em] transition-colors focus-visible:outline-none ${
+          previewing ? "text-foreground" : "text-foreground hover:text-muted focus-visible:text-muted"
+        }`
+      : `flex items-center gap-2 py-1.5 text-[15px] font-medium tracking-[-0.005em] transition-colors focus-visible:outline-none ${
+          previewing ? "text-foreground" : "text-foreground/85 hover:text-foreground focus-visible:text-foreground"
+        }`;
   const body = (
     <>
-      {item.icon && <Icon name={item.icon} />}
-      <span className="min-w-0">
-        <span className="flex items-center gap-2 text-[15px] font-medium leading-snug tracking-tight text-foreground">
-          {item.title}
-          {item.isNew && <NewBadge />}
-        </span>
-        <span className="mt-1 block text-[14px] leading-snug text-muted">{item.desc}</span>
-      </span>
+      {item.title}
+      {item.isNew && <NewBadge />}
+      {size === "small" && item.desc && <span className="truncate text-[13px] font-normal text-muted">{item.desc}</span>}
     </>
   );
-  const cls = `group/item -mx-3 flex gap-3 rounded-xl px-3 py-3 transition-colors hover:bg-foreground/[0.07] hover:shadow-[inset_0_1px_0_var(--glass-rim)] focus-visible:bg-foreground/[0.07] focus-visible:outline-none ${
-    previewing ? "bg-foreground/[0.07] shadow-[inset_0_1px_0_var(--glass-rim)]" : ""
-  }`;
   // Hover or keyboard focus swaps the preview player to this project.
   const show = item.preview && onPreview ? () => onPreview(item.preview!) : undefined;
   return item.external ? (
-    <a href={item.href} target="_blank" rel="noopener noreferrer" onClick={onPick} className={cls}>
+    <a href={item.href} target={item.href.startsWith("mailto:") ? undefined : "_blank"} rel="noopener noreferrer" onClick={onPick} className={cls}>
       {body}
     </a>
   ) : (
@@ -264,7 +223,7 @@ function PreviewPlayer({ preview, onPick }: { preview?: Preview; onPick: () => v
     <Link href={preview.href} onClick={onPick} className="group/pv block">
       <div
         key={preview.href}
-        className="relative aspect-video w-full overflow-hidden rounded-xl border border-hairline bg-black [animation:pvfade_.35s_ease-out]"
+        className="relative aspect-video w-full overflow-hidden rounded-2xl bg-black [animation:pvfade_.35s_ease-out]"
         style={{ background: preview.gradient }}
       >
         {preview.video ? (
@@ -289,7 +248,7 @@ function PreviewPlayer({ preview, onPick }: { preview?: Preview; onPick: () => v
         )}
         {/* Lower scrim + "playing" pip */}
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/60 to-transparent" />
-        <span className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-black/45 px-2 py-0.5 text-[11px] font-medium text-white backdrop-blur-sm">
+        <span className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-black/60 px-2 py-0.5 text-[11px] font-medium text-white">
           <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[color:var(--accent)]" />
           {preview.video ? "Now playing" : "Preview"}
         </span>
@@ -314,8 +273,22 @@ function PreviewPlayer({ preview, onPick }: { preview?: Preview; onPick: () => v
   );
 }
 
-export default function MegaNav({ nav }: { nav: { label: string; href: string }[] }) {
-  const [open, setOpen] = useState<string | null>(null);
+export default function MegaNav({
+  nav,
+  onOpenChange,
+}: {
+  nav: { label: string; href: string }[];
+  /** Tells the header a panel is open (it goes solid to join the panel). */
+  onOpenChange?: (open: boolean) => void;
+}) {
+  const [open, setOpenState] = useState<string | null>(null);
+  const setOpen = useCallback(
+    (v: string | null) => {
+      setOpenState(v);
+      onOpenChange?.(v !== null);
+    },
+    [onOpenChange]
+  );
   // The hovered project, remembered with the panel it was hovered in — so a
   // panel that opens again starts the player on its default.
   const [preview, setPreview] = useState<{ panel: string; p: Preview } | undefined>(undefined);
@@ -335,7 +308,7 @@ export default function MegaNav({ nav }: { nav: { label: string; href: string }[
   const close = useCallback(() => {
     cancelClose();
     setOpen(null);
-  }, []);
+  }, [setOpen]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && close();
@@ -354,30 +327,28 @@ export default function MegaNav({ nav }: { nav: { label: string; href: string }[
   // Until something is hovered, the player shows the panel's first project.
   const shown =
     (preview?.panel === open ? preview.p : undefined) ??
-    active?.columns.flatMap((c) => c.items).find((it) => it.preview)?.preview;
+    active?.big.items.find((it) => it.preview)?.preview;
 
   return (
-    // Not positioned: the dropdown panel centres on the header pill (the
-    // nearest positioned ancestor), wherever the links sit inside it.
+    // Not positioned: the panel spans the header's full width (the nearest
+    // positioned ancestor), wherever the links sit inside it.
     <div ref={root} onMouseLeave={scheduleClose} onMouseEnter={cancelClose}>
-      <nav className="flex items-center gap-1" aria-label="Main">
+      <nav className="flex items-center" aria-label="Main">
         {nav.map((item) => {
           const menu = MENUS[item.label];
+          const isOpen = open === item.label;
+          // EDIT: link colour — full white when its menu is open (or nothing
+          // is open), dimmed while another menu is, like the reference.
+          const tone = isOpen || !open ? "text-foreground" : "text-foreground/55 hover:text-foreground";
           if (!menu) {
             const external = item.label.toLowerCase() === "store";
             return (
-              <Link
-                key={item.label}
-                href={item.href}
-                onMouseEnter={close}
-                className={`${triggerCls} border-transparent hover:bg-foreground/[0.05]`}
-              >
+              <Link key={item.label} href={item.href} onMouseEnter={close} className={`${triggerCls} ${tone}`}>
                 {item.label}
-                {external && <span aria-hidden>↗</span>}
+                {external && <span aria-hidden className="ml-1">↗</span>}
               </Link>
             );
           }
-          const isOpen = open === item.label;
           return (
             <button
               key={item.label}
@@ -389,80 +360,77 @@ export default function MegaNav({ nav }: { nav: { label: string; href: string }[
                 setOpen(item.label);
               }}
               onClick={() => setOpen(isOpen ? null : item.label)}
-              className={`${triggerCls} ${
-                isOpen
-                  ? "border-hairline bg-foreground/[0.05]"
-                  : "border-transparent hover:bg-foreground/[0.05]"
-              }`}
+              className={`${triggerCls} ${tone}`}
             >
               {item.label}
-              <Chevrons />
             </button>
           );
         })}
       </nav>
 
-      {/* Panel — outer frame + inner bordered grid, like a framed card */}
+      {/* The page behind an open menu: dimmed and blurred (no pointer
+          events, so moving onto it closes the menu like leaving it). */}
       <div
-        className={`absolute left-1/2 top-full z-50 pt-3 transition-[opacity,transform] duration-200 ease-out ${
-          active
-            ? "visible -translate-x-1/2 translate-y-0 opacity-100"
-            : "pointer-events-none invisible -translate-x-1/2 -translate-y-1 opacity-0"
+        aria-hidden
+        className={`pointer-events-none fixed inset-0 -z-10 bg-black/55 backdrop-blur-md transition-opacity duration-300 ${
+          active ? "opacity-100" : "opacity-0"
+        }`}
+      />
+
+      {/* Panel — full width, solid, under the header */}
+      <div
+        className={`absolute inset-x-0 top-full z-50 bg-background transition-[opacity,transform] duration-200 ease-out ${
+          active ? "visible translate-y-0 opacity-100" : "pointer-events-none invisible -translate-y-1 opacity-0"
         }`}
       >
         {active && (
           <div
-            // Dark liquid glass: frosted over the page (.glass-menu in globals.css)
-            className={`${active.width} glass-menu rounded-[20px] p-2`}
             role="menu"
+            className="mx-auto grid max-w-[1760px] gap-x-16 px-6 pb-12 pt-8 lg:px-10"
+            style={{ gridTemplateColumns: active.preview ? "minmax(0,1.1fr) minmax(0,0.8fr) minmax(0,1fr)" : "minmax(0,1.1fr) repeat(2, minmax(0,0.8fr))" }}
           >
-            <div
-              className="grid divide-x divide-[color:var(--glass-edge)] rounded-[14px] bg-foreground/[0.03] shadow-[inset_0_0_0_1px_var(--glass-edge)]"
-              style={{
-                gridTemplateColumns:
-                  active.template ?? `repeat(${active.columns.length}, minmax(0,1fr))`,
-              }}
-            >
-              {active.columns.map((col, ci) => (
-                <div key={ci} className="flex flex-col gap-1 px-7 py-6">
-                  {col.heading && (
-                    <p className="mb-2 text-[13px] font-medium text-muted">{col.heading}</p>
-                  )}
-                  {col.kind === "preview" && <PreviewPlayer preview={shown} onPick={close} />}
-                  {col.items.map((it) => (
-                    <MenuItem
-                      key={it.title + it.href}
-                      item={it}
-                      onPick={close}
-                      onPreview={(p) => open && setPreview({ panel: open, p })}
-                      previewing={!!it.preview && shown?.href === it.preview.href}
-                    />
-                  ))}
-                </div>
+            {/* The big column */}
+            <div>
+              <p className="mb-4 text-[14px] text-muted">{active.big.heading}</p>
+              {active.big.items.map((it) => (
+                <MenuItem
+                  key={it.title + it.href}
+                  item={it}
+                  size="big"
+                  onPick={close}
+                  onPreview={(p) => open && setPreview({ panel: open, p })}
+                  previewing={!!it.preview && shown?.href === it.preview.href}
+                />
               ))}
+              {active.cta && (
+                <Link href={active.cta.href} onClick={close} className="mt-6 inline-flex items-center gap-1.5 text-[15px] font-medium text-muted transition-colors hover:text-foreground">
+                  {active.cta.label} <span aria-hidden>→</span>
+                </Link>
+              )}
             </div>
 
-            {active.footer && (
-              <div className="flex items-center justify-between px-5 pb-2 pt-4">
-                <Link
-                  href={active.footer.cta.href}
-                  onClick={close}
-                  className="text-[15px] font-medium text-[color:var(--accent)] transition-opacity hover:opacity-75"
-                >
-                  {active.footer.cta.label} <span aria-hidden>→</span>
-                </Link>
-                <div className="flex items-center gap-7">
-                  {active.footer.links.map((l) => (
-                    <Link
-                      key={l.label}
-                      href={l.href}
-                      onClick={close}
-                      className="text-[14px] text-foreground/70 transition-colors hover:text-foreground"
-                    >
-                      {l.label}
-                    </Link>
-                  ))}
-                </div>
+            {/* The small columns */}
+            {active.side.map((g) => (
+              <div key={g.heading}>
+                <p className="mb-4 text-[14px] text-muted">{g.heading}</p>
+                {g.items.map((it) => (
+                  <MenuItem
+                    key={it.title + it.href}
+                    item={it}
+                    size="small"
+                    onPick={close}
+                    onPreview={(p) => open && setPreview({ panel: open, p })}
+                    previewing={!!it.preview && shown?.href === it.preview.href}
+                  />
+                ))}
+              </div>
+            ))}
+
+            {/* The project player */}
+            {active.preview && (
+              <div>
+                <p className="mb-4 text-[14px] text-muted">Preview</p>
+                <PreviewPlayer preview={shown} onPick={close} />
               </div>
             )}
           </div>

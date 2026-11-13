@@ -20,7 +20,7 @@ const GALLERY_DEFAULT = 2;
 /**
  * Featured-work band — full-bleed (no side margins): meta row, the
  * oversized "Featured© Work" line, the accordion gallery, then bold
- * uppercase statements with a vertical /WORK label and a SEE WORKS pill.
+ * statements and a See all projects button.
  */
 export default function SelectedWorks() {
   const gallery = projects
@@ -33,9 +33,9 @@ export default function SelectedWorks() {
   return (
     <section aria-label="Featured work" className="bg-background text-foreground">
       {/* Meta row */}
-      <div className="mx-auto flex max-w-[1760px] items-center justify-between gap-3 px-5 pt-6 text-[10px] font-bold uppercase tracking-[0.08em] sm:px-8 sm:text-[12px]">
+      <div className="mx-auto flex max-w-[1760px] items-center justify-between gap-3 px-5 pt-6 text-[14px] text-muted sm:px-8">
         <span>{META_LEFT}</span>
-        <span className="text-foreground/80">{META_RIGHT}</span>
+        <span>{META_RIGHT}</span>
       </div>
 
       {/* Title between hairlines (static) */}
@@ -77,9 +77,9 @@ export default function SelectedWorks() {
 
           <Link
             href="/projects"
-            className="mt-9 inline-flex items-center rounded-full border-2 border-foreground px-7 py-1.5 text-[15px] font-bold uppercase tracking-tight transition-colors hover:bg-foreground hover:text-background sm:mt-11"
+            className="mt-9 inline-flex h-11 items-center gap-1.5 rounded-full bg-foreground px-6 text-[15px] font-medium text-background transition-colors hover:bg-foreground/85 sm:mt-11"
           >
-            See Works
+            See all projects <span aria-hidden>→</span>
           </Link>
         </div>
       </div>

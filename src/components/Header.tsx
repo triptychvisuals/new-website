@@ -1,34 +1,21 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { site } from "@/lib/site";
 import ThemeToggle from "@/components/ThemeToggle";
 import MegaNav from "@/components/MegaNav";
 import { haptic } from "@/lib/haptics";
 
 /**
- * Sticky header — a floating liquid-glass pill:
- *   ◬ Triptych Studios® .... Projects ⇕  About ⇕  Press ⇕  Store ↗ .... ☀☾  [Start a project]
- * Below lg it collapses to logo · switch · hamburger, with the menu dropping
- * from under the pill.
+ * Sticky header — a flat bar:
+ *   ◬ Triptych Studios®  Projects  About  Press  Store ↗ ......... ☾  (Contact)  (Start a project ↗)
+ * Desktop menus open a full-width panel under it (MegaNav). Phones get
+ * logo · theme · menu, the menu filling the screen. On the home page it
+ * floats over the hero video, see-through with white type, until scrolled.
  */
 /** EDIT: the authored wordmark, used whenever the portal has no logo set. */
 const DEFAULT_LOGO = "/triptych-logo.png";
-
-function hasArrow(label: string) {
-  return label.toLowerCase() === "store";
-}
-
-/**
- * On phones the About content lives inline on the home page, so the menu
- * scrolls to it instead of loading /about — mobile stays one continuous scroll.
- */
-function mobileHref(href: string) {
-  if (href === "/about") return "/#about";
-  if (href.startsWith("/about#")) return `/#${href.split("#")[1]}`;
-  return href;
-}
 
 /* Social icons — EDIT: sizes are the width/height on each svg */
 function IgIcon() {
@@ -80,38 +67,33 @@ function SocialRow() {
 }
 
 /**
- * The call-to-action: a dark glass pill inside an iridescent ring of light
- * that flows round its edge, with a soft glow of the same colours behind it.
- * Only a rotation animates (globals.css, .cta-liquid).
+ * The header's two buttons, flat: the primary a solid pill in the page's
+ * ink (white on the dark theme), the secondary a quiet filled pill.
  */
-function LiquidButton({
+function PillLink({
   href,
   onClick,
-  small = false,
+  primary = false,
+  external = false,
   children,
 }: {
   href: string;
   onClick?: () => void;
-  small?: boolean;
+  primary?: boolean;
+  external?: boolean;
   children: React.ReactNode;
 }) {
-  return (
-    <a
-      href={href}
-      onClick={() => {
-        haptic("tap");
-        onClick?.();
-      }}
-      className="cta-liquid group"
-    >
-      <span aria-hidden className="cta-glow">
-        <span className="cta-spin" />
-      </span>
-      <span aria-hidden className="cta-ring">
-        <span className="cta-spin" />
-      </span>
-      <span className={`cta-face ${small ? "px-4 py-2 text-[14px]" : "px-4 py-2 text-[13.5px]"}`}>{children}</span>
+  const cls = `inline-flex h-9 shrink-0 items-center justify-center gap-1 whitespace-nowrap rounded-full px-4 text-[14px] font-medium tracking-[-0.005em] transition-colors ${
+    primary ? "bg-foreground text-background hover:bg-foreground/85" : "bg-foreground/[0.09] text-foreground hover:bg-foreground/[0.16]"
+  }`;
+  return external ? (
+    <a href={href} onClick={() => { haptic("tap"); onClick?.(); }} className={cls}>
+      {children}
     </a>
+  ) : (
+    <Link href={href} onClick={() => { haptic("tap"); onClick?.(); }} className={cls}>
+      {children}
+    </Link>
   );
 }
 
@@ -129,8 +111,8 @@ function Logo({
   const isDefault = src === DEFAULT_LOGO;
   return (
     <Link href="/" onClick={onClick} aria-label="Triptych Studios — home" className={`inline-flex items-center gap-2 lg:gap-2.5 ${className}`}>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
       {/* Mark height matches the wordmark's cap height; w-auto keeps its scale */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={src}
         alt=""
@@ -147,87 +129,136 @@ function Logo({
   );
 }
 
-export default function Header({ logo }: { logo?: string }) {
+/**
+ * Phone menu: the whole screen under the bar, the destinations in large type.
+ * EDIT: the list.
+ */
+const MOBILE_LINKS = [
+  { label: "Projects", href: "/projects" },
+  { label: "Who we are", href: "/who-we-are" },
+  { label: "Services & partners", href: "/services" },
+  { label: "Philosophy", href: "/philosophy" },
+  { label: "Testimonials", href: "/testimonials" },
+  { label: "Press", href: "/press" },
+  { label: "Store", href: "/store" },
+];
+
+export default function Header({ logo, overlay = false }: { logo?: string; overlay?: boolean }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [panelOpen, setPanelOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const close = () => setMenuOpen(false);
+
+  // Over the hero (home page): see-through, white type on a soft top shade,
+  // until the page scrolls past most of the video — then solid.
+  useEffect(() => {
+    if (!overlay) return;
+    let raf = 0;
+    const check = () => {
+      raf = 0;
+      // EDIT: how far down (× screen height) the bar turns solid
+      setScrolled(window.scrollY > window.innerHeight * 0.55);
+    };
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(check);
+    };
+    check();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, [overlay]);
+
+  // The phone menu takes the screen: the page under it stays put.
+  useEffect(() => {
+    document.documentElement.style.overflow = menuOpen ? "hidden" : "";
+    return () => {
+      document.documentElement.style.overflow = "";
+    };
+  }, [menuOpen]);
+
+  const clear = overlay && !scrolled && !panelOpen && !menuOpen;
 
   return (
     // data-site-header: Decade sets data-theme="dark" here while the
     // timeline is on screen, re-theming everything inside (menus included).
-    // Phones: -mb pulls the hero up under the floating pill (its height +
-    // top gap), so the footage runs to the top of the screen.
-    <header data-site-header className="sticky top-0 z-40 -mb-[68px] px-3 pt-3 sm:mb-0 sm:px-5">
-      {/* EDIT: max-w-[1240px] = how wide the pill gets on big screens */}
-      <div className="nav-pill relative mx-auto flex h-14 max-w-[1240px] items-center rounded-[18px] pl-5 pr-2 sm:pl-6 lg:h-[52px] lg:rounded-[18px]">
-        {/* Desktop: logo | links ........ switch + CTA */}
-        <div className="hidden min-w-0 flex-1 items-center lg:flex">
-          <Logo src={logo} />
-          {/* Links centred in the bar */}
-          <div className="absolute left-1/2 -translate-x-1/2">
-            <MegaNav nav={site.nav} />
+    // On the home page (overlay) -mb pulls the hero up under the bar.
+    <header data-site-header className={`sticky top-0 z-40 ${overlay ? "-mb-14 lg:-mb-16" : ""}`}>
+      <div
+        // Over the hero the bar is forced dark, so the links read white on
+        // the footage whatever the page's theme.
+        data-theme={clear ? "dark" : undefined}
+        className={`relative transition-colors duration-300 ${clear ? "bg-transparent" : "bg-background"}`}
+      >
+        {clear && (
+          <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-28 bg-gradient-to-b from-black/55 to-transparent" />
+        )}
+        <div className="mx-auto flex h-14 max-w-[1760px] items-center px-5 lg:h-16 lg:px-10">
+          {/* Desktop: logo · links ............ theme · Contact · Start a project */}
+          <div className="hidden min-w-0 flex-1 items-center gap-6 lg:flex">
+            <Logo src={logo} />
+            <MegaNav nav={site.nav} onOpenChange={setPanelOpen} />
+            <div className="ml-auto flex items-center gap-2">
+              <ThemeToggle />
+              <PillLink href="/contact">Contact</PillLink>
+              <PillLink href={site.contactUrl} primary external>
+                Start a project <span aria-hidden>↗</span>
+              </PillLink>
+            </div>
           </div>
-          <div className="ml-auto flex items-center gap-3">
-            <ThemeToggle />
-            {/* EDIT: the call-to-action button */}
-            <LiquidButton href={site.contactUrl}>Start a project</LiquidButton>
-          </div>
-        </div>
 
-        {/* Mobile: logo .... switch + hamburger */}
-        <div className="flex w-full items-center justify-between pr-3 lg:hidden">
-          <Logo src={logo} />
-          <div className="flex items-center gap-4">
-            <ThemeToggle />
-            <button
-              type="button"
-              onClick={() => {
-                haptic("tap");
-                setMenuOpen((o) => !o);
-              }}
-              aria-label={menuOpen ? "Close menu" : "Open menu"}
-              aria-expanded={menuOpen}
-              className="relative flex h-[18px] w-7 flex-col items-end justify-center"
-            >
-              <span
-                className={`block h-[1.5px] w-7 bg-foreground transition-transform duration-300 ${
-                  menuOpen ? "translate-y-[3px] rotate-45" : "-translate-y-[3px]"
-                }`}
-              />
-              <span
-                className={`block h-[1.5px] w-7 bg-foreground transition-transform duration-300 ${
-                  menuOpen ? "-translate-y-[1.5px] -rotate-45" : "translate-y-[3px]"
-                }`}
-              />
-            </button>
-          </div>
-        </div>
-
-        {/* Mobile dropdown — dark glass, drops from under the pill */}
-        <div
-          className={`glass-menu absolute inset-x-0 top-full mt-2 origin-top overflow-hidden rounded-[18px] transition-all duration-300 ease-out lg:hidden ${
-            menuOpen
-              ? "visible translate-y-0 opacity-100"
-              : "pointer-events-none invisible -translate-y-3 opacity-0"
-          }`}
-        >
-          <nav className="flex flex-col px-5 py-2">
-            {site.nav.map((item) => (
-              <Link
-                key={item.label}
-                href={mobileHref(item.href)}
-                onClick={close}
-                className="flex items-center gap-2 border-b border-hairline/70 py-3.5 text-xl font-normal tracking-tight text-foreground last:border-0"
+          {/* Phones: logo ............ theme · menu */}
+          <div className="flex w-full items-center justify-between lg:hidden">
+            <Logo src={logo} onClick={close} />
+            <div className="flex items-center gap-1">
+              <ThemeToggle />
+              <button
+                type="button"
+                onClick={() => {
+                  haptic("tap");
+                  setMenuOpen((o) => !o);
+                }}
+                aria-label={menuOpen ? "Close menu" : "Open menu"}
+                aria-expanded={menuOpen}
+                className="grid h-10 w-10 place-items-center text-foreground"
               >
-                {item.label}
-                {hasArrow(item.label) && <span aria-hidden>↗</span>}
-              </Link>
-            ))}
-          </nav>
-          <div className="flex items-center justify-between gap-4 px-5 pb-4 pt-1">
+                {menuOpen ? (
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"><path d="M4 4l12 12M16 4L4 16" /></svg>
+                ) : (
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round"><rect x="3.5" y="4.5" width="17" height="15" rx="3" /><path d="M9.5 4.5v15" /></svg>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Phone menu — the full screen under the bar */}
+      <div
+        className={`fixed inset-x-0 bottom-0 top-14 overflow-y-auto bg-background transition-opacity duration-200 lg:hidden ${
+          menuOpen ? "visible opacity-100" : "pointer-events-none invisible opacity-0"
+        }`}
+      >
+        <nav className="flex flex-col px-5 pb-6 pt-4" aria-label="Main">
+          {MOBILE_LINKS.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              onClick={close}
+              className="py-2 text-[30px] font-normal leading-[1.2] tracking-[-0.02em] text-foreground"
+            >
+              {item.label}
+            </Link>
+          ))}
+        </nav>
+        <div className="flex flex-col gap-3 px-5 pb-10">
+          <PillLink href={site.contactUrl} onClick={close} primary external>
+            Start a project <span aria-hidden>↗</span>
+          </PillLink>
+          <PillLink href="/contact" onClick={close}>Contact</PillLink>
+          <div className="pt-4">
             <SocialRow />
-            <LiquidButton href={site.contactUrl} onClick={close} small>
-              Start a project
-            </LiquidButton>
           </div>
         </div>
       </div>
