@@ -53,6 +53,15 @@ const jsonLd = {
       email: site.email,
       foundingDate: "2016", // EDIT
       founder: { "@type": "Person", name: "Lawrence Mahone" }, // EDIT
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: `${site.street}${site.pmb ? `, PMB ${site.pmb}` : ""}`,
+        addressLocality: site.city,
+        addressRegion: site.region,
+        postalCode: site.postalCode,
+        addressCountry: site.country,
+      },
+      ...(site.phone ? { telephone: site.phone } : {}),
       sameAs,
     },
     {

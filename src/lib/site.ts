@@ -29,6 +29,18 @@ export const site = {
   city: "Chicago",
   region: "IL",
   country: "US",
+  /** EDIT: the mailing address (the Contact page map points here). */
+  street: "211 W. Wacker Drive",
+  /** EDIT: the private mailbox number at that address — shown as "PMB 123"
+   *  once it's filled in; leave "" until then. */
+  pmb: "",
+  postalCode: "60606",
+  /** EDIT: the address's map position (decimal degrees). */
+  lat: 41.8867,
+  lng: -87.6345,
+  /** EDIT: the studio phone, as you'd like it shown, e.g. "(312) 555-0123".
+   *  Leave "" and the Contact page leaves the phone out. */
+  phone: "",
   /** EDIT: where every Contact button goes — the portal's project intake. */
   contactUrl: "https://portal.triptychstudios.co/start",
   sectionNumber: "001", // EDIT: hero index label

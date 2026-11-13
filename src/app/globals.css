@@ -446,3 +446,22 @@ html.lenis body {
 @media (prefers-reduced-motion: reduce) {
   .tl-year { animation: none; }
 }
+
+/* Reels (ReelCard): the heart pops when liked; the record turns. */
+@keyframes reel-pop {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.35); }
+  100% { transform: scale(1); }
+}
+.reel-pop {
+  animation: reel-pop 0.35s ease-out;
+}
+@keyframes reel-spin {
+  to { transform: rotate(360deg); }
+}
+.reel-disc {
+  animation: reel-spin 4s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .reel-pop, .reel-disc { animation: none; }
+}

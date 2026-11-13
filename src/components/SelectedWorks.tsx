@@ -1,55 +1,20 @@
 import Link from "next/link";
-import FeaturedGrid, { type FeaturedCard, type FeaturedTab } from "@/components/FeaturedGrid";
-import { projects, placeholderGradient } from "@/lib/projects";
-import { youtubeThumbs } from "@/lib/youtube";
+import ReelCard from "@/components/ReelCard";
+import { reels } from "@/lib/reels";
 
 // EDIT: the section's copy
 const LEAD =
   "Cinematic craft, bold visual storytelling and forward-thinking production. Every frame made with intent, and aligned with your story.";
 
-// EDIT: the tabs — each one a stretch of years (inclusive), newest first.
-// "Latest" takes the newest projects whatever their year.
-const ERAS: { label: string; from: number; to: number }[] = [
-  { label: "2021 – 2024", from: 2021, to: 2024 },
-  { label: "2016 – 2020", from: 2016, to: 2020 },
-];
-// EDIT: cards per tab
-const PER_TAB = 6;
-
 /**
- * Featured Work: a heading row with a link to every project, tabs by era,
- * and the projects as a grid of rounded cards with their names underneath.
+ * Featured Work: a heading row with a link to every project, then the
+ * reels (lib/reels.ts) — 9:16 videos in phone-style frames with a mock
+ * social overlay. A row of five on desktop; a swipeable row on phones.
  */
 export default function SelectedWorks() {
-  const card = (i: number): FeaturedCard => {
-    const p = projects[i];
-    const [image, fallback] = p.youtube ? youtubeThumbs(p.youtube) : [undefined, undefined];
-    return {
-      href: `/work/${p.slug}`,
-      title: p.title,
-      meta: [p.artist ?? p.category, p.year].filter(Boolean).join(" · "),
-      image,
-      fallback,
-      video: !image && p.video && /\.(mp4|webm)$/i.test(p.video) ? p.video : undefined,
-      gradient: placeholderGradient(i),
-    };
-  };
-  // Projects with a picture or a clip make the grid; the rest stay on /projects.
-  const shown = projects.map((p, i) => ({ p, i })).filter(({ p }) => p.youtube || p.video);
-  const tabs: FeaturedTab[] = [
-    { label: "Latest", cards: shown.slice(0, PER_TAB).map(({ i }) => card(i)) },
-    ...ERAS.map((e) => ({
-      label: e.label,
-      cards: shown
-        .filter(({ p }) => Number(p.year) >= e.from && Number(p.year) <= e.to)
-        .slice(0, PER_TAB)
-        .map(({ i }) => card(i)),
-    })).filter((t) => t.cards.length > 0),
-  ];
-
   return (
-    <section aria-label="Featured work" className="bg-background px-5 py-20 text-foreground sm:py-28 lg:px-10">
-      <div className="mx-auto max-w-[1760px]">
+    <section aria-label="Featured work" className="overflow-hidden bg-background py-20 text-foreground sm:py-28">
+      <div className="mx-auto max-w-[1760px] px-5 lg:px-10">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-[760px]">
             <h2 className="text-[clamp(2.25rem,5vw,4rem)] font-medium leading-[1.04] tracking-[-0.03em]">Featured work</h2>
@@ -62,8 +27,16 @@ export default function SelectedWorks() {
             See all projects <span aria-hidden>→</span>
           </Link>
         </div>
-        <div className="mt-10 sm:mt-12">
-          <FeaturedGrid tabs={tabs} />
+      </div>
+
+      {/* The reels: swipe on phones (snapping card to card), a row on desktop */}
+      <div className="mx-auto mt-10 max-w-[1760px] sm:mt-12 lg:px-10">
+        <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto px-5 pb-2 [scrollbar-width:none] sm:gap-4 lg:grid lg:snap-none lg:grid-cols-5 lg:overflow-visible lg:px-0">
+          {reels.map((r, i) => (
+            <div key={r.src + i} className="w-[72vw] max-w-[320px] shrink-0 snap-center sm:w-[42vw] lg:w-auto lg:max-w-none">
+              <ReelCard reel={r} index={i} />
+            </div>
+          ))}
         </div>
       </div>
     </section>
