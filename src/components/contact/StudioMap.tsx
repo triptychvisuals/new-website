@@ -675,7 +675,7 @@ function Labels() {
 
 /** Slowly round the address, leaning a little toward the pointer. */
 function Rig({ pointer }: { pointer: React.RefObject<{ x: number; y: number }> }) {
-  const { camera, size, scene } = useThree();
+  const { camera, size } = useThree();
   const look = useMemo(() => new THREE.Vector3(TX - 20, 30, TZ - 30), []);
   // EDIT: the orbit — distance and height on a wide screen (metres), and
   // speed (radians per second). Narrow (portrait) screens pull further
@@ -688,20 +688,16 @@ function Rig({ pointer }: { pointer: React.RefObject<{ x: number; y: number }> }
   const SPEED = reduced ? 0 : 0.035;
   // Start north-east of the address, looking south-west across the river.
   const START = -Math.PI / 2 + 0.35;
-  useEffect(() => {
-    const d = Math.hypot(R, H);
-    if (scene.fog instanceof THREE.Fog) {
-      scene.fog.near = d * 1.05;
-      scene.fog.far = d * 2.1;
-    }
-  }, [R, H, scene]);
   useFrame(({ clock }) => {
     const p = pointer.current ?? { x: 0, y: 0 };
     const a = START + clock.getElapsedTime() * SPEED + p.x * 0.2;
     camera.position.set(look.x + Math.cos(a) * R, H + p.y * 40, look.z + Math.sin(a) * R);
     camera.lookAt(look);
   });
-  return null;
+  // EDIT: fog — the city fades to black from just past the address out to
+  // about twice the camera's distance.
+  const d = Math.hypot(R, H);
+  return <fog attach="fog" args={[BG, d * 1.05, d * 2.1]} />;
 }
 
 /** The sun: from the south-west, casting the city's shadows on desktop. */
@@ -771,8 +767,6 @@ export default function StudioMap({ className = "" }: { className?: string }) {
         aria-label="3D map: 211 W. Wacker Drive, Chicago, on the river between Wells and Franklin"
       >
         <color attach="background" args={[BG]} />
-        {/* EDIT: fog — where the city starts and finishes fading to black */}
-        <fog attach="fog" args={[BG, 700, 1350]} />
         <hemisphereLight args={["#dfe9f2", "#3a3836", 1.5]} />
         <Sun shadows={hq} />
         <City shadows={hq} />
