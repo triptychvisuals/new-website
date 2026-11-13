@@ -71,92 +71,6 @@
 }
 
 
-/* "10 years strong" timeline (Decade.tsx). Phones (and reduced motion at
-   any size) get the straight list; iPad / desktop get the spiral stage.
-   Without JS the stage is a plain column; [data-3d] = the pinned helix. */
-.dc-stage {
-  display: none;
-  position: relative;
-}
-@media (min-width: 768px) and (prefers-reduced-motion: no-preference) {
-  .dc-stage {
-    display: block;
-  }
-  .dc-list {
-    display: none;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .dc-fill,
-  .dc-fill > * {
-    transform: none !important; /* static spine, fully drawn */
-  }
-}
-/* The phone timeline's spine: a thin flat line, the accent drawn down it
-   as you scroll (.tl-line--lit, revealed by transforms). EDIT: width. */
-.tl-line {
-  width: 2px;
-  background: var(--hairline);
-}
-.tl-line--lit {
-  width: 100%;
-  background: var(--accent);
-}
-@media (prefers-reduced-motion: no-preference) {
-  .dc-fill-window {
-    transform: translateY(-100%);
-  }
-  .dc-fill-inner {
-    transform: translateY(100%);
-  }
-}
-.dc-helix {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  max-width: 640px;
-  margin: 0 auto;
-  padding: 0 1.25rem;
-}
-.dc-seg,
-.dc-node,
-.dc-3d-only {
-  display: none;
-}
-.dc-stage[data-3d] {
-  height: 100svh;
-  overflow: hidden;
-}
-.dc-stage[data-3d] .dc-3d-only {
-  display: block;
-}
-.dc-stage[data-3d] .dc-helix {
-  /* zero-size anchor at the stage centre; everything hangs off it in 3D */
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  display: block;
-  max-width: none;
-  margin: 0;
-  padding: 0;
-  transform-style: preserve-3d;
-  will-change: transform;
-}
-.dc-stage[data-3d] .dc-card,
-.dc-stage[data-3d] .dc-seg,
-.dc-stage[data-3d] .dc-node {
-  position: absolute;
-  left: 0;
-  top: 0;
-  /* transforms pivot on the helix's axis, not each item's own centre */
-  transform-origin: 0 0;
-}
-.dc-stage[data-3d] .dc-card {
-  /* EDIT: card width on the spiral (the spiral's size scales with it) —
-     iPad here, desktop in the media query below */
-  width: min(470px, 60vw);
-  backface-visibility: hidden;
-}
 /* Blurred thumbnails behind the 500+ grid (WorkGridClient): tiny 320×180
    images blurred a little and scaled up to cover the section — the
    upscale does most of the blurring for free. Opacity is set from JS. */
@@ -173,64 +87,6 @@
   filter: blur(5px) saturate(3.6) contrast(1.2) brightness(1.15);
   transform: translate(-50%, -50%) scale(var(--wg-bg-scale, 6));
   will-change: opacity;
-}
-
-/* The wash sits under everything in the stage; the big year, line and
-   cards paint over it. The base is part of the stage's own paint (no
-   layer of its own); the fade layer only exists while a year fades out. */
-.dc-stage:not([data-3d]) .dc-wash-base,
-.dc-stage:not([data-3d]) .dc-wash {
-  display: none;
-}
-.dc-stage[data-3d] .dc-wash {
-  /* painted at quarter size and scaled up — it's a soft blur, so no one can
-     tell, and the paint at each year change costs 1/16th as much */
-  inset: auto;
-  left: 0;
-  top: 0;
-  width: 25%;
-  height: 25%;
-  transform: scale(4);
-  transform-origin: 0 0;
-  /* EDIT: how long one year's colours take to give way to the next */
-  transition: opacity 0.7s ease;
-}
-@media (min-width: 1024px) {
-  .dc-stage[data-3d] .dc-card {
-    /* capped by screen height too, so short laptop screens still fit a card
-       plus its neighbours' edges */
-    width: min(720px, 50vw, calc((100svh - 300px) * 1.6));
-  }
-  /* text scaled up to match the bigger card */
-  .dc-stage[data-3d] .dc-card h3 {
-    font-size: 2.1rem;
-  }
-  .dc-stage[data-3d] .dc-card h3 + p {
-    font-size: 17px;
-  }
-}
-/* The line round the spiral — straight pieces (width set in JS), the
-   accent filling from the left up to --fill (set from JS as you scroll).
-   EDIT: --line = thickness. */
-.dc-stage[data-3d] .dc-seg {
-  --fill: 0%;
-  --line: 3px;
-  display: block;
-  height: var(--line);
-  background: linear-gradient(90deg, var(--accent) var(--fill), rgb(255 255 255 / 0.16) var(--fill));
-}
-/* A dot on the line above every year; fills in once reached. */
-.dc-stage[data-3d] .dc-node {
-  display: block;
-  width: 14px;
-  height: 14px;
-  border-radius: 9999px;
-  background: #000;
-  box-shadow: inset 0 0 0 2px rgb(255 255 255 / 0.35);
-}
-.dc-stage[data-3d] .dc-node[data-lit] {
-  background: var(--accent);
-  box-shadow: none;
 }
 
 /* Reading progress (legal pages) — a CSS scroll timeline: the bar's width
@@ -410,105 +266,6 @@ html.lenis body {
 }
 
 
-/* ---------------------------------------------------------------------------
-   Accordion gallery (AccordionGallery.tsx). Panels share one row by
-   flex-grow (set inline from the active index) and ease between sizes;
-   on phones the row becomes a column of the same height.
-   EDIT: --acc-h (inline) = height; --acc-gap = space between panels.
-   --------------------------------------------------------------------------- */
-.acc-gallery {
-  --acc-gap: 8px;
-  display: flex;
-  gap: var(--acc-gap);
-  height: var(--acc-h);
-}
-.acc-panel {
-  position: relative;
-  flex-basis: 0;
-  min-width: 0;
-  overflow: hidden;
-  border-radius: 22px;
-  background: #111;
-  transition: flex-grow 0.7s cubic-bezier(0.22, 1, 0.36, 1);
-}
-.acc-img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1), filter 0.5s ease;
-  filter: saturate(0.85) brightness(0.9);
-}
-.acc-panel[data-open] .acc-img {
-  filter: none;
-}
-.acc-panel:hover .acc-img {
-  filter: none;
-}
-.acc-shade {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, rgb(0 0 0 / 0.65), rgb(0 0 0 / 0) 55%);
-  pointer-events: none;
-}
-.acc-label {
-  position: absolute;
-  left: 20px;
-  bottom: 18px;
-  max-width: calc(100% - 40px);
-  color: #fff;
-  opacity: 0;
-  transform: translateY(8px);
-  transition: opacity 0.35s ease, transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-  pointer-events: none;
-}
-.acc-panel[data-open] .acc-label {
-  opacity: 1;
-  transform: none;
-  transition-delay: 0.15s;
-}
-.acc-side {
-  position: absolute;
-  left: 50%;
-  bottom: 18px;
-  transform: translateX(-50%) rotate(180deg);
-  writing-mode: vertical-rl;
-  white-space: nowrap;
-  font-size: 14px;
-  font-weight: 500;
-  color: rgb(255 255 255 / 0.85);
-  opacity: 1;
-  transition: opacity 0.25s ease;
-  pointer-events: none;
-}
-.acc-panel[data-open] .acc-side {
-  opacity: 0;
-}
-@media (max-width: 639px) {
-  .acc-gallery {
-    flex-direction: column;
-    --acc-gap: 6px;
-  }
-  .acc-panel {
-    min-height: 0;
-    border-radius: 18px;
-  }
-  .acc-side {
-    left: 16px;
-    bottom: auto;
-    top: 50%;
-    transform: translateY(-50%);
-    writing-mode: horizontal-tb;
-  }
-  .acc-label {
-    left: 12px;
-    bottom: 12px;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .acc-panel, .acc-img, .acc-label { transition: none; }
-}
 
 /* ---------------------------------------------------------------------------
    Drift wall (DriftWall.tsx, from React Bits): the band's height, then the
@@ -676,4 +433,16 @@ html.lenis body {
 }
 @media (prefers-reduced-motion: reduce) {
   .partner-tile { animation: none; }
+}
+
+/* Timeline (Decade.tsx): the big year rises in each time it changes. */
+@keyframes tl-year-in {
+  from { opacity: 0; transform: translate3d(0, 18%, 0); }
+  to { opacity: 1; transform: none; }
+}
+.tl-year {
+  animation: tl-year-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .tl-year { animation: none; }
 }

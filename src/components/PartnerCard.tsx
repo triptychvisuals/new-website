@@ -107,13 +107,21 @@ export default function PartnerCard() {
       </div>
 
       <div className="relative mx-auto flex max-w-[760px] flex-col items-center text-center lg:min-h-[640px] lg:justify-center">
-        {/* Phones / tablets: the tiles in a row above */}
-        <div className="mb-10 grid grid-cols-4 gap-3 sm:grid-cols-7 lg:hidden">
+        {/* Phones / tablets: the tiles in rows of four above — the studio's
+            own mark rounds out the last row (EDIT: drop it once there's an
+            eighth label logo in /public/partners). */}
+        <div className="mb-10 grid grid-cols-4 gap-3 lg:hidden">
           {items.map((it) => (
             <span key={it.name} className="grid aspect-square w-[68px] place-items-center rounded-[18px] bg-surface sm:w-[76px]">
               {tile(it)}
             </span>
           ))}
+          {items.length % 4 !== 0 && (
+            <span className="grid aspect-square w-[68px] place-items-center rounded-[18px] bg-surface sm:w-[76px]">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/triptych-logo.png" alt="Triptych Studios" draggable={false} className="max-h-[34%] max-w-[60%] object-contain [filter:brightness(0)] dark:[filter:none]" />
+            </span>
+          )}
         </div>
         {/* EDIT: the section's copy */}
         <p className="text-[15px] text-muted">Labels we work with</p>

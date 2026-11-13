@@ -1,86 +1,69 @@
 import Link from "next/link";
-import AccordionGallery from "@/components/AccordionGallery";
-import { projects } from "@/lib/projects";
+import FeaturedGrid, { type FeaturedCard, type FeaturedTab } from "@/components/FeaturedGrid";
+import { projects, placeholderGradient } from "@/lib/projects";
 import { youtubeThumbs } from "@/lib/youtube";
 
-// EDIT: featured-work band copy ------------------------------------------------
-const META_LEFT = "© All Rights Reserved";
-const META_RIGHT = "Imagination in Motion"; // the tagline
-const STATEMENT_1 =
-  "Fusing cinematic craft, bold visual storytelling, and forward-thinking production. A signature look driven by the Triptych aesthetic.";
-const STATEMENT_2_LEAD =
-  "A modern approach to creative work — every frame executed with intent, continuously refined, and perfectly aligned with ";
-const STATEMENT_2_ACCENT = "your story."; // accent-underlined tail
-// EDIT: the accordion gallery under the title — how many projects, and which
-// one starts open. Projects with a YouTube video, newest first.
-const GALLERY_COUNT = 5;
-const GALLERY_DEFAULT = 2;
-// ------------------------------------------------------------------------------
+// EDIT: the section's copy
+const LEAD =
+  "Cinematic craft, bold visual storytelling and forward-thinking production. Every frame made with intent, and aligned with your story.";
+
+// EDIT: the tabs — each one a stretch of years (inclusive), newest first.
+// "Latest" takes the newest projects whatever their year.
+const ERAS: { label: string; from: number; to: number }[] = [
+  { label: "2021 – 2024", from: 2021, to: 2024 },
+  { label: "2016 – 2020", from: 2016, to: 2020 },
+];
+// EDIT: cards per tab
+const PER_TAB = 6;
 
 /**
- * Featured-work band — full-bleed (no side margins): meta row, the
- * oversized "Featured© Work" line, the accordion gallery, then bold
- * statements and a See all projects button.
+ * Featured Work: a heading row with a link to every project, tabs by era,
+ * and the projects as a grid of rounded cards with their names underneath.
  */
 export default function SelectedWorks() {
-  const gallery = projects
-    .filter((p) => p.youtube)
-    .slice(0, GALLERY_COUNT)
-    .map((p) => {
-      const [image, fallback] = youtubeThumbs(p.youtube!);
-      return { image, fallback, label: p.title, sub: [p.artist, p.year].filter(Boolean).join(" · "), link: `/work/${p.slug}` };
-    });
+  const card = (i: number): FeaturedCard => {
+    const p = projects[i];
+    const [image, fallback] = p.youtube ? youtubeThumbs(p.youtube) : [undefined, undefined];
+    return {
+      href: `/work/${p.slug}`,
+      title: p.title,
+      meta: [p.artist ?? p.category, p.year].filter(Boolean).join(" · "),
+      image,
+      fallback,
+      video: !image && p.video && /\.(mp4|webm)$/i.test(p.video) ? p.video : undefined,
+      gradient: placeholderGradient(i),
+    };
+  };
+  // Projects with a picture or a clip make the grid; the rest stay on /projects.
+  const shown = projects.map((p, i) => ({ p, i })).filter(({ p }) => p.youtube || p.video);
+  const tabs: FeaturedTab[] = [
+    { label: "Latest", cards: shown.slice(0, PER_TAB).map(({ i }) => card(i)) },
+    ...ERAS.map((e) => ({
+      label: e.label,
+      cards: shown
+        .filter(({ p }) => Number(p.year) >= e.from && Number(p.year) <= e.to)
+        .slice(0, PER_TAB)
+        .map(({ i }) => card(i)),
+    })).filter((t) => t.cards.length > 0),
+  ];
+
   return (
-    <section aria-label="Featured work" className="bg-background text-foreground">
-      {/* Meta row */}
-      <div className="mx-auto flex max-w-[1760px] items-center justify-between gap-3 px-5 pt-6 text-[14px] text-muted sm:px-8">
-        <span>{META_LEFT}</span>
-        <span>{META_RIGHT}</span>
-      </div>
-
-      {/* Title between hairlines (static) */}
-      <div className="mt-5 overflow-hidden border-y border-hairline px-5 sm:px-8">
-        <h2 className="mx-auto max-w-[1760px] whitespace-nowrap text-[min(13vw,120px)] font-medium leading-[1.05] tracking-[-0.04em] sm:text-[min(11.5vw,170px)]">
-          Featured
-          <span aria-hidden className="align-[0.12em] text-[0.62em]">
-            ©
-          </span>{" "}
-          Work
-        </h2>
-      </div>
-
-      {/* Accordion gallery — hover a project to open it */}
-      <div className="mx-auto max-w-[1760px] px-3 pt-3 sm:px-4 sm:pt-4">
-        <AccordionGallery items={gallery} defaultIndex={GALLERY_DEFAULT} expandRatio={0.52} trigger="hover" />
-      </div>
-
-      {/* Statements */}
-      <div className="relative mx-auto max-w-[1760px] px-5 pb-12 pt-10 sm:px-8 sm:pb-16 sm:pt-14">
-        {/* Crosshair accents */}
-        <span aria-hidden className="absolute right-6 top-8 text-2xl font-extralight text-[color:var(--accent)]">
-          +
-        </span>
-        <span aria-hidden className="absolute bottom-3 left-5 text-2xl font-extralight text-[color:var(--accent)] sm:left-8">
-          +
-        </span>
-
-        <div className="max-w-2xl">
-          <p className="text-[clamp(1.05rem,2.2vw,1.6rem)] font-normal leading-[1.35] tracking-tight">
-            {STATEMENT_1}
-          </p>
-          <p className="mt-8 text-[clamp(1.05rem,2.2vw,1.6rem)] font-normal leading-[1.35] tracking-tight sm:mt-10">
-            {STATEMENT_2_LEAD}
-            <span className="text-[color:var(--accent)] underline decoration-2 underline-offset-4">
-              {STATEMENT_2_ACCENT}
-            </span>
-          </p>
-
+    <section aria-label="Featured work" className="bg-background px-5 py-20 text-foreground sm:py-28 lg:px-10">
+      <div className="mx-auto max-w-[1760px]">
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+          <div className="max-w-[760px]">
+            <h2 className="text-[clamp(2.25rem,5vw,4rem)] font-medium leading-[1.04] tracking-[-0.03em]">Featured work</h2>
+            <p className="mt-5 text-[17px] leading-relaxed text-muted sm:text-[18px]">{LEAD}</p>
+          </div>
           <Link
             href="/projects"
-            className="mt-9 inline-flex h-11 items-center gap-1.5 rounded-full bg-foreground px-6 text-[15px] font-medium text-background transition-colors hover:bg-foreground/85 sm:mt-11"
+            className="inline-flex h-11 shrink-0 items-center gap-1.5 self-start rounded-full bg-foreground/[0.09] px-5 text-[15px] font-medium transition-colors hover:bg-foreground/[0.16] lg:self-auto"
           >
             See all projects <span aria-hidden>→</span>
           </Link>
+        </div>
+        <div className="mt-10 sm:mt-12">
+          <FeaturedGrid tabs={tabs} />
         </div>
       </div>
     </section>

@@ -181,8 +181,7 @@ export default function Header({ logo, overlay = false }: { logo?: string; overl
   const clear = overlay && !scrolled && !panelOpen && !menuOpen;
 
   return (
-    // data-site-header: Decade sets data-theme="dark" here while the
-    // timeline is on screen, re-theming everything inside (menus included).
+    // data-site-header: the header's hook for anything that needs to find it.
     // On the home page (overlay) -mb pulls the hero up under the bar.
     <header data-site-header className={`sticky top-0 z-40 ${overlay ? "-mb-14 lg:-mb-16" : ""}`}>
       <div
