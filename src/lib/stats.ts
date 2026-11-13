@@ -22,6 +22,11 @@ export const IMPACT_STATS: { value: string; label: string }[] = [
  * FALLBACK_SINCE — labelled "and counting", not "live".
  */
 export const LIVE_VIEWS = {
+  // EDIT: how far below the real total the counter sits on the 1st of each
+  // month (0.03 = 3%). It then climbs faster than the real views so it
+  // meets the real total at the end of the month — a steady trickle that
+  // never overshoots. On the 1st it steps back down and starts again.
+  leeway: 0.03,
   // EDIT: YouTube ids of videos you made that aren't projects on the site
   // (the part after "watch?v="), so they count too.
   extraIds: [] as string[],

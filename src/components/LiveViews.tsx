@@ -18,6 +18,8 @@ const fmt = new Intl.NumberFormat("en-US");
  * The view counter under "Global Impact": a big odometer whose digits roll
  * into place when it comes on screen, then keep ticking. Numbers come from
  * /api/views (real YouTube counts, refreshed hourly) — see lib/stats.ts.
+ * It runs a little behind the real total and catches up over the month
+ * (LIVE_VIEWS.leeway), so it's always climbing and never ahead.
  */
 export default function LiveViews() {
   const wrap = useRef<HTMLDivElement>(null);
@@ -45,10 +47,19 @@ export default function LiveViews() {
     return () => io.disconnect();
   }, []);
 
-  // Tick: the last count plus the views since, at the current pace.
+  // Tick: the last count plus the views since, at the current pace — less
+  // the month's leeway, which shrinks to nothing by the month's end.
   useEffect(() => {
     if (!src) return;
-    const tick = () => setValue(Math.floor(src.base + (src.perDay * (Date.now() - src.at)) / 864e5));
+    const tick = () => {
+      const now = Date.now();
+      const real = src.base + (src.perDay * (now - src.at)) / 864e5;
+      const d = new Date(now);
+      const start = Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), 1);
+      const end = Date.UTC(d.getUTCFullYear(), d.getUTCMonth() + 1, 1);
+      const left = 1 - (now - start) / (end - start);
+      setValue(Math.floor(real * (1 - LIVE_VIEWS.leeway * left)));
+    };
     const first = requestAnimationFrame(tick);
     const id = setInterval(tick, 500); // EDIT: how often it updates (ms)
     return () => {
