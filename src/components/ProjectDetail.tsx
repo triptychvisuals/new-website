@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { youtubeEmbed } from "@/lib/youtube";
 import { useRef, useState } from "react";
 import type { Project } from "@/lib/projects";
@@ -7,10 +8,10 @@ import type { PortalWork } from "@/lib/siteContent";
 import { site } from "@/lib/site";
 
 /**
- * Project page, stripped to the finished work: the title, the film, and the
- * Finished Frames gallery. Every production detail (synopsis, metadata,
- * technical breakdown, crew, BTS) is removed for now — git history has it all
- * if it ever comes back.
+ * Project page, in the flat house style: a back link, the category and
+ * year over the title, the artist and a line about it; the film full width
+ * in a rounded frame; the details as flat cells; the Finished Frames
+ * gallery; then three more projects.
  *
  * Frames: drop stills into /public/work/<slug>/ (jpg / png / webp — any name,
  * `camera.png` excluded) and they appear here automatically, as do the
@@ -79,12 +80,16 @@ function PinButton({ href }: { href: string }) {
   );
 }
 
+/** A neighbouring project for the "More projects" row. */
+export type MoreProject = { href: string; title: string; sub: string; media?: string; gradient: string };
+
 export default function ProjectDetail({
   project,
   work,
   gradient,
   media,
   frames = [],
+  more = [],
 }: {
   project: Project;
   /** Portal detail fields (synopsis, client, runtime…) when the feed has them. */
@@ -93,6 +98,8 @@ export default function ProjectDetail({
   media?: string;
   /** /work/<slug>/… stills found on disk (absolute public paths). */
   frames?: string[];
+  /** EDIT: how many show is set in app/work/[slug]/page.tsx. */
+  more?: MoreProject[];
 }) {
   const [playing, setPlaying] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -117,9 +124,8 @@ export default function ProjectDetail({
     }
   }
 
-  // A little context, not the old full breakdown: synopsis + compact
-  // metadata, shown only for fields that actually have values (the portal
-  // fills them in; authored category/artist/year always exist).
+  // Details that have values (the portal fills them in; authored
+  // category/artist/year always exist).
   const synopsis = work?.synopsis;
   const meta: [string, string][] = (
     [
@@ -134,94 +140,34 @@ export default function ProjectDetail({
     ] as [string, string | undefined][]
   ).filter((row): row is [string, string] => !!row[1]);
 
+  const fill = "absolute inset-0 h-full w-full object-cover";
+
   return (
-    <main
-      className="pd"
-      style={{
-        maxWidth: 1760,
-        margin: "0 auto",
-        padding: "0 clamp(20px,4.5vw,72px) 60px",
-      }}
-    >
+    <main className="pd mx-auto w-full max-w-[1760px] px-5 pb-24 lg:px-10">
       <style>{CSS}</style>
 
-      {/* Title + a little information */}
-      <section style={{ padding: "clamp(30px,4vw,52px) 0 0" }}>
-        <div className="pd-head">
+      {/* Title block */}
+      <section className="pt-8 sm:pt-12">
+        <Link href="/projects" className="inline-flex items-center gap-1.5 text-[15px] text-muted transition-colors hover:text-foreground">
+          <span aria-hidden>←</span> All projects
+        </Link>
+        <div className="mt-10 grid gap-8 sm:mt-14 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:items-end">
           <div>
-            <h1
-              style={{
-                fontWeight: 400,
-                letterSpacing: "-.035em",
-                lineHeight: 0.9,
-                fontSize: "clamp(52px,9vw,132px)",
-                textWrap: "balance",
-              }}
-            >
+            <p className="text-[15px] text-muted">
+              {[project.category, project.year].filter(Boolean).join(" · ")}
+            </p>
+            <h1 className="mt-4 text-[clamp(2.75rem,7.5vw,7rem)] font-medium leading-[0.96] tracking-[-0.04em] [text-wrap:balance]">
               {project.title}
             </h1>
-            {synopsis && (
-              <p
-                style={{
-                  maxWidth: "44ch",
-                  marginTop: "clamp(18px,2.2vw,28px)",
-                  fontSize: "clamp(15px,1.3vw,19px)",
-                  lineHeight: 1.5,
-                  color: "var(--muted)",
-                }}
-              >
-                {synopsis}
-              </p>
-            )}
+            {project.artist && <p className="mt-4 text-[20px] tracking-[-0.01em] sm:text-[24px]">{project.artist}</p>}
           </div>
-
-          {meta.length > 0 && (
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                columnGap: "clamp(20px,2.4vw,40px)",
-                borderTop: "1px solid var(--hair)",
-                alignSelf: "end",
-              }}
-            >
-              {meta.map(([k, v]) => (
-                <div
-                  key={k}
-                  style={{ padding: "12px 0", borderBottom: "1px solid var(--hair)" }}
-                >
-                  <div
-                    style={{
-                      fontSize: 10,
-                      letterSpacing: ".14em",
-                      textTransform: "uppercase",
-                      color: "var(--muted)",
-                      marginBottom: 5,
-                    }}
-                  >
-                    {k}
-                  </div>
-                  <div style={{ fontSize: 15, letterSpacing: "-.01em" }}>{v}</div>
-                </div>
-              ))}
-            </div>
-          )}
+          {synopsis && <p className="max-w-[48ch] text-[17px] leading-relaxed text-muted sm:text-[18px]">{synopsis}</p>}
         </div>
       </section>
 
       {/* The film */}
-      <section style={{ padding: "clamp(26px,3.5vw,44px) 0 0" }}>
-        <div
-          style={{
-            position: "relative",
-            aspectRatio: "16 / 9",
-            width: "100%",
-            border: "1px solid var(--hair)",
-            borderRadius: 16,
-            overflow: "hidden",
-            background: "#000",
-          }}
-        >
+      <section className="pt-10 sm:pt-14">
+        <div className="relative aspect-video w-full overflow-hidden rounded-[20px] bg-black sm:rounded-[24px]">
           {project.youtube ? (
             // The video itself, in YouTube's player (privacy-enhanced domain)
             <iframe
@@ -231,7 +177,7 @@ export default function ProjectDetail({
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowFullScreen
               referrerPolicy="strict-origin-when-cross-origin"
-              style={{ position: "absolute", inset: 0, width: "100%", height: "100%", border: 0 }}
+              className="absolute inset-0 h-full w-full border-0"
             />
           ) : reel && reelIsVideo ? (
             <video
@@ -242,127 +188,67 @@ export default function ProjectDetail({
               muted
               playsInline
               preload="metadata"
-              style={{
-                position: "absolute",
-                inset: 0,
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-                objectPosition: project.objectPosition,
-              }}
+              className={fill}
+              style={{ objectPosition: project.objectPosition }}
             />
           ) : reel ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={reel}
-              alt=""
-              style={{
-                position: "absolute",
-                inset: 0,
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-                objectPosition: project.objectPosition,
-              }}
-            />
+            <img src={reel} alt="" className={fill} style={{ objectPosition: project.objectPosition }} />
           ) : (
-            <div style={{ position: "absolute", inset: 0, background: gradient }} />
+            <div className="absolute inset-0" style={{ background: gradient }} />
           )}
           {poster && !reel && !project.youtube && (
             // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={poster}
-              alt=""
-              style={{
-                position: "absolute",
-                inset: 0,
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-              }}
-            />
+            <img src={poster} alt="" className={fill} />
           )}
 
           {(!reel || reelIsVideo) && !project.youtube && (
             <button
               onClick={togglePlay}
               aria-label={playing ? "Pause" : "Play"}
-              className="pd-play"
-              style={{
-                position: "absolute",
-                left: "50%",
-                top: "50%",
-                transform: "translate(-50%,-50%)",
-                width: 88,
-                height: 88,
-                borderRadius: "50%",
-                border: "1px solid rgba(255,255,255,.5)",
-                background: "rgba(11,10,10,.4)",
-                backdropFilter: "blur(6px)",
-                cursor: "pointer",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
+              className="absolute left-1/2 top-1/2 grid h-20 w-20 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-white text-black transition-transform hover:scale-105"
             >
               {playing ? (
-                <span style={{ display: "flex", gap: 5 }}>
-                  <span style={{ width: 5, height: 22, background: "#fff" }} />
-                  <span style={{ width: 5, height: 22, background: "#fff" }} />
+                <span className="flex gap-[5px]">
+                  <span className="h-5 w-[5px] rounded-sm bg-black" />
+                  <span className="h-5 w-[5px] rounded-sm bg-black" />
                 </span>
               ) : (
-                <span
-                  style={{
-                    width: 0,
-                    height: 0,
-                    borderLeft: "22px solid #fff",
-                    borderTop: "14px solid transparent",
-                    borderBottom: "14px solid transparent",
-                    marginLeft: 6,
-                  }}
-                />
+                <span className="ml-1 h-0 w-0 border-y-[12px] border-l-[19px] border-y-transparent border-l-black" />
               )}
             </button>
           )}
         </div>
       </section>
 
-      {/* Finished frames — pinnable */}
-      <section style={{ padding: "clamp(44px,6vw,80px) 0 0" }}>
-        <div style={{ marginBottom: "clamp(16px,2vw,26px)" }}>
-          <span
-            style={{
-              fontSize: 11,
-              letterSpacing: ".14em",
-              textTransform: "uppercase",
-              color: "var(--muted)",
-            }}
+      {/* Details */}
+      {meta.length > 0 && (
+        <section aria-label="Details" className="pt-6">
+          <dl
+            className="grid grid-cols-2 gap-px overflow-hidden rounded-[18px] bg-hairline sm:grid-cols-[repeat(var(--n),minmax(0,1fr))]"
+            style={{ "--n": Math.min(meta.length, 4) } as React.CSSProperties}
           >
-            Finished Frames
-          </span>
+            {meta.map(([k, v]) => (
+              <div key={k} className="bg-surface px-5 py-5">
+                <dt className="text-[14px] text-muted">{k}</dt>
+                <dd className="mt-1.5 text-[17px] font-medium tracking-[-0.01em]">{v}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+      )}
+
+      {/* Finished frames — pinnable */}
+      <section className="pt-20 sm:pt-28">
+        <div className="mb-8 flex items-end justify-between gap-6">
+          <h2 className="text-[clamp(1.75rem,3.5vw,3rem)] font-medium leading-[1.04] tracking-[-0.03em]">Finished frames</h2>
+          {frames.length > 0 && <p className="hidden text-[15px] text-muted sm:block">Save any frame to Pinterest</p>}
         </div>
 
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fill,minmax(min(100%,340px),1fr))",
-            gap: 12,
-          }}
-        >
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {frames.length > 0
             ? frames.map((src) => (
-                <div
-                  key={src}
-                  className="pd-frame"
-                  style={{
-                    position: "relative",
-                    aspectRatio: "16 / 9",
-                    border: "1px solid var(--hair)",
-                    borderRadius: 14,
-                    overflow: "hidden",
-                    background: "var(--hairline)",
-                  }}
-                >
+                <div key={src} className="pd-frame relative aspect-video overflow-hidden rounded-[16px] bg-surface">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={src}
@@ -372,13 +258,7 @@ export default function ProjectDetail({
                     data-pin-media={absolute(src)}
                     data-pin-url={`${site.url}/work/${project.slug}`}
                     data-pin-description={pinDescription(project.title)}
-                    style={{
-                      position: "absolute",
-                      inset: 0,
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "cover",
-                    }}
+                    className={fill}
                   />
                   <PinButton href={pinUrl(project.slug, src, project.title)} />
                 </div>
@@ -388,64 +268,57 @@ export default function ProjectDetail({
                 <div
                   key={i}
                   aria-hidden
-                  style={{
-                    position: "relative",
-                    aspectRatio: "16 / 9",
-                    border: "1px solid var(--hair)",
-                    borderRadius: 14,
-                    overflow: "hidden",
-                    background: gradient,
-                    opacity: 0.55,
-                  }}
+                  className="relative aspect-video overflow-hidden rounded-[16px] opacity-50"
+                  style={{ background: gradient }}
                 >
-                  <span
-                    style={{
-                      position: "absolute",
-                      left: 14,
-                      bottom: 10,
-                      fontSize: 11,
-                      color: "rgba(255,255,255,.55)",
-                    }}
-                  >
-                    Frame {String(i + 1).padStart(2, "0")}
-                  </span>
+                  <span className="absolute bottom-3 left-4 text-[12px] text-white/60">Frame {String(i + 1).padStart(2, "0")}</span>
                 </div>
               ))}
         </div>
       </section>
 
-      {/* FOOTER */}
-      <footer
-        style={{
-          marginTop: "clamp(70px,9vw,120px)",
-          paddingTop: 30,
-          borderTop: "1px solid var(--hair)",
-          display: "flex",
-          flexWrap: "wrap",
-          gap: 16,
-          justifyContent: "space-between",
-          alignItems: "center",
-          fontSize: 12,
-          color: "var(--muted)",
-        }}
-      >
-        <span>{project.title}</span>
-        <span>© 2026 Triptych Studios</span>
-      </footer>
+      {/* More projects */}
+      {more.length > 0 && (
+        <section aria-label="More projects" className="pt-20 sm:pt-28">
+          <div className="mb-8 flex items-end justify-between gap-6">
+            <h2 className="text-[clamp(1.75rem,3.5vw,3rem)] font-medium leading-[1.04] tracking-[-0.03em]">More projects</h2>
+            <Link
+              href="/projects"
+              className="inline-flex h-11 shrink-0 items-center gap-1.5 rounded-full bg-foreground/[0.09] px-5 text-[15px] font-medium transition-colors hover:bg-foreground/[0.16]"
+            >
+              See all <span aria-hidden>→</span>
+            </Link>
+          </div>
+          <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-3">
+            {more.map((m) => (
+              <Link key={m.href} href={m.href} className="group block">
+                <div className="relative aspect-video overflow-hidden rounded-[18px] bg-surface">
+                  <div className="absolute inset-0" style={{ background: m.gradient }} />
+                  {m.media && (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={m.media}
+                      alt=""
+                      loading="lazy"
+                      referrerPolicy="no-referrer"
+                      className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                    />
+                  )}
+                </div>
+                <h3 className="mt-4 text-[18px] font-medium leading-snug tracking-[-0.01em]">{m.title}</h3>
+                <p className="mt-1 text-[14px] text-muted">{m.sub}</p>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
     </main>
   );
 }
 
-/* Hover affordances: play button scales, Pin button appears on frame hover
-   (always visible on touch devices, which never hover). */
+/* Pin button appears on frame hover (always visible on touch devices,
+   which never hover). */
 const CSS = `
-.pd { --hair: var(--hairline); }
-.pd-head { display: grid; gap: clamp(28px,4vw,56px); }
-@media (min-width: 900px) {
-  .pd-head { grid-template-columns: minmax(0,1fr) clamp(280px,26vw,360px); align-items: end; }
-}
-.pd-play { transition: transform .25s ease, background .25s ease; }
-.pd-play:hover { transform: translate(-50%,-50%) scale(1.06); background: rgba(11,10,10,.6); }
 .pd-pin { opacity: 1; transition: opacity .2s ease, transform .2s ease; }
 @media (hover: hover) {
   .pd-frame .pd-pin { opacity: 0; transform: translateY(-4px); }

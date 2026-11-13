@@ -11,7 +11,9 @@ import {
   slugify,
 } from "@/lib/projects";
 import Header from "@/components/Header";
-import ProjectDetail from "@/components/ProjectDetail";
+import ProjectDetail, { type MoreProject } from "@/components/ProjectDetail";
+import Footer from "@/components/Footer";
+import { mergeCards } from "@/lib/cards";
 import { getSiteContent, type PortalWork } from "@/lib/siteContent";
 import { site } from "@/lib/site";
 import { youtubePoster } from "@/lib/youtube";
@@ -110,6 +112,20 @@ export default async function ProjectPage({
   const project = work ? projectFromWork(work, workIndex) : found!.project;
   const index = work ? workIndex : found!.index;
 
+  // EDIT: "More projects" — the next three in the index (wrapping round),
+  // preferring ones with a picture.
+  const cards = mergeCards(content.works);
+  const at = cards.findIndex((c) => c.project.slug === project.slug);
+  const order = [...cards.slice(at + 1), ...cards.slice(0, Math.max(at, 0))];
+  const pickMore = [...order.filter((c) => c.media && !/\.svg$/.test(c.media)), ...order.filter((c) => !c.media)].slice(0, 3);
+  const more: MoreProject[] = pickMore.map((c) => ({
+    href: c.href || `/work/${c.project.slug}`,
+    title: c.project.title,
+    sub: [c.project.artist, c.project.year].filter(Boolean).join(" · "),
+    media: c.media,
+    gradient: placeholderGradient(c.index),
+  }));
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <Header logo={content.logo} />
@@ -119,7 +135,9 @@ export default async function ProjectPage({
         gradient={placeholderGradient(index)}
         media={work?.thumb ?? work?.clipPoster ?? (project.youtube ? youtubePoster(project.youtube) : projectMedia(index))}
         frames={[...(work?.frames ?? []), ...framesFor(slug)]}
+        more={more}
       />
+      <Footer />
     </div>
   );
 }

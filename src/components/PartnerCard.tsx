@@ -126,7 +126,7 @@ export default function PartnerCard() {
         {/* EDIT: the section's copy */}
         <p className="text-[15px] text-muted">Labels we work with</p>
         <h2 className="mt-4 text-[clamp(2.25rem,5.5vw,4.75rem)] font-medium leading-[1.04] tracking-[-0.03em]">
-          The labels behind the music
+          Global Impact
         </h2>
         <p className="mt-6 max-w-[520px] text-[17px] leading-relaxed text-muted">
           Music videos and campaigns made with artists across the major labels, from treatment to final grade.

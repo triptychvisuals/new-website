@@ -118,10 +118,11 @@ function Logo({
         alt=""
         className={`h-4 w-auto ${isDefault ? "[filter:brightness(0)] dark:[filter:none]" : ""}`}
       />
-      {/* EDIT: wordmark — sits right of the mark, ® floated above its end */}
-      <span className="relative whitespace-nowrap pr-2 text-[15px] font-medium leading-none tracking-tight text-foreground lg:pr-2.5 lg:text-[16px]">
+      {/* EDIT: wordmark — sits right of the mark, ® tucked up against the "s"
+          (the ml nudges it; more negative = closer) */}
+      <span className="whitespace-nowrap text-[15px] font-medium leading-none tracking-tight text-foreground lg:text-[16px]">
         Triptych Studios
-        <span aria-hidden className="absolute -top-1.5 right-0 text-[8px] leading-none lg:-top-1.5 lg:text-[9px]">
+        <span aria-hidden className="relative -top-[0.55em] ml-px align-baseline text-[0.55em] leading-none">
           ®
         </span>
       </span>

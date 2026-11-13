@@ -65,4 +65,14 @@ export const reels: Reel[] = [
     caption: "Music video, 2025.", // EDIT
     focus: "50% 60%",
   },
+  {
+    // EDIT: placeholder — a later moment of the showreel (#t= start, in
+    // seconds) with a different crop, until a sixth vertical clip arrives.
+    src: "/hero/hero.mp4#t=24",
+    href: "/projects",
+    title: "Behind the lens",
+    artist: "Triptych Studios",
+    caption: "On set in Chicago.", // EDIT
+    focus: "30% 50%",
+  },
 ];
