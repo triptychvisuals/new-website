@@ -13,11 +13,11 @@ const LEAD =
  */
 export default function SelectedWorks() {
   return (
-    <section aria-label="Featured work" className="overflow-hidden bg-background py-20 text-foreground sm:py-28">
+    <section aria-label="Premium social content" className="overflow-hidden bg-background py-20 text-foreground sm:py-28">
       <div className="mx-auto max-w-[1760px] px-5 lg:px-10">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-[760px]">
-            <h2 className="text-[clamp(2.25rem,5vw,4rem)] font-medium leading-[1.04] tracking-[-0.03em]">Featured work</h2>
+            <h2 className="text-[clamp(2.25rem,5vw,4rem)] font-medium leading-[1.04] tracking-[-0.03em]">Premium Social Content</h2>
             <p className="mt-5 text-[17px] leading-relaxed text-muted sm:text-[18px]">{LEAD}</p>
           </div>
           <Link
