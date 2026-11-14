@@ -23,6 +23,15 @@ export const site = {
    * the socials and under every project's finished frames. "" hides it.
    */
   pinterest: "",
+  /** EDIT: the legal entity behind the studio, as registered with the IRS
+   *  and with Stripe. Named in the legal pages so customers (and Stripe)
+   *  can match the site to the business that charges them. */
+  legalName: "Triptych Visuals LLC",
+  /** EDIT: how charges read on a customer's card statement. Keep this in
+   *  step with the statement descriptor in Stripe (Settings > Business). */
+  statementDescriptor: "TRIPTYCH VISUALS",
+  /** EDIT: the state whose law governs the terms, and where disputes go. */
+  lawState: "Indiana",
   email: "hello@triptychvisuals.com", // EDIT: contact email (also confirm law@…)
   /** EDIT: press enquiries. */
   pressEmail: "law@triptychstudios.co",
