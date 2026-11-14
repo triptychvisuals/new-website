@@ -2,16 +2,26 @@
 // The hero reel: approved shots from the studio's work, cut from the masters
 // in Google Drive (Overthink, Hands Up!!!, Good Morning America, Englewood
 // Tommy, Obsessive Compulsive Imagination, Symptom, Feel the Love). They play in a random
-// order on every visit (components/HeroReel.tsx); the first one listed
-// opens the reel. EDIT: delete a line to drop a shot; files live in
-// /public/hero/reel (NAME.mp4 1080p, NAME-m.mp4 720p for phones).
+// order on every visit (components/HeroReel.tsx), after a fixed opening.
+// EDIT: delete a line to drop a shot; files live in /public/hero/reel
+// (NAME.mp4 1080p, NAME-m.mp4 720p for phones).
 // -------------------------------------------------------------------------
 export type HeroClip = { src: string; phone: string };
 
 const shot = (name: string): HeroClip => ({ src: `/hero/reel/${name}.mp4`, phone: `/hero/reel/${name}-m.mp4` });
 
+// EDIT: the opening, always first and in this order: Wale, Overthink.
+export const HERO_OPENING: HeroClip[] = [shot("r04"), shot("r20"), shot("r11"), shot("r28")];
+
+// EDIT: shots that always play early, at this place among the shuffled
+// shots after the opening (0 = straight after it).
+export const HERO_FEATURED: { clip: HeroClip; at: number }[] = [
+  { clip: shot("r38"), at: 1 }, // Hands Up!!! — the four-square split
+  { clip: shot("hu-whips"), at: 4 }, // Hands Up!!! — the whole whip-pan run, 1:05–1:50 (41 s)
+];
+
+// Everything else, shuffled on every visit.
 export const HERO_CLIPS: HeroClip[] = [
-  shot("r04"),
   shot("ftl01"),
   shot("ftl02"),
   shot("ftl03"),
@@ -40,7 +50,6 @@ export const HERO_CLIPS: HeroClip[] = [
   shot("r107"),
   shot("r108"),
   shot("r109"),
-  shot("r11"),
   shot("r110"),
   shot("r111"),
   shot("r112"),
@@ -81,7 +90,6 @@ export const HERO_CLIPS: HeroClip[] = [
   shot("r17"),
   shot("r18"),
   shot("r19"),
-  shot("r20"),
   shot("r21"),
   shot("r22"),
   shot("r23"),
@@ -89,7 +97,6 @@ export const HERO_CLIPS: HeroClip[] = [
   shot("r25"),
   shot("r26"),
   shot("r27"),
-  shot("r28"),
   shot("r29"),
   shot("r30"),
   shot("r31"),
@@ -98,14 +105,9 @@ export const HERO_CLIPS: HeroClip[] = [
   shot("r35"),
   shot("r36"),
   shot("r37"),
-  shot("r38"),
   shot("r39"),
   shot("r40"),
   shot("r42"),
-  shot("r43"),
-  shot("r44"),
-  shot("r45"),
-  shot("r46"),
   shot("r49"),
   shot("r50"),
   shot("r51"),

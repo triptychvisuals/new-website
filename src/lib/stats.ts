@@ -3,11 +3,12 @@
 // counter.
 // -------------------------------------------------------------------------
 
+import { clients } from "./projects";
 /** The row of headline stats — value and what it counts. */
 export const IMPACT_STATS: { value: string; label: string }[] = [
   { value: "2016", label: "Founded in Chicago" }, // EDIT
   { value: "500+", label: "Projects delivered" }, // EDIT
-  { value: "7", label: "Major labels" }, // EDIT
+  { value: `${clients.length}`, label: "Major labels" }, // EDIT: counts the labels in lib/projects clients
   { value: "10", label: "Years in Chicago" }, // EDIT
 ];
 

@@ -5,9 +5,8 @@ import { IMPACT_STATS } from "@/lib/stats";
 import LiveViews from "./LiveViews";
 
 // EDIT: the partners shown here — the labels (lib/projects clients) plus
-// Concordia University Chicago. Its logo: drop concordia.png (or .svg) in
-// /public/partners and it replaces the name.
-const PARTNERS = [...clients, "Concordia University Chicago"];
+// brands. A partner with no logo file in /public/partners shows its name.
+const PARTNERS = [...clients, "Under Armour"];
 
 /**
  * Drop real logo files into /public/partners and they replace the text
@@ -25,6 +24,7 @@ const LOGO_SIZES: Record<string, string> = {
   universal: "h-[78%]", // globe lockup with small sub-line
   atlantic: "h-[72%]", // PNG cropped tight to the artwork
   warner: "h-[68%]",
+  "under-armour": "h-[46%]", // solid square mark — smaller reads the same weight
 };
 const DEFAULT_LOGO_SIZE = "h-[60%]";
 

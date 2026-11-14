@@ -54,6 +54,7 @@ export const clients = [
   "Atlantic Records",
   "Capitol Records",
   "Republic Records",
+  "Columbia Records", // EDIT: logo → /public/partners/columbia.png (or .svg); shows the name until then
 ];
 
 // -------------------------------------------------------------------------
@@ -74,6 +75,8 @@ const AUTHORED: Authored[] = [
   // card preview standing in as the page's player until then)
   { title: "Symptom", artist: "Jay Wood", year: "2026", video: "/previews/symptom.mp4", standalone: true },
   { title: "Obsessive Compulsive Imagination", artist: "Antoinae", year: "2026", video: "/previews/obsessive-compulsive-imagination.mp4", standalone: true },
+  // EDIT: the mixtape trailer, filed under Commercial (shows a "Commercial" filter on Projects)
+  { title: "Trench Baddie", artist: "Glizzy Glow", year: "2026", youtube: "XpK6-LT1YoI", category: "Commercial", standalone: true },
   { title: "Dramatic", artist: "Jay Wood ft. Quintin & Jonah Renna", year: "2025" }, // EDIT: youtube id
   { title: "Timmy Story", year: "2025", video: "/reels/reel-a.mp4" }, // EDIT: artist + youtube id
   { title: "Hands Up!!!", artist: "Jay Wood", year: "2025", video: "/reels/reel-b.mp4" }, // EDIT: youtube id

@@ -38,10 +38,11 @@ const STARTS: { look: Look; from: "sunrise" | "sunset"; min: number }[] = [
 const FADE_MIN = 25;
 
 // EDIT: the looks that have a circling drone video (made in Higgsfield
-// from the still, starting and ending on it so it loops): files
+// from the still; it glides forward, eases to a stop, then plays back the
+// same way, so the loop has no seam): files
 // /public/contact/<look>.mp4 and <look>-m.mp4 for phones. Looks not listed
 // show the still with a slow push-in and the pin.
-const ORBITS = new Set<Look>([]);
+const ORBITS = new Set<Look>(["dawn", "day", "golden", "dusk", "night"]);
 
 const LABEL: Record<Look, string> = { dawn: "Dawn", day: "Day", golden: "Golden hour", dusk: "Blue hour", night: "Night" };
 

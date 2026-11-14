@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { HERO_CLIPS } from "@/lib/heroClips";
+import { HERO_CLIPS, HERO_FEATURED, HERO_OPENING, type HeroClip } from "@/lib/heroClips";
 import { PHONE_MAX } from "@/lib/video";
 
 // EDIT: how long the crossfade between shots takes (ms).
@@ -25,21 +25,24 @@ export default function HeroReel() {
     const a = one.current;
     const b = two.current;
     const root = box.current;
-    if (!a || !b || !root || HERO_CLIPS.length < 2) return;
+    if (!a || !b || !root) return;
     const els = [a, b];
     const phone = window.matchMedia(`(max-width: ${PHONE_MAX}px)`).matches;
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    // The first shot is fixed (it's in the page's HTML so it starts at once);
-    // the rest are shuffled for this visit.
-    const rest = HERO_CLIPS.map((_, i) => i).slice(1);
+    // The opening plays first, in order (its first shot is in the page's
+    // HTML so it starts at once); then the rest, shuffled for this visit,
+    // with the featured shots dropped in at their places.
+    const rest: HeroClip[] = [...HERO_CLIPS];
     for (let i = rest.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [rest[i], rest[j]] = [rest[j], rest[i]];
     }
-    const order = [0, ...rest];
+    [...HERO_FEATURED].sort((x, y) => x.at - y.at).forEach((f) => rest.splice(Math.min(f.at, rest.length), 0, f.clip));
+    const order = [...HERO_OPENING, ...rest];
+    if (order.length < 2) return;
     const srcAt = (k: number) => {
-      const c = HERO_CLIPS[order[k % order.length]];
+      const c = order[k % order.length];
       return phone ? c.phone : c.src;
     };
 
@@ -107,7 +110,7 @@ export default function HeroReel() {
     };
   }, []);
 
-  const first = HERO_CLIPS[0];
+  const first = HERO_OPENING[0] ?? HERO_CLIPS[0];
   const layer = "absolute inset-0 h-full w-full object-cover transition-opacity ease-out motion-reduce:transition-none";
 
   return (
