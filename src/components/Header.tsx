@@ -116,11 +116,12 @@ function Logo({
       <img
         src={src}
         alt=""
-        className={`h-4 w-auto ${isDefault ? "[filter:brightness(0)] dark:[filter:none]" : ""}`}
+        className={`h-4 w-auto max-[439px]:h-[18px] ${isDefault ? "[filter:brightness(0)] dark:[filter:none]" : ""}`}
       />
       {/* EDIT: wordmark — sits right of the mark, ® tucked up against the "s"
           (the ml nudges it; more negative = closer) */}
-      <span className="whitespace-nowrap text-[15px] font-medium leading-none tracking-tight text-foreground lg:text-[16px]">
+      {/* narrow phones show the mark alone, to make room for Start a project */}
+      <span className="whitespace-nowrap text-[15px] font-medium leading-none tracking-tight text-foreground max-[439px]:hidden lg:text-[16px]">
         Triptych Studios
         <span aria-hidden className="relative -top-[0.55em] ml-px align-baseline text-[0.55em] leading-none">
           ®
@@ -208,10 +209,21 @@ export default function Header({ logo, overlay = false }: { logo?: string; overl
             </div>
           </div>
 
-          {/* Phones: logo ............ theme · menu */}
+          {/* Phones: logo ............ Start a project · theme · menu */}
           <div className="flex w-full items-center justify-between lg:hidden">
             <Logo src={logo} onClick={close} />
             <div className="flex items-center gap-1">
+              {/* EDIT: the phone bar's call to action */}
+              <a
+                href={site.contactUrl}
+                onClick={() => {
+                  haptic("tap");
+                  close();
+                }}
+                className="mr-1 inline-flex h-8 shrink-0 items-center gap-1 whitespace-nowrap rounded-full bg-foreground px-3 text-[13px] font-medium text-background transition-colors hover:bg-foreground/85"
+              >
+                Start a project <span aria-hidden>↗</span>
+              </a>
               <ThemeToggle />
               <button
                 type="button"
