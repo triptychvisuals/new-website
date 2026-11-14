@@ -5,7 +5,7 @@
 
 /** The row of headline stats — value and what it counts. */
 export const IMPACT_STATS: { value: string; label: string }[] = [
-  { value: "50M+", label: "Views across all videos" }, // EDIT
+  { value: "2016", label: "Founded in Chicago" }, // EDIT
   { value: "500+", label: "Projects delivered" }, // EDIT
   { value: "7", label: "Major labels" }, // EDIT
   { value: "10", label: "Years in Chicago" }, // EDIT
