@@ -41,7 +41,7 @@ export const LIVE_VIEWS = {
   // EDIT: views from places the API can't see (Instagram, TikTok, TV…),
   // added on top of the YouTube total.
   offset: 0,
-  FALLBACK_BASE: 50_000_000, // EDIT
-  FALLBACK_SINCE: "2026-11-13T00:00:00Z", // EDIT: the day FALLBACK_BASE was true
-  FALLBACK_PER_DAY: 25_000, // EDIT: estimated new views per day
+  FALLBACK_BASE: 191_000_000, // EDIT: last real total (from /api/views)
+  FALLBACK_SINCE: "2026-11-14T00:00:00Z", // EDIT: the day FALLBACK_BASE was true
+  FALLBACK_PER_DAY: 100_000, // EDIT: new views per day (YouTube pace)
 };

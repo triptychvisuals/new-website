@@ -74,7 +74,7 @@ export default function LiveViews() {
 
   return (
     <div ref={wrap} className="flex flex-col items-center">
-      <p className="sr-only">{value ? `${fmt.format(value)} views` : "Over 50 million views"}</p>
+      <p className="sr-only">{value ? `${fmt.format(value)} views` : "Over 190 million views"}</p>
       <div
         aria-hidden
         className="flex text-[clamp(3rem,9vw,7rem)] font-medium leading-none tracking-[-0.04em] tabular-nums"
