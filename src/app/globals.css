@@ -264,6 +264,20 @@ html.lenis body {
   .partner-tile { animation: none; }
 }
 
+/* Contact hero (StudioView): the aerial render drifts in slowly, like a
+   drone holding position. Scale only; the centring uses `translate`. */
+@keyframes studio-drift {
+  0% { scale: 1.02; }
+  100% { scale: 1.1; }
+}
+.studio-drift {
+  animation: studio-drift 60s ease-in-out infinite alternate;
+  transform-origin: 40% 35%;
+}
+@media (prefers-reduced-motion: reduce) {
+  .studio-drift { animation: none; }
+}
+
 /* Timeline (Decade.tsx): the big year rises in each time it changes. */
 @keyframes tl-year-in {
   from { opacity: 0; transform: translate3d(0, 18%, 0); }

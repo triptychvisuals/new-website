@@ -7,6 +7,11 @@ import Reveal from "@/components/Reveal";
 import BriefBuilder from "@/components/contact/BriefBuilder";
 import LocalTime from "@/components/contact/LocalTime";
 import StudioMap from "@/components/contact/StudioMapLazy";
+import StudioView from "@/components/contact/StudioView";
+
+// EDIT: the hero — "render" (the Higgsfield aerial, at the real time of day
+// in Chicago) or "3d" (the live 3D model of the block).
+const HERO: "render" | "3d" = "render";
 import { site } from "@/lib/site";
 import { socials } from "@/lib/about";
 import { getSiteContent } from "@/lib/siteContent";
@@ -49,7 +54,7 @@ export default async function ContactPage() {
 
         {/* The map — raw: a plan of the Loop in 3D, with the address marked */}
         <section aria-label="Where we are" className="relative border-b border-hairline bg-[#050505] text-white">
-          <StudioMap className="h-[72svh] min-h-[460px] w-full" />
+          {HERO === "3d" ? <StudioMap className="h-[72svh] min-h-[460px] w-full" /> : <StudioView className="h-[72svh] min-h-[460px] w-full" />}
           {/* Overlay: corner marks, the title, the address and coordinates */}
           <div aria-hidden className="pointer-events-none absolute inset-4 z-30 sm:inset-6">
             <span className="absolute left-0 top-0 h-4 w-4 border-l border-t border-white/60" />
@@ -70,7 +75,7 @@ export default async function ContactPage() {
             </p>
           </div>
           <div className="pointer-events-none absolute bottom-6 right-6 z-30 hidden text-right font-mono text-[11px] leading-relaxed text-white/50 sm:bottom-10 sm:right-10 sm:block">
-            <p>Fig. 01 — The Loop, Chicago</p>
+            <p>Fig. 01 — W. Wacker Drive, Chicago</p>
             <p className="mt-2 flex items-center justify-end gap-2">
               <span className="inline-block h-px w-16 bg-white/50" /> 200 m
             </p>
