@@ -20,11 +20,11 @@ export const values: { title: string; body: string }[] = [
 
 export type Service = { name: string; blurb: string; includes: string[]; from: string };
 export const servicesList: Service[] = [
-  { name: "Music videos", blurb: "Concept, treatment, shoot, edit and colour for singles and album rollouts.", includes: ["Treatment & look book", "Casting & locations", "Director + DP", "Edit, colour, VFX clean-up", "Vertical cutdowns"], from: "From $5k" },
-  { name: "Commercials", blurb: "Spots for brands and labels — from one hero film to a full campaign.", includes: ["Creative development", "Production & permits", "Hero spot + cutdowns", "Sound mix", "Platform deliverables"], from: "From $15k" },
-  { name: "Brand films", blurb: "Longer stories about the people and the work behind a brand.", includes: ["Interviews & B-roll", "Story edit", "Music licensing", "Captions & subtitles"], from: "From $10k" },
-  { name: "Live & events", blurb: "Performances, release parties and tours, shot to feel like you were there.", includes: ["Multi-camera coverage", "Same-week recap", "Social clips"], from: "From $3k" },
-  { name: "Post-production", blurb: "Bring footage you've shot; we cut, grade and finish it.", includes: ["Editing", "Colour grading", "Motion graphics", "Delivery masters"], from: "From $1.5k" },
+  { name: "Music videos", blurb: "Concept, treatment, shoot, edit and colour for singles and album rollouts.", includes: ["Treatment & look book", "Casting & locations", "Director + DP", "Edit, colour, VFX clean-up", "Vertical cutdowns"], from: "From $5k USD" },
+  { name: "Commercials", blurb: "Spots for brands and labels — from one hero film to a full campaign.", includes: ["Creative development", "Production & permits", "Hero spot + cutdowns", "Sound mix", "Platform deliverables"], from: "From $15k USD" },
+  { name: "Brand films", blurb: "Longer stories about the people and the work behind a brand.", includes: ["Interviews & B-roll", "Story edit", "Music licensing", "Captions & subtitles"], from: "From $10k USD" },
+  { name: "Live & events", blurb: "Performances, release parties and tours, shot to feel like you were there.", includes: ["Multi-camera coverage", "Same-week recap", "Social clips"], from: "From $3k USD" },
+  { name: "Post-production", blurb: "Bring footage you've shot; we cut, grade and finish it.", includes: ["Editing", "Colour grading", "Motion graphics", "Delivery masters"], from: "From $1.5k USD" },
 ];
 
 export const process: { step: string; body: string }[] = [

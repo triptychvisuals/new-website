@@ -6,7 +6,7 @@
 export const site = {
   name: "Triptych", // EDIT: first word of the hero + wordmark
   suffix: "Studios", // EDIT: second word of the hero headline
-  registered: true, // EDIT: show the ® mark next to the wordmark
+  registered: false, // EDIT: true only once "Triptych Studios" is a federally registered trademark (shows ®); false shows ™
   /** EDIT: canonical production URL — Pinterest pin links resolve against it. */
   url: "https://triptychstudios.co",
   /**

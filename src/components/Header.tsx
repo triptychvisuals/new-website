@@ -9,7 +9,7 @@ import { haptic } from "@/lib/haptics";
 
 /**
  * Sticky header — a flat bar:
- *   ◬ Triptych Studios®  Projects  About  Press  Store ↗ ......... ☾  (Contact)  (Start a project ↗)
+ *   ◬ Triptych Studios™  Projects  About  Press  Store ↗ ......... ☾  (Contact)  (Start a project ↗)
  * Desktop menus open a full-width panel under it (MegaNav). Phones get
  * logo · theme · menu, the menu filling the screen. On the home page it
  * floats over the hero video, see-through with white type, until scrolled.
@@ -118,12 +118,13 @@ function Logo({
         alt=""
         className={`h-4 w-auto ${isDefault ? "[filter:brightness(0)] dark:[filter:none]" : ""}`}
       />
-      {/* EDIT: wordmark — sits right of the mark, ® tucked up against the "s"
+      {/* EDIT: wordmark — sits right of the mark, the mark (™ until the
+          trademark is registered, then ®) tucked up against the "s"
           (the ml nudges it; more negative = closer) */}
       <span className="whitespace-nowrap text-[15px] font-medium leading-none tracking-tight text-foreground lg:text-[16px]">
         Triptych Studios
         <span aria-hidden className="relative -top-[0.55em] ml-px align-baseline text-[0.55em] leading-none">
-          ®
+          {site.registered ? "®" : "™"}
         </span>
       </span>
     </Link>
