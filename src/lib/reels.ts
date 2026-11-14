@@ -2,9 +2,9 @@
 // EDIT: the reels on the home page's Featured Work — vertical (9:16)
 // videos shown in a phone-style frame with a mock social overlay.
 //
-// Drop vertical clips in /public/reels/vertical/ and list them here. Until
-// then these entries use the studio's existing (horizontal) clips, which
-// the frame crops to 9:16 from the centre — set `focus` to move the crop.
+// Clips live in /public/reels/vertical/ (720×1280 mp4) with a small frame
+// for the card in /public/reels/insets/. A horizontal clip also works: the
+// frame crops it to 9:16 from the centre — set `focus` to move the crop.
 // -------------------------------------------------------------------------
 
 export type Reel = {
@@ -32,56 +32,25 @@ export type Reel = {
   inset?: string;
 };
 
+// EDIT: placeholders — vertical cuts from the studio's brand shoot (Google
+// Drive), until the real social pieces are picked. Eight fill the grid
+// (four across on desktop).
+const shoot = (n: number, title: string, caption: string): Reel => ({
+  src: `/reels/vertical/v${n}.mp4`,
+  inset: `/reels/insets/v${n}.jpg`,
+  href: "/projects",
+  title,
+  artist: "Triptych Studios",
+  caption,
+});
+
 export const reels: Reel[] = [
-  {
-    src: "/hero/hero.mp4",
-    inset: "/reels/insets/showreel.jpg",
-    href: "/projects",
-    title: "Showreel",
-    artist: "Triptych Studios",
-    caption: "Selected work, 2016 to now.", // EDIT
-  },
-  {
-    src: "/reels/reel-b.mp4",
-    inset: "/reels/insets/hands-up.jpg",
-    href: "/work/hands-up",
-    title: "Hands Up!!!",
-    artist: "Jay Wood",
-    caption: "Color, movement and a lot of paint.", // EDIT
-    audio: "Jay Wood · Hands Up!!!",
-    focus: "45% 50%",
-  },
-  {
-    src: "/reels/reel-a.mp4",
-    inset: "/reels/insets/timmy-story.jpg",
-    href: "/work/timmy-story",
-    title: "Timmy Story",
-    caption: "One room, one light.", // EDIT
-  },
-  {
-    src: "/reels/feel-the-love.mp4",
-    inset: "/reels/insets/feel-the-love.jpg",
-    href: "/work/feel-the-love",
-    title: "Feel the Love",
-    caption: "Music video, 2024.", // EDIT
-  },
-  {
-    src: "/reels/reel-c.mp4",
-    inset: "/reels/insets/good-morning-america.jpg",
-    href: "/work/good-morning-america",
-    title: "Good Morning America",
-    caption: "Music video, 2025.", // EDIT
-    focus: "50% 60%",
-  },
-  {
-    // EDIT: placeholder — a later moment of the showreel (#t= start, in
-    // seconds) with a different crop, until a sixth vertical clip arrives.
-    src: "/hero/hero.mp4#t=8",
-    inset: "/reels/insets/behind-the-lens.jpg",
-    href: "/projects",
-    title: "Behind the lens",
-    artist: "Triptych Studios",
-    caption: "On set in Chicago.", // EDIT
-    focus: "30% 50%",
-  },
+  shoot(1, "The walk-in", "First day in the new office."), // EDIT
+  shoot(2, "Skyline", "Chicago from the top."), // EDIT
+  shoot(3, "Rooftop", "Golden hour, forty floors up."), // EDIT
+  shoot(4, "The office", "Lights, laptop, launch."), // EDIT
+  shoot(5, "Dinner", "Cocktails before the close."), // EDIT
+  shoot(6, "The menu", "A table worth the wait."), // EDIT
+  shoot(7, "Downtown", "Flags, stone and steel."), // EDIT
+  shoot(8, "Riverwalk", "Arms crossed, deal done."), // EDIT
 ];

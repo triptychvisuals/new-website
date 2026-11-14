@@ -9,12 +9,13 @@ const LEAD =
 /**
  * Featured Work: a heading row with a link to every project, then the
  * reels (lib/reels.ts) — 9:16 videos in phone-style frames with a mock
- * social overlay. A 3 × 2 grid on desktop; a swipeable row on phones.
+ * social overlay. Edge to edge on desktop, four across and two rows deep;
+ * a swipeable row on phones.
  */
 export default function SelectedWorks() {
   return (
     <section aria-label="Premium social content" className="overflow-hidden bg-background py-20 text-foreground sm:py-28">
-      <div className="mx-auto max-w-[1280px] px-5 lg:px-10">
+      <div className="px-5 lg:px-10">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-[760px]">
             <h2 className="text-[clamp(2.25rem,5vw,4rem)] font-medium leading-[1.04] tracking-[-0.03em]">Premium Social Content</h2>
@@ -29,11 +30,11 @@ export default function SelectedWorks() {
         </div>
       </div>
 
-      {/* The reels: swipe on phones (snapping card to card), a 3 × 2 grid on
-          desktop whose last row fades out under a "See all projects" pill.
-          EDIT: max-w on the wrapper sets how big each reel gets. */}
-      <div className="relative mx-auto mt-10 max-w-[1280px] sm:mt-12 lg:px-10">
-        <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto px-5 pb-2 [scrollbar-width:none] sm:gap-4 lg:grid lg:snap-none lg:grid-cols-3 lg:gap-6 lg:overflow-visible lg:px-0">
+      {/* The reels: swipe on phones (snapping card to card), a full-width
+          4 × 2 grid on desktop whose last row fades out under a "See all
+          projects" pill. EDIT: lg:grid-cols-4 sets how many go across. */}
+      <div className="relative mt-10 sm:mt-12 lg:px-10">
+        <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto px-5 pb-2 [scrollbar-width:none] sm:gap-4 lg:grid lg:snap-none lg:grid-cols-4 lg:gap-5 lg:overflow-visible lg:px-0">
           {reels.map((r, i) => (
             <div key={r.src + i} className="w-[72vw] max-w-[320px] shrink-0 snap-center sm:w-[42vw] lg:w-auto lg:max-w-none">
               <ReelCard reel={r} />
