@@ -17,6 +17,7 @@ const PAGES: [string, number][] = [
   ["/contact", 0.5],
   ["/privacy", 0.2],
   ["/terms", 0.2],
+  ["/refunds", 0.2],
   ["/disclaimer", 0.2],
 ];
 
