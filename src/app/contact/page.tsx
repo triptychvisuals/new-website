@@ -1,10 +1,9 @@
-// Contact — a raw 3D map of the address, the details grid, then the brief
-// builder. Index 009.
+// Contact — a 3D model of the address, the details grid, then what happens
+// after you write. Index 009.
 import type { Metadata } from "next";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Reveal from "@/components/Reveal";
-import BriefBuilder from "@/components/contact/BriefBuilder";
 import LocalTime from "@/components/contact/LocalTime";
 import StudioMap from "@/components/contact/StudioMapLazy";
 import StudioView from "@/components/contact/StudioView";
@@ -32,7 +31,7 @@ export const metadata: Metadata = {
   description: "Contact Triptych Studios — 211 W. Wacker Drive, Chicago. Start a project, or write to the studio or press.", // EDIT
 };
 
-// EDIT: what happens after a brief lands.
+// EDIT: what happens after someone writes in.
 const NEXT = [
   ["Within a day", "We read it and reply with first thoughts and any questions."],
   ["Within a week", "A call, a treatment, and a quote with a real schedule."],
@@ -131,16 +130,6 @@ export default async function ContactPage() {
                 {s.label} <span aria-hidden>↗</span>
               </a>
             ))}
-          </div>
-        </section>
-
-        <section className="mx-auto w-full max-w-[1760px] px-5 pt-20 sm:px-8 sm:pt-28 lg:px-10" aria-label="Start a project">
-          <Reveal>
-            <p className="font-mono text-[11px] text-muted">Start a project</p>
-            <h2 className="mt-6 max-w-[22ch] text-[clamp(1.75rem,4vw,3.25rem)] font-medium leading-[1.05] tracking-tight">Tell us what you&apos;re making. The brief writes itself.</h2>
-          </Reveal>
-          <div className="mt-12">
-            <BriefBuilder />
           </div>
         </section>
 
