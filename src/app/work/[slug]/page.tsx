@@ -14,6 +14,7 @@ import Header from "@/components/Header";
 import ProjectDetail, { type MoreProject } from "@/components/ProjectDetail";
 import Footer from "@/components/Footer";
 import { mergeCards } from "@/lib/cards";
+import { SLUG_ALIASES } from "@/lib/previews";
 import { getSiteContent, type PortalWork } from "@/lib/siteContent";
 import { site } from "@/lib/site";
 import { youtubePoster } from "@/lib/youtube";
@@ -31,6 +32,8 @@ export const dynamicParams = true;
  * (work.frames, public addresses) and are shown first.
  */
 function framesFor(slug: string): string[] {
+  // the authored slug and the portal's can differ (overthink / overthinking)
+  slug = SLUG_ALIASES[slug] ?? slug;
   const dir = path.join(process.cwd(), "public", "work", slug);
   if (!fs.existsSync(dir)) return [];
   return fs
@@ -117,13 +120,15 @@ export default async function ProjectPage({
   const cards = mergeCards(content.works);
   const at = cards.findIndex((c) => c.project.slug === project.slug);
   const order = [...cards.slice(at + 1), ...cards.slice(0, Math.max(at, 0))];
-  const pickMore = [...order.filter((c) => c.media && !/\.svg$/.test(c.media)), ...order.filter((c) => !c.media)].slice(0, 3);
+  const hasPicture = (c: (typeof order)[number]) => !!c.preview || (!!c.media && !/\.svg$/.test(c.media));
+  const pickMore = [...order.filter(hasPicture), ...order.filter((c) => !hasPicture(c))].slice(0, 3);
   const more: MoreProject[] = pickMore.map((c) => ({
     href: c.href || `/work/${c.project.slug}`,
     title: c.project.title,
     sub: [c.project.artist, c.project.year].filter(Boolean).join(" · "),
     media: c.media,
     gradient: placeholderGradient(c.index),
+    preview: c.preview,
   }));
 
   return (

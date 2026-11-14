@@ -20,13 +20,17 @@ const PARTNERS = [...clients, "Concordia University Chicago"];
 // EDIT: per-logo height (Tailwind class) so dense or portrait marks read at
 // the same visual weight as wide wordmarks. Anything not listed uses DEFAULT.
 const LOGO_SIZES: Record<string, string> = {
-  capitol: "h-12", // oval lockup — PNG cropped tight to the artwork
-  interscope: "h-14", // tall portrait crop
-  universal: "h-14", // globe lockup with small sub-line
-  atlantic: "h-12", // PNG cropped tight to the artwork
-  warner: "h-11",
+  capitol: "h-[72%]", // oval lockup — PNG cropped tight to the artwork
+  interscope: "h-[78%]", // tall portrait crop
+  universal: "h-[78%]", // globe lockup with small sub-line
+  atlantic: "h-[72%]", // PNG cropped tight to the artwork
+  warner: "h-[68%]",
 };
-const DEFAULT_LOGO_SIZE = "h-9";
+const DEFAULT_LOGO_SIZE = "h-[60%]";
+
+// EDIT: the size of each logo tile (px) — desktop, floating round the
+// headline. Phones size theirs to the row (three across).
+const TILE = 176;
 
 
 function logoFor(
@@ -56,18 +60,19 @@ function logoFor(
 }
 
 // EDIT: where each logo tile floats round the headline (desktop), as % of
-// the section — left, top — plus how long its slow bob takes (s). Tiles
+// the room left once a tile fits (0 = flush left/top, 100 = flush right/
+// bottom) — left, top — plus how long its slow bob takes (s). Tiles
 // past the list's length are skipped; extra logos reuse the last spots.
 const SPOTS: [number, number, number][] = [
-  [7, 16, 7],
-  [85, 12, 8],
-  [16, 4, 8.5],
-  [90, 40, 6.8],
-  [9, 64, 9],
-  [84, 70, 9.4],
-  [4, 40, 7.5],
-  [76, 2, 7.2],
-  [14, 86, 6.5],
+  [4, 6, 7],
+  [96, 3, 8],
+  [12, 36, 8.5],
+  [88, 34, 6.8],
+  [3, 67, 9],
+  [97, 65, 9.4],
+  [11, 98, 7.5],
+  [89, 97, 7.2],
+  [50, 100, 6.5],
 ];
 
 /**
@@ -86,14 +91,14 @@ export default function PartnerCard() {
         alt={it.name}
         draggable={false}
         // the marks are dark artwork: white on the dark theme
-        className={`max-h-[46%] max-w-[64%] object-contain ${it.logo.white ? "[filter:invert(1)] dark:[filter:none]" : "dark:[filter:invert(1)]"}`}
+        className={`absolute inset-0 m-auto ${it.logo.size} w-auto max-w-[80%] object-contain ${it.logo.white ? "[filter:invert(1)] dark:[filter:none]" : "dark:[filter:invert(1)]"}`}
       />
     ) : (
-      <span className="px-2 text-center text-[12px] font-medium leading-tight text-foreground/80">{it.name}</span>
+      <span className="px-3 text-center text-[15px] font-medium leading-tight text-foreground/80 lg:text-[17px]">{it.name}</span>
     );
 
   return (
-    <section aria-label="Labels we work with" className="relative overflow-hidden bg-background px-5 py-20 sm:py-28 lg:min-h-[900px] lg:py-0">
+    <section aria-label="Labels we work with" className="relative overflow-hidden bg-background px-5 py-20 sm:py-28 lg:min-h-[1040px] lg:py-0">
       {/* Desktop: tiles floating round the headline */}
       <div aria-hidden className="absolute inset-0 hidden lg:block">
         {items.map((it, i) => {
@@ -101,8 +106,17 @@ export default function PartnerCard() {
           return (
             <span
               key={it.name}
-              className="partner-tile absolute grid h-[104px] w-[104px] place-items-center rounded-[26px] bg-surface"
-              style={{ left: `${left}%`, top: `${top}%`, animationDuration: `${secs}s`, animationDelay: `${-i * 1.3}s` }}
+              className="partner-tile absolute grid place-items-center rounded-[36px] bg-surface"
+              // spots are % of the room left once the tile fits, so big
+              // tiles never run off the edge
+              style={{
+                width: TILE,
+                height: TILE,
+                left: `calc((100% - ${TILE}px) * ${left / 100})`,
+                top: `calc((100% - ${TILE}px) * ${top / 100})`,
+                animationDuration: `${secs}s`,
+                animationDelay: `${-i * 1.3}s`,
+              }}
             >
               {tile(it)}
             </span>
@@ -110,22 +124,15 @@ export default function PartnerCard() {
         })}
       </div>
 
-      <div className="relative mx-auto flex max-w-[760px] flex-col items-center text-center lg:min-h-[900px] lg:justify-center lg:py-24">
-        {/* Phones / tablets: the tiles in rows of four above — the studio's
-            own mark rounds out the last row (EDIT: drop it once there's an
-            eighth label logo in /public/partners). */}
-        <div className="mb-10 grid grid-cols-4 gap-3 lg:hidden">
+      <div className="relative mx-auto flex max-w-[760px] flex-col items-center text-center lg:min-h-[1040px] lg:justify-center lg:py-24">
+        {/* Phones / tablets: the tiles in rows of three above — the studio's
+            own mark rounds out the last row when it's short. */}
+        <div className="mb-10 flex w-full max-w-[560px] flex-wrap justify-center gap-3 sm:gap-4 lg:hidden">
           {items.map((it) => (
-            <span key={it.name} className="grid aspect-square w-[68px] place-items-center rounded-[18px] bg-surface sm:w-[76px]">
+            <span key={it.name} className="relative grid aspect-square w-[calc((100%-1.5rem)/3)] place-items-center rounded-[24px] bg-surface sm:w-[calc((100%-2rem)/3)]">
               {tile(it)}
             </span>
           ))}
-          {items.length % 4 !== 0 && (
-            <span className="grid aspect-square w-[68px] place-items-center rounded-[18px] bg-surface sm:w-[76px]">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/triptych-logo.png" alt="Triptych Studios" draggable={false} className="max-h-[34%] max-w-[60%] object-contain [filter:brightness(0)] dark:[filter:none]" />
-            </span>
-          )}
         </div>
         {/* EDIT: the section's copy */}
         <p className="text-[15px] text-muted">Labels we work with</p>

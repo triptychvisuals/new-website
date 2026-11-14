@@ -7,6 +7,7 @@ import {
   type Project,
 } from "@/lib/projects";
 import type { PortalWork } from "@/lib/siteContent";
+import { previewFor, type Preview } from "@/lib/previews";
 
 /** A gallery-ready card: a portal project, or an authored fallback. */
 export type CardData = {
@@ -15,6 +16,8 @@ export type CardData = {
   index: number;
   media?: string;
   href?: string;
+  /** A short silent loop that plays while the card is on screen (lib/previews). */
+  preview?: Preview;
 };
 
 /**
@@ -36,25 +39,47 @@ export function mergeCards(works: PortalWork[] = []): CardData[] {
         href: undefined,
       };
     });
-    // Post-production credits are authored here, so they join the feed's list.
     const have = new Set(fromFeed.map((c) => c.project.slug));
+    // Authored projects marked `standalone` (not in the portal yet) slot in
+    // by year among the feed's works.
+    const merged = [...fromFeed];
+    projects
+      .filter((p) => p.standalone && !have.has(p.slug))
+      .forEach((project) => {
+        const at = merged.findIndex((c) => Number(c.project.year) < Number(project.year));
+        merged.splice(at < 0 ? merged.length : at, 0, {
+          project,
+          index: fromFeed.length + postCredits.length + merged.length,
+          media: project.youtube ? youtubePoster(project.youtube) : undefined,
+          href: undefined,
+        });
+        have.add(project.slug);
+      });
+    // Post-production credits are authored here, so they join the feed's list.
     const extra = postCredits
       .filter((p) => !have.has(p.slug))
       .map((project, k) => ({
         project,
-        index: fromFeed.length + k,
+        index: merged.length + k,
         media: project.youtube ? youtubePoster(project.youtube) : undefined,
         href: undefined,
       }));
-    return [...fromFeed, ...extra];
+    return withPreviews([...merged, ...extra]);
   }
   // Projects without a video yet get no media: the card shows its colour
   // poster with a gear drawing (the animated SVG reels are kept for the
   // single-image spots — thirty of them in one grid cost frames).
-  return projects.map((project, i) => ({
-    project,
-    index: i,
-    media: project.youtube ? youtubePoster(project.youtube) : undefined,
-    href: undefined,
-  }));
+  return withPreviews(
+    projects.map((project, i) => ({
+      project,
+      index: i,
+      media: project.youtube ? youtubePoster(project.youtube) : undefined,
+      href: undefined,
+    }))
+  );
+}
+
+/** Every card gets its animated preview, when there is one. */
+function withPreviews(cards: CardData[]): CardData[] {
+  return cards.map((c) => ({ ...c, preview: previewFor(c.project.slug) }));
 }

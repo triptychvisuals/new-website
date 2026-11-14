@@ -1,3 +1,4 @@
+import { site } from "@/lib/site";
 // -------------------------------------------------------------------------
 // EDIT: All About-page copy lives here. Rebranded to Triptych from the
 // reference; swap in real clients, services, history and testimonials.
@@ -19,6 +20,7 @@ export const socials: { label: string; href: string }[] = [
   { label: "Vimeo", href: "#" }, // EDIT
   { label: "YouTube", href: "#" }, // EDIT
   { label: "LinkedIn", href: "#" }, // EDIT
+  { label: "Pinterest", href: site.pinterest || "#" }, // EDIT: lib/site.ts → pinterest
 ];
 
 export const phone = "+142 1700 123 456"; // EDIT

@@ -34,6 +34,12 @@ export type Project = {
   roles?: string[];
   /** Post-production credits: who directed / produced it. */
   director?: string;
+  /**
+   * EDIT: true = shows on the site even while the portal feed drives the
+   * project list (for work that isn't in the portal yet). Drop it once the
+   * project is added in the portal.
+   */
+  standalone?: boolean;
 };
 
 // EDIT: the category name post-production credits file under.
@@ -64,6 +70,10 @@ type Authored = Omit<Project, "slug" | "category"> & { category?: string };
 
 const AUTHORED: Authored[] = [
   { title: "Overthink", artist: "Wale ft. Elmiene", year: "2026", youtube: "aEfoHSFeTII" },
+  // EDIT: youtube ids for these three once they're up (the clip below is the
+  // card preview standing in as the page's player until then)
+  { title: "Symptom", artist: "Jay Wood", year: "2026", video: "/previews/symptom.mp4", standalone: true },
+  { title: "Obsessive Compulsive Imagination", artist: "Antoinae", year: "2026", video: "/previews/obsessive-compulsive-imagination.mp4", standalone: true },
   { title: "Dramatic", artist: "Jay Wood ft. Quintin & Jonah Renna", year: "2025" }, // EDIT: youtube id
   { title: "Timmy Story", year: "2025", video: "/reels/reel-a.mp4" }, // EDIT: artist + youtube id
   { title: "Hands Up!!!", artist: "Jay Wood", year: "2025", video: "/reels/reel-b.mp4" }, // EDIT: youtube id
@@ -75,6 +85,7 @@ const AUTHORED: Authored[] = [
     // face + hands stay in frame instead of empty text headroom up top.
     objectPosition: "50% 60%",
   }, // EDIT: artist + youtube id
+  { title: "Poetic Street Talk", artist: "Englewood Tommy", year: "2024", video: "/previews/poetic-street-talk.mp4", standalone: true },
   { title: "Feel the Love", year: "2024", video: "/reels/feel-the-love.mp4", youtube: "4LQP9E6W-3w" }, // EDIT: artist
   { title: "Locked In", artist: "G Herbo", year: "2022", youtube: "n3JAY-3H8Ao" },
   { title: "Ridin Wit It", artist: "G Herbo", year: "2020", youtube: "k5coDLFQrj0" }, // Triptych's most-watched video

@@ -278,6 +278,19 @@ html.lenis body {
   .studio-drift { animation: none; }
 }
 
+/* Project cards without a preview clip: the thumbnail pushes in and
+   drifts slowly, so every card in the grid moves. Transform only. */
+@keyframes card-push {
+  0% { transform: scale(1.04) translate3d(-1.2%, 0.6%, 0); }
+  100% { transform: scale(1.14) translate3d(1.2%, -0.6%, 0); }
+}
+.card-push {
+  animation: card-push 16s ease-in-out infinite alternate;
+}
+@media (prefers-reduced-motion: reduce) {
+  .card-push { animation: none; }
+}
+
 /* Timeline (Decade.tsx): the big year rises in each time it changes. */
 @keyframes tl-year-in {
   from { opacity: 0; transform: translate3d(0, 18%, 0); }

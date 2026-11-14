@@ -7,6 +7,7 @@ import { placeholderGradient, POST_PRODUCTION, type Project } from "@/lib/projec
 import { mergeCards, type CardData } from "@/lib/cards";
 import type { PortalWork } from "@/lib/siteContent";
 import VideoGearIcon from "./VideoGearIcon";
+import PreviewLoop from "./PreviewLoop";
 
 type View = "grid" | "list";
 
@@ -140,36 +141,57 @@ const kind = (p: Project) =>
 const hrefOf = (c: CardData) => c.href || `/work/${c.project.slug}`;
 const isVideo = (src?: string) => !!src && /\.(mp4|webm)(\?.*)?$/i.test(src);
 
-/** The picture for a card: a still, a reel that plays on hover, or a colour poster. */
+/**
+ * The picture for a card: its animated preview (lib/previews) looping while
+ * on screen; else its thumbnail with a slow push-in (or a reel that plays
+ * on hover); else a colour poster.
+ */
 function Media({ card, sizes = "" }: { card: CardData; sizes?: string }) {
-  const { project, index, media } = card;
+  const { project, index, media, preview } = card;
   const reel = project.video ?? media;
   const fit = project.objectPosition ? { objectPosition: project.objectPosition } : undefined;
   const cls = `absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03] ${sizes}`;
   return (
     <>
       <div className="absolute inset-0" style={{ background: placeholderGradient(index) }} />
-      {!reel && (
-        <VideoGearIcon index={index} className="absolute left-1/2 top-1/2 h-[42%] w-auto -translate-x-1/2 -translate-y-1/2 text-white/75" />
+      {preview ? (
+        <PreviewLoop src={preview.src} poster={preview.poster} style={fit} className={cls} />
+      ) : (
+        <>
+          {!reel && (
+            <VideoGearIcon index={index} className="absolute left-1/2 top-1/2 h-[42%] w-auto -translate-x-1/2 -translate-y-1/2 text-white/75" />
+          )}
+          {reel &&
+            (isVideo(reel) ? (
+              <video
+                src={reel}
+                muted
+                loop
+                playsInline
+                preload="metadata"
+                aria-hidden
+                style={fit}
+                className={cls}
+                onMouseEnter={(e) => e.currentTarget.play().catch(() => {})}
+                onMouseLeave={(e) => e.currentTarget.pause()}
+              />
+            ) : (
+              // a still: a slow push-in so every card moves
+              <div className="absolute inset-0 overflow-hidden transition-transform duration-700 ease-out group-hover:scale-[1.03]">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={reel}
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                  referrerPolicy="no-referrer"
+                  style={{ ...fit, animationDelay: `${-(index % 7) * 2.3}s` }}
+                  className={`card-push absolute inset-0 h-full w-full object-cover ${sizes}`}
+                />
+              </div>
+            ))}
+        </>
       )}
-      {reel &&
-        (isVideo(reel) ? (
-          <video
-            src={reel}
-            muted
-            loop
-            playsInline
-            preload="metadata"
-            aria-hidden
-            style={fit}
-            className={cls}
-            onMouseEnter={(e) => e.currentTarget.play().catch(() => {})}
-            onMouseLeave={(e) => e.currentTarget.pause()}
-          />
-        ) : (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={reel} alt="" loading="lazy" decoding="async" referrerPolicy="no-referrer" style={fit} className={cls} />
-        ))}
     </>
   );
 }

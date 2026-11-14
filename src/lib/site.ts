@@ -17,6 +17,12 @@ export const site = {
    * Leave empty until then and nothing is rendered.
    */
   pinterestVerify: "",
+  /**
+   * EDIT: the studio's Pinterest profile, e.g.
+   * "https://www.pinterest.com/triptychstudios/". Once set it shows with
+   * the socials and under every project's finished frames. "" hides it.
+   */
+  pinterest: "",
   email: "hello@triptychvisuals.com", // EDIT: contact email (also confirm law@…)
   /** EDIT: press enquiries. */
   pressEmail: "law@triptychstudios.co",

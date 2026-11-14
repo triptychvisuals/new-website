@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { youtubeEmbed } from "@/lib/youtube";
+import type { Preview } from "@/lib/previews";
+import PreviewLoop from "./PreviewLoop";
 import { useRef, useState } from "react";
 import type { Project } from "@/lib/projects";
 import type { PortalWork } from "@/lib/siteContent";
@@ -81,7 +83,7 @@ function PinButton({ href }: { href: string }) {
 }
 
 /** A neighbouring project for the "More projects" row. */
-export type MoreProject = { href: string; title: string; sub: string; media?: string; gradient: string };
+export type MoreProject = { href: string; title: string; sub: string; media?: string; gradient: string; preview?: Preview };
 
 export default function ProjectDetail({
   project,
@@ -244,7 +246,14 @@ export default function ProjectDetail({
       <section className="pt-20 sm:pt-28">
         <div className="mb-8 flex items-end justify-between gap-6">
           <h2 className="text-[clamp(1.75rem,3.5vw,3rem)] font-medium leading-[1.04] tracking-[-0.03em]">Finished frames</h2>
-          {frames.length > 0 && <p className="hidden text-[15px] text-muted sm:block">Save any frame to Pinterest</p>}
+          {frames.length > 0 &&
+            (site.pinterest ? (
+              <a href={site.pinterest} target="_blank" rel="noopener noreferrer" className="hidden text-[15px] text-muted transition-colors hover:text-foreground sm:block">
+                Save any frame · Follow us on Pinterest <span aria-hidden>↗</span>
+              </a>
+            ) : (
+              <p className="hidden text-[15px] text-muted sm:block">Save any frame to Pinterest</p>
+            ))}
         </div>
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
@@ -296,7 +305,13 @@ export default function ProjectDetail({
               <Link key={m.href} href={m.href} className="group block">
                 <div className="relative aspect-video overflow-hidden rounded-[18px] bg-surface">
                   <div className="absolute inset-0" style={{ background: m.gradient }} />
-                  {m.media && (
+                  {m.preview ? (
+                    <PreviewLoop
+                      src={m.preview.src}
+                      poster={m.preview.poster}
+                      className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                    />
+                  ) : m.media && (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
                       src={m.media}
