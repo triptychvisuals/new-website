@@ -110,7 +110,7 @@ export async function GET() {
 
   const ids = [...siteIds, ...channelIds];
   const returned = new Set<string>();
-  const list: { title: string; date: string; views: number }[] = [];
+  const list: { id: string; title: string; date: string; views: number }[] = [];
   const now = Date.now();
   let total = 0;
   let perDay = 0;
@@ -126,7 +126,7 @@ export async function GET() {
         total += views;
         perDay += views / days;
         if (it.id) returned.add(it.id);
-        list.push({ title: it.snippet?.title ?? it.id ?? "", date: (it.snippet?.publishedAt ?? "").slice(0, 10), views });
+        list.push({ id: it.id ?? "", title: it.snippet?.title ?? it.id ?? "", date: (it.snippet?.publishedAt ?? "").slice(0, 10), views });
       }
     }
   } catch {
