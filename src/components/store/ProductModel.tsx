@@ -155,7 +155,7 @@ function addDecals(s: THREE.Object3D, decals: Decal[]): THREE.Group {
     const o = new THREE.Object3D();
     o.position.copy(hit.point);
     o.lookAt(hit.point.clone().add(new THREE.Vector3(0, 0, 1)));
-    const raw = new DecalGeometry(hit.object as THREE.Mesh, hit.point, o.rotation, new THREE.Vector3(w, w / art.aspect, size.z * 0.12));
+    const raw = new DecalGeometry(hit.object as THREE.Mesh, hit.point, o.rotation, new THREE.Vector3(w, w / art.aspect, size.z * 0.45));
     // keep only fabric facing the way it was projected from, so a detail
     // never shows through on the far side of the shirt
     const geo = facing(raw, new THREE.Vector3(0, 0, 1));
@@ -294,8 +294,8 @@ export default function ProductModel({ src, poster, alt, decals }: { src: string
           dpr={[1, 2]}
           gl={{ antialias: true, alpha: true, powerPreference: "low-power" }}
           onCreated={({ gl }) => {
-            gl.toneMapping = THREE.ACESFilmicToneMapping;
-            gl.toneMappingExposure = 1.05;
+            gl.toneMapping = THREE.NeutralToneMapping;
+            gl.toneMappingExposure = 1.18;
           }}
         >
           <ambientLight intensity={0.5} />
