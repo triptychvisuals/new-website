@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { site } from "@/lib/site";
 import CopyButton from "@/components/press/CopyButton";
+import MatrixHorse from "./MatrixHorse";
 
 // EDIT: the choices.
 const TYPES = ["Music video", "Commercial", "Brand film", "Live / event", "Something else"];
@@ -145,25 +146,33 @@ export default function BriefBuilder() {
 
       {/* The brief, written as you go */}
       <aside className="lg:sticky lg:top-24 lg:self-start">
-        <div className="rounded-2xl bg-foreground p-6 text-background sm:p-8">
+        {/* EDIT: the panel is always "the Matrix" — black, with green code */}
+        <div className="rounded-2xl bg-[#020403] p-6 text-[#00ff41] ring-1 ring-[#00ff41]/25 sm:p-8">
           <div className="flex items-center justify-between gap-4">
-            <p className="font-mono text-[11px] uppercase tracking-[0.15em] opacity-60">Your brief</p>
-            <span className="font-mono text-[11px] uppercase tracking-[0.15em] opacity-60">{ready ? "Ready" : "Add name + email"}</span>
+            <p className="font-mono text-[11px] uppercase tracking-[0.15em] opacity-70">Your brief</p>
+            <span className="font-mono text-[11px] uppercase tracking-[0.15em] opacity-70">{ready ? "Ready" : "Add name + email"}</span>
           </div>
-          <pre className="mt-5 whitespace-pre-wrap font-mono text-[12.5px] leading-relaxed opacity-90">{text}</pre>
+          {/* the first motion picture, in code */}
+          <figure className="mt-5">
+            <MatrixHorse className="aspect-[16/9] rounded-xl ring-1 ring-[#00ff41]/20" />
+            <figcaption className="mt-2 font-mono text-[10px] uppercase tracking-[0.15em] text-[#00ff41]/50">
+              The Horse in Motion · Muybridge, 1878 — the first motion picture
+            </figcaption>
+          </figure>
+          <pre className="mt-5 whitespace-pre-wrap font-mono text-[12.5px] leading-relaxed text-[#7dffa0] [text-shadow:0_0_8px_rgba(0,255,65,.35)]">{text}</pre>
           <div className="mt-6 flex flex-wrap gap-2">
             <a
               href={ready ? mailto : undefined}
               aria-disabled={!ready}
-              className={`inline-flex items-center gap-2 rounded-full bg-background px-5 py-2.5 text-[14px] font-medium text-foreground transition-opacity ${ready ? "hover:opacity-85" : "pointer-events-none opacity-40"}`}
+              className={`inline-flex items-center gap-2 rounded-full bg-[#00ff41] px-5 py-2.5 text-[14px] font-medium text-black transition-opacity ${ready ? "hover:opacity-85" : "pointer-events-none opacity-40"}`}
             >
               Send brief <span aria-hidden>→</span>
             </a>
-            <a href={portal} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-full border border-background/40 px-5 py-2.5 text-[14px] text-background transition-colors hover:border-background">
+            <a href={portal} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-full border border-[#00ff41]/40 px-5 py-2.5 text-[14px] text-[#00ff41] transition-colors hover:border-[#00ff41]">
               Continue in the portal <span aria-hidden>↗</span>
             </a>
           </div>
-          <div className="mt-3 [&_button]:border-background/30 [&_button]:text-background/80 [&_button:hover]:border-background [&_button:hover]:text-background">
+          <div className="mt-3 [&_button]:border-[#00ff41]/30 [&_button]:text-[#00ff41]/80 [&_button:hover]:border-[#00ff41] [&_button:hover]:text-[#00ff41]">
             <CopyButton text={text} label="Copy brief" />
           </div>
         </div>
