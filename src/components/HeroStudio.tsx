@@ -24,8 +24,12 @@ const PRESS_FEATURE = features[0];
 export default function HeroStudio({
   // EDIT: authored tagline — the portal's tagline replaces it when set.
   tagline = "Imagination in Motion",
+  // EDIT: the strip under the video (tagline, line, press link, quick
+  // links). Off on the home page, where Global Impact follows the video.
+  intro = true,
 }: {
   tagline?: string;
+  intro?: boolean;
 }) {
   return (
     <>
@@ -44,12 +48,14 @@ export default function HeroStudio({
         }}
       />
 
-      {/* The video carries the hero on its own; the tagline and the ways in
-          sit in a quiet strip under it (below). The h1 stays for search. */}
+      {/* The video carries the hero on its own. Without the strip below,
+          the tagline stays as the page's (unseen) h1 for search. */}
+      {!intro && <h1 className="sr-only">{tagline}</h1>}
     </section>
 
     {/* Under the video: the tagline small on the left, the ways in as
         plain text links on the right. */}
+    {intro && (
     <section aria-label="Introduction" className="bg-background px-5 pb-10 pt-8 text-foreground lg:px-10">
       <div className="mx-auto flex max-w-[1760px] flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
         <div>
@@ -84,6 +90,7 @@ export default function HeroStudio({
         </nav>
       </div>
     </section>
+    )}
     </>
   );
 }

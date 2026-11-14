@@ -1,4 +1,4 @@
-// Home — the reel, the latest release, the labels, the reels, the
+// Home — the reel, Global Impact (the labels), the latest release, the reels, the
 // timeline, and a closing invitation to start a project.
 import type { Viewport } from "next";
 import Header from "@/components/Header";
@@ -24,11 +24,11 @@ export default async function Home() {
     <>
       <main className="relative min-h-screen">
         <Header logo={content.logo} overlay />
-        <HeroStudio tagline={content.tagline} />
+        <HeroStudio tagline={content.tagline} intro={false} />
+        {/* Global Impact — the labels, the live views and the numbers — right under the video */}
+        <PartnerCard />
         {/* The newest release, big, and the one before it */}
         <LatestCards />
-        {/* The labels, floating round a headline */}
-        <PartnerCard />
         <SelectedWorks />
         {/* The 2016 → 2026 timeline */}
         <Decade />
