@@ -29,7 +29,7 @@ export const site = {
   legalName: "Triptych Studios LLC",
   /** EDIT: how charges read on a customer's card statement. Keep this in
    *  step with the statement descriptor in Stripe (Settings > Business). */
-  statementDescriptor: "TRIPTYCH VISUALS",
+  statementDescriptor: "TRIPTYCH STUDIOS",
   /** EDIT: the state whose law governs the terms, and where disputes go. */
   lawState: "Indiana",
   email: "law@triptychstudios.co", // EDIT: contact email (clients, refunds, billing questions)
