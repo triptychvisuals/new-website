@@ -1,96 +1,139 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { phoneCopy, PHONE_MAX } from "@/lib/video";
+import { useEffect, useRef } from "react";
+import { HERO_CLIPS } from "@/lib/heroClips";
+import { PHONE_MAX } from "@/lib/video";
 
-// EDIT: hero background clips. Drop your real files in /public/hero and list
-// them here — they cycle horizontally every AUTO_MS. These are placeholders
-// (existing clips) so the carousel is visibly working until you swap them.
-const HERO_VIDEOS = [
-  "/hero/hero.mp4",
-  "/reels/reel-c.mp4",
-  "/reels/reel-b.mp4",
-  "/reels/reel-a.mp4",
-];
-
-// EDIT: auto-advance interval in milliseconds.
-const AUTO_MS = 2500;
+// EDIT: how long the crossfade between shots takes (ms).
+const FADE_MS = 700;
 
 /**
- * Hero background reel gallery: a horizontal track of clips behind the hero
- * copy that slides every AUTO_MS, with no controls on top.
+ * The hero reel: approved shots from the studio's work (lib/heroClips.ts),
+ * played one after another in a new random order on every visit.
  *
- * Only the clip on screen plays — the others sit paused — and the whole
- * reel pauses once the hero scrolls out of view, so no video is decoding
- * while you scroll the rest of the page.
+ * Two video elements take turns: one plays while the other quietly loads
+ * the next shot, then they crossfade — so only two shots are ever in
+ * memory, however long the list. Phones get lighter 720p copies. Nothing
+ * plays while the hero is off screen.
  */
 export default function HeroReel() {
-  const [active, setActive] = useState(0);
-  const [onScreen, setOnScreen] = useState(true);
-  const track = useRef<HTMLDivElement>(null);
-  const count = HERO_VIDEOS.length;
+  const box = useRef<HTMLDivElement>(null);
+  const one = useRef<HTMLVideoElement>(null);
+  const two = useRef<HTMLVideoElement>(null);
 
-  // Is the hero on screen at all?
   useEffect(() => {
-    const el = track.current;
-    if (!el) return;
-    const io = new IntersectionObserver(([e]) => setOnScreen(e.isIntersecting));
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
+    const a = one.current;
+    const b = two.current;
+    const root = box.current;
+    if (!a || !b || !root || HERO_CLIPS.length < 2) return;
+    const els = [a, b];
+    const phone = window.matchMedia(`(max-width: ${PHONE_MAX}px)`).matches;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  // Play the active clip (while visible); keep every other clip paused.
-  useEffect(() => {
-    const vids = track.current?.querySelectorAll("video") ?? [];
-    vids.forEach((v, i) => {
-      if (onScreen && i === active) v.play().catch(() => {});
+    // The first shot is fixed (it's in the page's HTML so it starts at once);
+    // the rest are shuffled for this visit.
+    const rest = HERO_CLIPS.map((_, i) => i).slice(1);
+    for (let i = rest.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [rest[i], rest[j]] = [rest[j], rest[i]];
+    }
+    const order = [0, ...rest];
+    const srcAt = (k: number) => {
+      const c = HERO_CLIPS[order[k % order.length]];
+      return phone ? c.phone : c.src;
+    };
+
+    let front = 0; // which element is showing
+    let pos = 0; // where we are in `order`
+    let onScreen = true;
+    let alive = true;
+    const timers: number[] = [];
+
+    const prime = (el: HTMLVideoElement, k: number) => {
+      el.src = srcAt(k);
+      el.load();
+    };
+    prime(b, 1);
+
+    const advance = () => {
+      if (!alive) return;
+      const cur = els[front];
+      const next = els[1 - front];
+      next.currentTime = 0;
+      if (onScreen) next.play().catch(() => {});
+      next.style.opacity = "1";
+      cur.style.opacity = "0";
+      front = 1 - front;
+      pos += 1;
+      // once it has faded out, the old one loads the shot after next
+      timers.push(window.setTimeout(() => {
+        cur.pause();
+        prime(cur, pos + 1);
+      }, reduced ? 0 : FADE_MS + 50));
+    };
+
+    const onEnded = (e: Event) => {
+      if (e.target === els[front]) advance();
+    };
+    // a shot that won't load is skipped
+    const onError = (e: Event) => {
+      const el = e.target as HTMLVideoElement;
+      if (el !== els[front]) {
+        pos += 1;
+        prime(el, pos + 1);
+      } else advance();
+    };
+    for (const el of els) {
+      el.addEventListener("ended", onEnded);
+      el.addEventListener("error", onError);
+    }
+
+    const io = new IntersectionObserver(([e]) => {
+      onScreen = e.isIntersecting;
+      const v = els[front];
+      if (onScreen) v.play().catch(() => {});
       else v.pause();
     });
-    // Buffer the next clip ahead so it's ready when the track slides to it.
-    const next = vids[(active + 1) % vids.length];
-    if (next) next.preload = "auto";
-  }, [active, onScreen]);
+    io.observe(root);
 
-  // Advance when the clip's time is up.
-  useEffect(() => {
-    if (count <= 1 || !onScreen) return;
-    const id = setTimeout(() => setActive((a) => (a + 1) % count), AUTO_MS);
-    return () => clearTimeout(id);
-  }, [count, onScreen, active]);
+    return () => {
+      alive = false;
+      io.disconnect();
+      timers.forEach(clearTimeout);
+      for (const el of els) {
+        el.removeEventListener("ended", onEnded);
+        el.removeEventListener("error", onError);
+      }
+    };
+  }, []);
 
+  const first = HERO_CLIPS[0];
+  const layer = "absolute inset-0 h-full w-full object-cover transition-opacity ease-out motion-reduce:transition-none";
 
   return (
-    <>
-      {/* Clip track — one clip per slide, translated by the active index */}
-      <div ref={track} className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-        <div
-          className="flex h-full w-full transition-transform duration-700 ease-out"
-          style={{ transform: `translateX(-${active * 100}%)` }}
-        >
-          {HERO_VIDEOS.map((src, i) => (
-            <video
-              key={`${src}-${i}`}
-              className="h-full w-full shrink-0 object-cover"
-              // First clip autoplays for an instant start; the effect above
-              // takes over from there.
-              autoPlay={i === 0}
-              muted
-              loop
-              playsInline
-              // Only the first clip is buffered up front; the effect above
-              // readies the next one as each plays (keeps phone data + CPU down)
-              preload={i === 0 ? "auto" : "metadata"}
-              aria-hidden
-            >
-              {/* phones get the lighter copy where there is one (lib/video.ts) */}
-              {phoneCopy(src) && <source src={phoneCopy(src)} type="video/mp4" media={`(max-width: ${PHONE_MAX}px)`} />}
-              <source src={src} type="video/mp4" />
-            </video>
-          ))}
-        </div>
-      </div>
-
-    </>
+    <div ref={box} className="pointer-events-none absolute inset-0 -z-10 overflow-hidden bg-black">
+      <video
+        ref={one}
+        className={layer}
+        style={{ opacity: 1, transitionDuration: `${FADE_MS}ms` }}
+        autoPlay
+        muted
+        playsInline
+        preload="auto"
+        aria-hidden
+      >
+        <source src={first.phone} type="video/mp4" media={`(max-width: ${PHONE_MAX}px)`} />
+        <source src={first.src} type="video/mp4" />
+      </video>
+      <video
+        ref={two}
+        className={layer}
+        style={{ opacity: 0, transitionDuration: `${FADE_MS}ms` }}
+        muted
+        playsInline
+        preload="auto"
+        aria-hidden
+      />
+    </div>
   );
 }
-
