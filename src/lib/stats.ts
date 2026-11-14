@@ -31,7 +31,9 @@ export const LIVE_VIEWS = {
   includePostProduction: true,
   // EDIT: YouTube ids of videos you made that aren't projects on the site
   // (the part after "watch?v="), so they count too.
-  extraIds: [] as string[],
+  extraIds: [
+    "XpK6-LT1YoI", // EDIT: name it here once identified
+  ] as string[],
   // EDIT: the studio's own YouTube channel (its @handle). Every upload on it
   // counts too, except copies of videos already counted above — the same
   // video, or the same song and artist in the title. "" turns this off.
