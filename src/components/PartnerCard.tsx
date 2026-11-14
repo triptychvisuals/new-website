@@ -28,8 +28,9 @@ const LOGO_SIZES: Record<string, string> = {
 };
 const DEFAULT_LOGO_SIZE = "h-[60%]";
 
-// EDIT: the size of each logo tile (px) — desktop, floating round the
-// headline. Phones size theirs to the row (three across).
+// EDIT: the largest a logo tile gets (px) on wide screens, where they
+// float in their own columns either side of the words. Narrower screens
+// set them in rows of three above the headline.
 const TILE = 176;
 
 
@@ -59,26 +60,15 @@ function logoFor(
   return undefined;
 }
 
-// EDIT: where each logo tile floats round the headline (desktop), as % of
-// the room left once a tile fits (0 = flush left/top, 100 = flush right/
-// bottom) — left, top — plus how long its slow bob takes (s). Tiles
-// past the list's length are skipped; extra logos reuse the last spots.
-const SPOTS: [number, number, number][] = [
-  [4, 6, 7],
-  [96, 3, 8],
-  [12, 36, 8.5],
-  [88, 34, 6.8],
-  [3, 67, 9],
-  [97, 65, 9.4],
-  [11, 98, 7.5],
-  [89, 97, 7.2],
-  [50, 100, 6.5],
-];
+// EDIT: how long each tile's slow bob takes (s), in turn.
+const BOB = [7, 8, 8.5, 6.8, 9, 9.4, 7.5, 7.2];
+
 
 /**
  * The labels section: the partner logos on dark rounded tiles floating
- * round a centred headline with two buttons. On phones the tiles sit in a
- * row above the headline instead. Logos are the files in /public/partners
+ * either side of a centred headline with two buttons. The tiles live in
+ * their own columns, so they never touch the words at any width; where
+ * the columns don't fit, the tiles sit in rows above the headline instead. Logos are the files in /public/partners
  * (see above); a partner with no file shows its name.
  */
 export default function PartnerCard() {
@@ -94,40 +84,36 @@ export default function PartnerCard() {
         className={`absolute inset-0 m-auto ${it.logo.size} w-auto max-w-[80%] object-contain ${it.logo.white ? "[filter:invert(1)] dark:[filter:none]" : "dark:[filter:invert(1)]"}`}
       />
     ) : (
-      <span className="px-3 text-center text-[15px] font-medium leading-tight text-foreground/80 lg:text-[17px]">{it.name}</span>
+      <span className="px-3 text-center text-[15px] font-medium leading-tight text-foreground/80 xl:text-[17px]">{it.name}</span>
     );
 
   return (
-    <section aria-label="Labels we work with" className="relative overflow-hidden bg-background px-5 py-20 sm:py-28 lg:min-h-[1040px] lg:py-0">
-      {/* Desktop: tiles floating round the headline */}
-      <div aria-hidden className="absolute inset-0 hidden lg:block">
-        {items.map((it, i) => {
-          const [left, top, secs] = SPOTS[Math.min(i, SPOTS.length - 1)];
-          return (
-            <span
-              key={it.name}
-              className="partner-tile absolute grid place-items-center rounded-[36px] bg-surface"
-              // spots are % of the room left once the tile fits, so big
-              // tiles never run off the edge
-              style={{
-                width: TILE,
-                height: TILE,
-                left: `calc((100% - ${TILE}px) * ${left / 100})`,
-                top: `calc((100% - ${TILE}px) * ${top / 100})`,
-                animationDuration: `${secs}s`,
-                animationDelay: `${-i * 1.3}s`,
-              }}
-            >
-              {tile(it)}
-            </span>
-          );
-        })}
-      </div>
+    <section aria-label="Labels we work with" className="relative overflow-hidden bg-background px-5 py-20 sm:py-28 xl:px-10 xl:py-20">
+      <div className="mx-auto xl:grid xl:min-h-[960px] xl:max-w-[1760px] xl:grid-cols-[minmax(0,1fr)_minmax(0,760px)_minmax(0,1fr)] xl:gap-x-12">
+      {/* Wide screens: a column of tiles each side, staggered */}
+      {[0, 1].map((side) => (
+        <div key={side} aria-hidden className={`hidden xl:flex xl:flex-col xl:justify-between ${side === 1 ? "xl:order-3" : ""}`}>
+          {items
+            .map((it, i) => ({ it, i }))
+            .filter(({ i }) => i % 2 === side)
+            .map(({ it, i }, k) => (
+              <span
+                key={it.name}
+                className={`partner-tile relative grid aspect-square w-full place-items-center rounded-[36px] bg-surface ${
+                  // zig-zag: in towards the words, then out to the edge
+                  (k % 2 === 0) === (side === 0) ? "self-start" : "self-end"
+                }`}
+                style={{ maxWidth: TILE, animationDuration: `${BOB[i % BOB.length]}s`, animationDelay: `${-i * 1.3}s` }}
+              >
+                {tile(it)}
+              </span>
+            ))}
+        </div>
+      ))}
 
-      <div className="relative mx-auto flex max-w-[760px] flex-col items-center text-center lg:min-h-[1040px] lg:justify-center lg:py-24">
-        {/* Phones / tablets: the tiles in rows of three above — the studio's
-            own mark rounds out the last row when it's short. */}
-        <div className="mb-10 flex w-full max-w-[560px] flex-wrap justify-center gap-3 sm:gap-4 lg:hidden">
+      <div className="relative mx-auto flex max-w-[760px] flex-col items-center text-center xl:order-2 xl:w-full xl:justify-center">
+        {/* Narrower screens: the tiles in rows of three above */}
+        <div className="mb-10 flex w-full max-w-[560px] flex-wrap justify-center gap-3 sm:gap-4 xl:hidden">
           {items.map((it) => (
             <span key={it.name} className="relative grid aspect-square w-[calc((100%-1.5rem)/3)] place-items-center rounded-[24px] bg-surface sm:w-[calc((100%-2rem)/3)]">
               {tile(it)}
@@ -163,6 +149,7 @@ export default function PartnerCard() {
             Services & partners
           </a>
         </div>
+      </div>
       </div>
     </section>
   );
