@@ -7,6 +7,7 @@ import Footer from "@/components/Footer";
 import StoreClient from "@/components/store/StoreClient";
 import { CAUSE, products } from "@/lib/store";
 import { getSiteContent } from "@/lib/siteContent";
+import { stripeMode } from "@/lib/stripe";
 
 export const metadata: Metadata = {
   title: "Store", // EDIT
@@ -22,7 +23,7 @@ export default async function StorePage() {
       <main className="relative min-h-screen bg-background text-foreground">
         <Header logo={content.logo} />
         <div className="mx-auto w-full max-w-[1760px] pt-8 sm:pt-12 lg:px-5">
-          <StoreClient />
+          <StoreClient testMode={stripeMode() === "sandbox"} />
         </div>
 
         {/* The cause (EDIT: lib/store.ts → CAUSE) */}

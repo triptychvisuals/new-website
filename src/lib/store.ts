@@ -42,6 +42,22 @@ export type Product = {
 };
 
 /**
+ * EDIT: shipping at checkout — where we ship (two-letter country codes)
+ * and the options the buyer picks from (cents). Stripe collects the
+ * address.
+ */
+export const SHIPPING = {
+  countries: ["US"],
+  options: [
+    { name: "Standard", amount: 800, days: [3, 7] },
+    { name: "Express", amount: 2000, days: [1, 3] },
+  ],
+};
+
+/** Most of one item in one order. */
+export const MAX_QTY = 10; // EDIT
+
+/**
  * EDIT: the film cause. Half of every sale goes here — it's shown at the
  * top of the store, on every product and in the bag. Name the partner
  * organisation (and link it) once it's chosen.

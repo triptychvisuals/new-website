@@ -18,7 +18,7 @@ const KEY = "triptych-bag";
  * localStorage so it survives a reload. Checkout hands the order off —
  * EDIT `checkout()` to connect Shopify / Stripe.
  */
-export default function StoreClient() {
+export default function StoreClient({ testMode = false }: { testMode?: boolean }) {
   const [kind, setKind] = useState<"All" | Kind>("All");
   const [sizes, setSizes] = useState<Record<string, string>>({});
   const [bag, setBag] = useState<Line[]>([]);
@@ -72,11 +72,35 @@ export default function StoreClient() {
   };
   const setQty = (i: number, qty: number) => setBag((b) => (qty <= 0 ? b.filter((_, k) => k !== i) : b.map((l, k) => (k === i ? { ...l, qty } : l))));
 
-  // EDIT: checkout — for now an email order; swap for your Shopify / Stripe
-  // checkout URL.
-  const checkout = () => {
+  // Checkout: the server turns the bag into a Stripe Checkout page
+  // (app/api/checkout) and we go there. Until Stripe is connected it
+  // falls back to an email order.
+  const [paying, setPaying] = useState(false);
+  const [payError, setPayError] = useState<string | null>(null);
+  const emailOrder = () => {
     const body = lines.map((l) => `${l.qty} × ${l.product.name}${l.size ? ` (${l.size})` : ""} — ${money(l.product.price * l.qty)}`).join("\n");
     window.location.assign(`mailto:${site.email}?subject=${encodeURIComponent("Store order")}&body=${encodeURIComponent(`${body}\n\nSubtotal ${money(subtotal)}\n\nShip to:\n`)}`);
+  };
+  const checkout = async () => {
+    setPaying(true);
+    setPayError(null);
+    try {
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ lines: bag.map(({ id, size, qty }) => ({ id, size, qty })) }),
+      });
+      if (res.status === 503) {
+        setPaying(false);
+        return emailOrder();
+      }
+      const data = (await res.json()) as { url?: string; error?: string };
+      if (!res.ok || !data.url) throw new Error(data.error || "Checkout didn't start.");
+      window.location.assign(data.url);
+    } catch (e) {
+      setPaying(false);
+      setPayError(e instanceof Error ? e.message : "Checkout didn't start. Try again.");
+    }
   };
 
   const chip = (on: boolean) =>
@@ -270,11 +294,18 @@ export default function StoreClient() {
           <button
             type="button"
             onClick={checkout}
-            disabled={lines.length === 0}
+            disabled={lines.length === 0 || paying}
+            aria-busy={paying}
             className="mt-4 w-full rounded-full bg-foreground py-3 text-[14px] font-medium text-background transition-opacity hover:opacity-85 disabled:opacity-40"
           >
-            Checkout <span aria-hidden>→</span>
+            {paying ? "Opening secure checkout…" : <>Checkout <span aria-hidden>→</span></>}
           </button>
+          {payError && <p role="alert" className="mt-2 text-[13px] text-accent">{payError}</p>}
+          {testMode && (
+            <p className="mt-3 rounded-xl border border-dashed border-hairline px-3 py-2 text-[12px] leading-relaxed text-muted">
+              Test mode (Stripe sandbox): no real charges. Pay with card 4242 4242 4242 4242, any future date, any CVC.
+            </p>
+          )}
         </div>
       </aside>
     </section>
