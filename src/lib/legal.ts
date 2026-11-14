@@ -19,7 +19,7 @@ export type LegalDoc = {
 
 const studio = `${site.name} ${site.suffix}`;
 const domain = site.url.replace("https://", "");
-const owner = `${studio} is a trade name of ${site.legalName}`;
+const owner = `${studio} is operated by ${site.legalName}, an ${site.lawState} limited liability company`;
 
 export const legalDocs: LegalDoc[] = [
   {
@@ -234,7 +234,7 @@ export const legalDocs: LegalDoc[] = [
         id: "contact",
         heading: "Contact",
         body: [
-          `${site.legalName}, doing business as ${studio}. Email ${site.email}. Mailing address: ${site.street}${site.pmb ? `, PMB ${site.pmb}` : ""}, ${site.city}, ${site.region} ${site.postalCode}.`,
+          `${site.legalName}. Email ${site.email}. Mailing address: ${site.street}${site.pmb ? `, PMB ${site.pmb}` : ""}, ${site.city}, ${site.region} ${site.postalCode}.`,
         ],
       },
     ],
