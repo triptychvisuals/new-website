@@ -44,6 +44,10 @@ const FADE_MIN = 25;
 // show the still with a slow push-in and the pin.
 const ORBITS = new Set<Look>(["dawn", "day", "golden", "dusk", "night"]);
 
+// EDIT: true = the orbit plays even when the visitor's device asks for
+// reduced motion (it's a slow, eased glide); false = they get the still.
+const ORBIT_FOR_ALL = true;
+
 const LABEL: Record<Look, string> = { dawn: "Dawn", day: "Day", golden: "Golden hour", dusk: "Blue hour", night: "Night" };
 
 /** Sunrise and sunset (UTC ms) on the UTC day of `d`, at lat / lng (NOAA). */
@@ -103,13 +107,13 @@ function Layer({ look, opacity, still }: { look: Look; opacity: number; still: b
 
 export default function StudioView({ className = "" }: { className?: string }) {
   const [now, setNow] = useState<number | null>(null);
-  // reduced motion: the stills only
+  // reduced motion: the stills only (unless ORBIT_FOR_ALL)
   const [still, setStill] = useState(false);
 
   useEffect(() => {
     const tick = () => setNow(Date.now());
     const m = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const t0 = window.setTimeout(() => setStill(m.matches), 0);
+    const t0 = window.setTimeout(() => setStill(m.matches && !ORBIT_FOR_ALL), 0);
     const first = window.setTimeout(tick, 0);
     const id = window.setInterval(tick, 60_000);
     return () => {

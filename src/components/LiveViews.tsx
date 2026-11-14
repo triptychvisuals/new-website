@@ -75,9 +75,10 @@ export default function LiveViews() {
   return (
     <div ref={wrap} className="flex flex-col items-center">
       <p className="sr-only">{value ? `${fmt.format(value)} views` : "Over 190 million views"}</p>
+      {/* EDIT: the number's size: fills a phone's width, capped at 7rem on bigger screens */}
       <div
         aria-hidden
-        className="flex text-[clamp(3rem,9vw,7rem)] font-medium leading-none tracking-[-0.04em] tabular-nums"
+        className="flex text-[clamp(2.5rem,14.5vw,7rem)] font-medium leading-none tracking-[-0.04em] tabular-nums"
       >
         {chars.map((c, i) => {
           const key = chars.length - i; // keyed from the right, so new digits slot in on the left
