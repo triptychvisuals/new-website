@@ -24,9 +24,16 @@ const AUTO_MS = 2500;
  * reel pauses once the hero scrolls out of view, so no video is decoding
  * while you scroll the rest of the page.
  */
-export default function HeroReel() {
+export default function HeroReel({
+  // While the lead YouTube video is showing on top, the local clips rest
+  // (paused, not cycling) so only one video decodes at a time.
+  resting = false,
+}: {
+  resting?: boolean;
+} = {}) {
   const [active, setActive] = useState(0);
-  const [onScreen, setOnScreen] = useState(true);
+  const [visible, setOnScreen] = useState(true);
+  const onScreen = visible && !resting;
   const track = useRef<HTMLDivElement>(null);
   const count = HERO_VIDEOS.length;
 

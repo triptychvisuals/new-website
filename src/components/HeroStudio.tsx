@@ -1,8 +1,10 @@
 import Link from "next/link";
-import HeroReel from "@/components/HeroReel";
+import HeroVideo from "@/components/HeroVideo";
+import { HERO_WATCH_URL } from "@/lib/hero";
 
 // EDIT: the quick links in the strip under the video.
 const PILLS = [
+  ...(HERO_WATCH_URL ? [{ label: "Watch the reel", href: HERO_WATCH_URL }] : []),
   { label: "See the work", href: "/projects" },
   { label: "Who we are", href: "/who-we-are" },
   { label: "Services", href: "/services" },
@@ -26,8 +28,9 @@ export default function HeroStudio({
     <>
     {/* EDIT: the hero's height — most of the first screen */}
     <section className="relative isolate flex h-[78svh] min-h-[520px] items-center justify-center overflow-hidden bg-black text-white lg:h-[88svh]" aria-label="Showreel">
-      {/* The reel (clips cycle every few seconds — EDIT clips in HeroReel) */}
-      <HeroReel />
+      {/* The reel: the lead YouTube video (EDIT in lib/hero.ts) over the
+          local clips (EDIT in HeroReel), which start it instantly. */}
+      <HeroVideo />
       {/* Shade: darker at the top for the header, a dim middle for the
           headline, and a fade into the page at the bottom. */}
       <div
@@ -57,7 +60,12 @@ export default function HeroStudio({
         </div>
         <nav aria-label="Quick links" className="flex flex-wrap gap-x-6 gap-y-2">
           {PILLS.map((p) => (
-            <Link key={p.href} href={p.href} className="text-[15px] text-muted transition-colors hover:text-foreground">
+            <Link
+              key={p.href}
+              href={p.href}
+              {...(p.href.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+              className="text-[15px] text-muted transition-colors hover:text-foreground"
+            >
               {p.label} <span aria-hidden>→</span>
             </Link>
           ))}
