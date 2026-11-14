@@ -55,7 +55,7 @@ export const site = {
   lng: -87.6345,
   /** EDIT: the studio phone, as you'd like it shown, e.g. "(312) 555-0123".
    *  Leave "" and the Contact page leaves the phone out. */
-  phone: "",
+  phone: "(219) 231-7048",
   /** EDIT: where every Contact button goes — the portal's project intake. */
   contactUrl: "https://portal.triptychstudios.co/start",
   sectionNumber: "001", // EDIT: hero index label
