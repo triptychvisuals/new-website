@@ -85,7 +85,6 @@ const AUTHORED: Authored[] = [
   { title: "Shooters", artist: "Lil Zay Osama ft. Doe Boy", year: "2021", youtube: "n0IiWdpcn5U" },
   { title: "Too Hot", artist: "Queen Key", year: "2021" }, // EDIT: youtube id
   { title: "Blackout", artist: "MVP Tino", year: "2019", youtube: "FiT7-3-EWEU" }, // ~
-  { title: "Weirdo Hoes", artist: "Lil Durk", year: "2019", youtube: "VbONF4saaIU" },
   { title: "Nightmares", artist: "Solly Bandz", year: "2019", youtube: "FmhTALb6JTc" }, // ~
   { title: "Dimple (Next Song Remix)", artist: "Queen Key", year: "2019", youtube: "n8f3ygPPIEY" }, // ~
   { title: "Timing", artist: "Khaliyah X", year: "2018" }, // EDIT: youtube id
@@ -124,6 +123,7 @@ const POST_CREDITS: Authored[] = [
   // ← add credits here
   // EDIT: roles — add what you did on each, e.g. roles: ["Edit", "Color"]
   { title: "Effortless", artist: "Polo G", year: "2019", director: "Laka Films", youtube: "kQZJbGifttw" },
+  { title: "Weirdo Hoes", artist: "Lil Durk", year: "2019", youtube: "VbONF4saaIU" },
   { title: "hellboy", artist: "Lil Peep", year: "2020", director: "Paul John", youtube: "s9t1ZfMZfH4" },
   { title: "Overweight", artist: "Trippie Redd ft. Chris King", year: "2017", roles: ["Edit"], director: "Laka Films", youtube: "OvMwvYklW0I" },
   { title: "Coupe", artist: "Bali Baby", year: "2017", roles: ["Edit"], director: "Spiffy Global", youtube: "zwa5UybNXpk" }, // ~
