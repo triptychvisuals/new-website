@@ -11,6 +11,10 @@ import type { NextConfig } from "next";
 //   • style-src 'unsafe-inline'   — GSAP writes inline styles; ProjectCard sets
 //     an inline gradient background.
 //   • img-src data: blob:         — inline SVG/data-URI + canvas-derived images.
+//   • script-src 'wasm-unsafe-eval' — lets WebAssembly compile (the meshopt
+//     decoder that unpacks the store's 3D models). It does not allow eval().
+//   • connect-src blob:           — the 3D loader reads a model's embedded
+//     textures through blob: URLs it makes itself.
 // 'unsafe-eval' / ws: are added in dev only (React Fast Refresh + HMR socket).
 // EDIT: if you ever add an external font, analytics, or embed, widen the
 // matching directive here (e.g. add the host to script-src / img-src / connect-src).
@@ -25,14 +29,14 @@ const PORTAL_ASSETS_HOST =
 
 const csp = [
   `default-src 'self'`,
-  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
+  `script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'${isDev ? " 'unsafe-eval'" : ""}`,
   // Google Sans loads from Google Fonts (see layout.tsx)
   `style-src 'self' 'unsafe-inline' https://fonts.googleapis.com`,
   // i.ytimg.com — YouTube thumbnails on the 500+ work grid (lib/youtube.ts)
   `img-src 'self' data: blob: ${PORTAL_ASSETS_HOST} https://i.ytimg.com`,
   `media-src 'self' ${PORTAL_ASSETS_HOST}`,
   `font-src 'self' https://fonts.gstatic.com`,
-  `connect-src 'self'${isDev ? " ws:" : ""}`,
+  `connect-src 'self' blob:${isDev ? " ws:" : ""}`,
   // EDIT: origins allowed to embed this site in an iframe — the Triptych
   // Portal's Live Site tab, at its own domain and at its Vercel address.
   // Everyone else stays blocked.

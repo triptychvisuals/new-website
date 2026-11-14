@@ -1,15 +1,16 @@
-// Store — studio merch, gadgets, prints and digital packs, in the flat house
-// style: a title block with the film cause beside it, then the shop and bag.
+// Store — one shirt, the star of the page: big and in 3D up top (the
+// featured layout in StoreClient), its details underneath, then the film
+// cause half of every sale goes to.
 import type { Metadata } from "next";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import StoreClient from "@/components/store/StoreClient";
-import { CAUSE } from "@/lib/store";
+import { CAUSE, products } from "@/lib/store";
 import { getSiteContent } from "@/lib/siteContent";
 
 export const metadata: Metadata = {
   title: "Store", // EDIT
-  description: "The Triptych windbreaker, heavyweight hoodie, layered puffer and varsity — half of every sale funds young filmmakers.", // EDIT
+  description: `${products[0]?.name ?? "Studio merch"}: limited edition, half of every sale funds young filmmakers in Chicago.`, // EDIT
 };
 
 export default async function StorePage() {
@@ -20,25 +21,17 @@ export default async function StorePage() {
     <>
       <main className="relative min-h-screen bg-background text-foreground">
         <Header logo={content.logo} />
-        <div className="mx-auto w-full max-w-[1760px] px-5 lg:px-10">
-          <section aria-label="Store" className="grid gap-10 pb-10 pt-14 sm:pt-20 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)] lg:items-end lg:pb-12 lg:pt-24">
+        <div className="mx-auto w-full max-w-[1760px] pt-8 sm:pt-12 lg:px-5">
+          <StoreClient />
+        </div>
+
+        {/* The cause (EDIT: lib/store.ts → CAUSE) */}
+        <section aria-label="Where the money goes" className="mx-auto w-full max-w-[1760px] px-5 pb-24 sm:px-8 lg:px-13">
+          <div className="grid gap-8 rounded-[28px] bg-foreground p-8 text-background sm:p-12 lg:grid-cols-[auto_minmax(0,1fr)] lg:items-center lg:gap-16">
+            <p className="text-[clamp(4rem,9vw,8rem)] font-medium leading-none tracking-[-0.05em]">{pct}</p>
             <div>
-              <p className="text-[15px] text-muted">Store</p>
-              {/* EDIT: the page's headline and lead */}
-              <h1 className="mt-4 text-[clamp(2.75rem,7vw,6.5rem)] font-medium leading-[0.98] tracking-[-0.04em]">
-                Wear the mark.
-                <br />
-                Fund the next one.
-              </h1>
-              <p className="mt-6 max-w-[560px] text-[17px] leading-relaxed text-muted sm:text-[19px]">
-                A windbreaker, a heavyweight hoodie, a layered puffer and a varsity — made in small runs, shipped from Chicago.
-              </p>
-            </div>
-            {/* The cause (EDIT: lib/store.ts → CAUSE) */}
-            <div className="rounded-[20px] bg-foreground p-7 text-background sm:p-8">
-              <p className="text-[clamp(3rem,6vw,5rem)] font-medium leading-none tracking-[-0.04em]">{pct}</p>
-              <p className="mt-3 text-[19px] font-medium">of every sale goes to film.</p>
-              <p className="mt-3 text-[15px] leading-relaxed text-background/70">{CAUSE.line}</p>
+              <p className="text-[clamp(1.5rem,2.6vw,2.25rem)] font-medium leading-tight tracking-[-0.02em]">of every sale goes to film.</p>
+              <p className="mt-3 max-w-[640px] text-[16px] leading-relaxed text-background/70">{CAUSE.line}</p>
               {CAUSE.partner && (
                 <p className="mt-4 text-[14px] text-background/70">
                   In partnership with{" "}
@@ -52,11 +45,8 @@ export default async function StorePage() {
                 </p>
               )}
             </div>
-          </section>
-        </div>
-        <div className="mx-auto w-full max-w-[1760px] pb-24">
-          <StoreClient />
-        </div>
+          </div>
+        </section>
       </main>
       <Footer />
     </>

@@ -1,7 +1,11 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import dynamic from "next/dynamic";
 import { products, kinds, money, CAUSE, type Kind, type Product } from "@/lib/store";
+
+// the 3D viewer (three) loads on its own, after the page
+const ProductModel = dynamic(() => import("./ProductModel"), { ssr: false });
 import { site } from "@/lib/site";
 import ProductArt from "./ProductArt";
 
@@ -80,121 +84,130 @@ export default function StoreClient() {
 
   return (
     <section className="px-5 pb-24 sm:px-8">
+      {products.length === 1 ? (
+        <Feature p={products[0]} size={sizes[products[0].id] ?? products[0].sizes?.[0]} setSize={(v) => setSizes((m) => ({ ...m, [products[0].id]: v }))} add={add} count={count} openBag={() => setOpen(true)} />
+      ) : (
+        <>
       {/* Filter + bag button */}
-      <div className="mb-6 flex flex-wrap items-center gap-2 sm:mb-8">
-        {kinds.length > 1 && (
-          <>
-            <button type="button" onClick={() => setKind("All")} aria-pressed={kind === "All"} className={chip(kind === "All")}>All</button>
-            {kinds.map((k) => (
-              <button key={k} type="button" onClick={() => setKind(k)} aria-pressed={kind === k} className={chip(kind === k)}>{k}</button>
-            ))}
-          </>
-        )}
-        <button
-          type="button"
-          onClick={() => setOpen(true)}
-          className="ml-auto inline-flex items-center gap-2 rounded-full border border-foreground px-4 py-1.5 text-[13px] font-medium transition-colors hover:bg-foreground hover:text-background"
-        >
-          Bag
-          <span className={`grid h-5 min-w-5 place-items-center rounded-full px-1 text-[11px] tabular-nums ${count ? "bg-accent text-white" : "bg-foreground/10"}`}>{count}</span>
-        </button>
-      </div>
+        <div className="mb-6 flex flex-wrap items-center gap-2 sm:mb-8">
+          {kinds.length > 1 && (
+            <>
+              <button type="button" onClick={() => setKind("All")} aria-pressed={kind === "All"} className={chip(kind === "All")}>All</button>
+              {kinds.map((k) => (
+                <button key={k} type="button" onClick={() => setKind(k)} aria-pressed={kind === k} className={chip(kind === k)}>{k}</button>
+              ))}
+            </>
+          )}
+          <button
+            type="button"
+            onClick={() => setOpen(true)}
+            className="ml-auto inline-flex items-center gap-2 rounded-full border border-foreground px-4 py-1.5 text-[13px] font-medium transition-colors hover:bg-foreground hover:text-background"
+          >
+            Bag
+            <span className={`grid h-5 min-w-5 place-items-center rounded-full px-1 text-[11px] tabular-nums ${count ? "bg-accent text-white" : "bg-foreground/10"}`}>{count}</span>
+          </button>
+        </div>
 
-      {/* Products */}
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4" aria-live="polite">
-        {shown.map((p) => {
-          const size = p.sizes ? (sizes[p.id] ?? p.sizes[0]) : undefined;
-          return (
-            <article key={p.id} className="group flex flex-col overflow-hidden rounded-[20px] bg-surface">
-              <div className="relative aspect-square w-full overflow-hidden bg-[#dcd7d5]">
-                {p.image ? (
-                  <>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={p.image}
-                      alt={p.name}
-                      loading="lazy"
-                      decoding="async"
-                      className={`absolute inset-0 h-full w-full object-cover transition duration-700 ease-out group-hover:scale-[1.04] ${p.imageBack && back[p.id] ? "opacity-0" : ""}`}
-                    />
-                    {p.imageBack && (
-                      <>
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                          src={p.imageBack}
-                          alt={`${p.name}, back`}
-                          loading="lazy"
-                          decoding="async"
-                          className={`absolute inset-0 h-full w-full object-cover transition duration-700 ease-out group-hover:scale-[1.04] ${back[p.id] ? "" : "opacity-0"}`}
-                        />
-                        <div className="absolute right-4 top-4 flex rounded-full bg-white/90 p-0.5 text-[11px] font-medium text-black">
-                          {(["Front", "Back"] as const).map((side) => {
-                            const on = (side === "Back") === !!back[p.id];
-                            return (
-                              <button
-                                key={side}
-                                type="button"
-                                aria-pressed={on}
-                                onClick={() => setBack((b) => ({ ...b, [p.id]: side === "Back" }))}
-                                className={`rounded-full px-2.5 py-1 transition-colors ${on ? "bg-black text-white" : "text-black/60 hover:text-black"}`}
-                              >
-                                {side}
-                              </button>
-                            );
-                          })}
-                        </div>
-                      </>
-                    )}
-                  </>
-                ) : (
-                  <div
-                    className="absolute inset-0"
-                    style={{ background: `radial-gradient(circle at 30% 25%, hsl(${p.hue} 70% 62%), hsl(${(p.hue + 30) % 360} 60% 40%) 55%, hsl(${(p.hue + 60) % 360} 55% 18%))` }}
-                  >
-                    <ProductArt shape={p.shape} className="absolute left-1/2 top-1/2 h-[52%] w-auto -translate-x-1/2 -translate-y-1/2 text-white opacity-90 transition-transform duration-500 ease-out group-hover:scale-105" />
-                  </div>
-                )}
-                {p.badge && (
-                  <span className="absolute left-4 top-4 rounded-full bg-black px-2.5 py-1 text-[11px] font-medium text-white">{p.badge}</span>
-                )}
-                <span className="absolute bottom-4 left-4 rounded-full bg-white/90 px-2.5 py-1 text-[11px] font-medium text-black">
-                  {Math.round(CAUSE.share * 100)}% to film
-                </span>
-              </div>
-              <div className="flex flex-1 flex-col p-5">
-                <div className="flex items-baseline justify-between gap-4">
-                  <h2 className="text-[17px] font-medium leading-tight tracking-tight">{p.name}</h2>
-                  <span className="shrink-0 text-[15px] tabular-nums">{money(p.price)}</span>
-                </div>
-                <p className="mt-2 text-[14px] leading-relaxed text-muted">{p.blurb}</p>
-                <div className="mt-auto flex items-end justify-between gap-4 pt-5">
-                  {p.sizes ? (
-                    <div className="flex flex-wrap gap-1.5" role="radiogroup" aria-label={`${p.name} size`}>
-                      {p.sizes.map((s) => (
-                        <button
-                          key={s}
-                          type="button"
-                          role="radio"
-                          aria-checked={size === s}
-                          onClick={() => setSizes((m) => ({ ...m, [p.id]: s }))}
-                          className={`min-w-9 rounded-md border px-2 py-1 text-[12px] transition-colors ${size === s ? "border-foreground bg-foreground text-background" : "border-hairline text-foreground/70 hover:border-foreground/40"}`}
-                        >
-                          {s}
-                        </button>
-                      ))}
-                    </div>
+        {/* Products */}
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4" aria-live="polite">
+          {shown.map((p) => {
+            const size = p.sizes ? (sizes[p.id] ?? p.sizes[0]) : undefined;
+            return (
+              <article key={p.id} className="group flex flex-col overflow-hidden rounded-[20px] bg-surface">
+                <div className="relative aspect-square w-full overflow-hidden bg-[#dcd7d5]">
+                  {p.model && p.image ? (
+                    <ProductModel src={p.model} poster={p.image} alt={p.name} />
+                  ) : p.image ? (
+                    <>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={p.image}
+                        alt={p.name}
+                        loading="lazy"
+                        decoding="async"
+                        className={`absolute inset-0 h-full w-full object-cover transition duration-700 ease-out group-hover:scale-[1.04] ${p.imageBack && back[p.id] ? "opacity-0" : ""}`}
+                      />
+                      {p.imageBack && (
+                        <>
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={p.imageBack}
+                            alt={`${p.name}, back`}
+                            loading="lazy"
+                            decoding="async"
+                            className={`absolute inset-0 h-full w-full object-cover transition duration-700 ease-out group-hover:scale-[1.04] ${back[p.id] ? "" : "opacity-0"}`}
+                          />
+                          <div className="absolute right-4 top-4 flex rounded-full bg-white/90 p-0.5 text-[11px] font-medium text-black">
+                            {(["Front", "Back"] as const).map((side) => {
+                              const on = (side === "Back") === !!back[p.id];
+                              return (
+                                <button
+                                  key={side}
+                                  type="button"
+                                  aria-pressed={on}
+                                  onClick={() => setBack((b) => ({ ...b, [p.id]: side === "Back" }))}
+                                  className={`rounded-full px-2.5 py-1 transition-colors ${on ? "bg-black text-white" : "text-black/60 hover:text-black"}`}
+                                >
+                                  {side}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        </>
+                      )}
+                    </>
                   ) : (
-                    <span className="text-[12px] text-muted">{p.kind === "Digital" ? "Instant download" : "Ships rolled, worldwide"}</span>
+                    <div
+                      className="absolute inset-0"
+                      style={{ background: `radial-gradient(circle at 30% 25%, hsl(${p.hue} 70% 62%), hsl(${(p.hue + 30) % 360} 60% 40%) 55%, hsl(${(p.hue + 60) % 360} 55% 18%))` }}
+                    >
+                      <ProductArt shape={p.shape} className="absolute left-1/2 top-1/2 h-[52%] w-auto -translate-x-1/2 -translate-y-1/2 text-white opacity-90 transition-transform duration-500 ease-out group-hover:scale-105" />
+                    </div>
                   )}
-                  <button type="button" onClick={() => add(p)} className="shrink-0 rounded-full bg-foreground px-4 py-2 text-[13px] font-medium text-background transition-opacity hover:opacity-85">
-                    Add to bag
-                  </button>
+                  {p.badge && (
+                    <span className="absolute left-4 top-4 rounded-full bg-black px-2.5 py-1 text-[11px] font-medium text-white">{p.badge}</span>
+                  )}
+                  <span className="absolute bottom-4 left-4 rounded-full bg-white/90 px-2.5 py-1 text-[11px] font-medium text-black">
+                    {Math.round(CAUSE.share * 100)}% to film
+                  </span>
                 </div>
-              </div>
-            </article>
-          );
-        })}
-      </div>
+                <div className="flex flex-1 flex-col p-5">
+                  <div className="flex items-baseline justify-between gap-4">
+                    <h2 className="text-[17px] font-medium leading-tight tracking-tight">{p.name}</h2>
+                    <span className="shrink-0 text-[15px] tabular-nums">{money(p.price)}</span>
+                  </div>
+                  <p className="mt-2 text-[14px] leading-relaxed text-muted">{p.blurb}</p>
+                  <div className="mt-auto flex items-end justify-between gap-4 pt-5">
+                    {p.sizes ? (
+                      <div className="flex flex-wrap gap-1.5" role="radiogroup" aria-label={`${p.name} size`}>
+                        {p.sizes.map((s) => (
+                          <button
+                            key={s}
+                            type="button"
+                            role="radio"
+                            aria-checked={size === s}
+                            onClick={() => setSizes((m) => ({ ...m, [p.id]: s }))}
+                            className={`min-w-9 rounded-md border px-2 py-1 text-[12px] transition-colors ${size === s ? "border-foreground bg-foreground text-background" : "border-hairline text-foreground/70 hover:border-foreground/40"}`}
+                          >
+                            {s}
+                          </button>
+                        ))}
+                      </div>
+                    ) : (
+                      <span className="text-[12px] text-muted">{p.kind === "Digital" ? "Instant download" : "Ships rolled, worldwide"}</span>
+                    )}
+                    <button type="button" onClick={() => add(p)} className="shrink-0 rounded-full bg-foreground px-4 py-2 text-[13px] font-medium text-background transition-opacity hover:opacity-85">
+                      Add to bag
+                    </button>
+                  </div>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+
+        </>
+      )}
 
       {/* Bag drawer */}
       <div
@@ -265,5 +278,116 @@ export default function StoreClient() {
         </div>
       </aside>
     </section>
+  );
+}
+
+/**
+ * The featured layout for a one-product store: the product big in 3D on
+ * the left (drag to turn), name, price, specs, sizes and Add to bag on the
+ * right, and its detail callouts underneath.
+ */
+function Feature({
+  p,
+  size,
+  setSize,
+  add,
+  count,
+  openBag,
+}: {
+  p: Product;
+  size?: string;
+  setSize: (s: string) => void;
+  add: (p: Product) => void;
+  count: number;
+  openBag: () => void;
+}) {
+  return (
+    <>
+      <div className="grid gap-8 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)] lg:items-center lg:gap-14">
+        {/* the stage */}
+        <div className="relative aspect-square w-full overflow-hidden rounded-[28px] bg-[#dcd7d5]">
+          {p.model && p.image ? (
+            <ProductModel src={p.model} poster={p.image} alt={p.name} decals={p.decals} />
+          ) : p.image ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={p.image} alt={p.name} className="absolute inset-0 h-full w-full object-cover" />
+          ) : null}
+          {p.badge && <span className="pointer-events-none absolute left-5 top-5 rounded-full bg-black px-3 py-1.5 text-[12px] font-medium text-white">{p.badge}</span>}
+          <span className="pointer-events-none absolute right-5 top-5 rounded-full bg-white/90 px-3 py-1.5 text-[12px] font-medium text-black">
+            {Math.round(CAUSE.share * 100)}% to film
+          </span>
+          {p.model && (
+            <span className="pointer-events-none absolute bottom-5 left-1/2 -translate-x-1/2 rounded-full bg-black/70 px-3 py-1.5 text-[12px] text-white/90 backdrop-blur-sm">
+              Drag to turn it <span aria-hidden>↔</span>
+            </span>
+          )}
+        </div>
+
+        {/* the details */}
+        <div>
+          {p.eyebrow && <p className="text-[15px] text-muted">{p.eyebrow}</p>}
+          <h1 className="mt-3 text-[clamp(2.75rem,6vw,5.5rem)] font-medium leading-[0.95] tracking-[-0.04em]">{p.name}</h1>
+          <p className="mt-5 text-[28px] font-medium tabular-nums tracking-[-0.02em]">{money(p.price)}</p>
+          <p className="mt-5 max-w-[520px] text-[17px] leading-relaxed text-muted">{p.blurb}</p>
+          {p.specs && (
+            <dl className="mt-8 grid max-w-[520px] grid-cols-3 gap-px overflow-hidden rounded-[18px] bg-hairline">
+              {p.specs.map(([k, v]) => (
+                <div key={k} className="flex flex-col-reverse bg-surface px-4 py-4">
+                  <dt className="mt-1 text-[13px] text-muted">{k}</dt>
+                  <dd className="text-[17px] font-medium">{v}</dd>
+                </div>
+              ))}
+            </dl>
+          )}
+          {p.sizes && (
+            <div className="mt-8">
+              <p className="text-[13px] text-muted">Size</p>
+              <div className="mt-2 flex flex-wrap gap-2" role="radiogroup" aria-label={`${p.name} size`}>
+                {p.sizes.map((s) => (
+                  <button
+                    key={s}
+                    type="button"
+                    role="radio"
+                    aria-checked={size === s}
+                    onClick={() => setSize(s)}
+                    className={`h-11 min-w-14 rounded-full border px-4 text-[14px] font-medium transition-colors ${size === s ? "border-foreground bg-foreground text-background" : "border-hairline text-foreground/75 hover:border-foreground/40"}`}
+                  >
+                    {s}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+          <div className="mt-8 flex max-w-[520px] gap-3">
+            <button type="button" onClick={() => add(p)} className="h-12 flex-1 rounded-full bg-foreground text-[15px] font-medium text-background transition-opacity hover:opacity-85">
+              Add to bag — {money(p.price)}
+            </button>
+            <button type="button" onClick={openBag} className="inline-flex h-12 items-center gap-2 rounded-full border border-hairline px-5 text-[14px] font-medium transition-colors hover:border-foreground/40">
+              Bag
+              <span className={`grid h-5 min-w-5 place-items-center rounded-full px-1 text-[11px] tabular-nums ${count ? "bg-accent text-white" : "bg-foreground/10"}`}>{count}</span>
+            </button>
+          </div>
+          <p className="mt-4 text-[13px] text-muted">Half of every sale funds young filmmakers in Chicago.</p>
+        </div>
+      </div>
+
+      {/* the callouts */}
+      {p.details && (
+        <div className="mt-20 grid gap-4 sm:mt-28 md:grid-cols-3">
+          {p.details.map((d) => (
+            <figure key={d.title} className="overflow-hidden rounded-[22px] bg-surface">
+              <div className="relative aspect-[4/3] bg-[#dcd7d5]">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={d.image} alt={`${p.name}: ${d.title}`} loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover" />
+              </div>
+              <figcaption className="p-6">
+                <p className="text-[19px] font-medium tracking-[-0.01em]">{d.title}</p>
+                <p className="mt-2 text-[15px] leading-relaxed text-muted">{d.text}</p>
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+      )}
+    </>
   );
 }
