@@ -234,7 +234,7 @@ export const legalDocs: LegalDoc[] = [
         id: "contact",
         heading: "Contact",
         body: [
-          `${site.legalName}. Email ${site.email}. Mailing address: ${site.street}${site.pmb ? `, PMB ${site.pmb}` : ""}, ${site.city}, ${site.region} ${site.postalCode}.`,
+          `${site.legalName}. Email ${site.email}${site.phone ? `, phone ${site.phone}` : ""}. Mailing address: ${site.street}${site.pmb ? `, PMB ${site.pmb}` : ""}, ${site.city}, ${site.region} ${site.postalCode}.`,
         ],
       },
     ],
@@ -314,7 +314,7 @@ export const legalDocs: LegalDoc[] = [
         id: "how-to-request",
         heading: "How to cancel or ask for a refund",
         body: [
-          `Email ${site.email} with your name, the project or order, and what you would like to do. We reply within one business day.`,
+          `Email ${site.email}${site.phone ? ` or call ${site.phone}` : ""} with your name, the project or order, and what you would like to do. We reply within one business day.`,
           "Approved refunds go back to the original payment method. Once we issue them, they usually reach your account within 5 to 10 business days, depending on your bank.",
           `Charges appear on your statement as ${site.statementDescriptor}. If you don't recognize a charge, contact us before contacting your bank. We can usually sort it out the same day.`,
         ],
