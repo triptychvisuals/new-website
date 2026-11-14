@@ -4,8 +4,10 @@ import { clients } from "@/lib/projects";
 import { IMPACT_STATS } from "@/lib/stats";
 import LiveViews from "./LiveViews";
 
-// EDIT: partner order in the loop (names come from lib/projects clients).
-const PARTNERS = clients;
+// EDIT: the partners shown here — the labels (lib/projects clients) plus
+// Concordia University Chicago. Its logo: drop concordia.png (or .svg) in
+// /public/partners and it replaces the name.
+const PARTNERS = [...clients, "Concordia University Chicago"];
 
 /**
  * Drop real logo files into /public/partners and they replace the text

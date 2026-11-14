@@ -1,5 +1,6 @@
 import Link from "next/link";
 import HeroReel from "@/components/HeroReel";
+import { features } from "@/lib/press";
 
 // EDIT: the quick links in the strip under the video.
 const PILLS = [
@@ -9,6 +10,10 @@ const PILLS = [
   { label: "Press", href: "/press" },
   { label: "Store", href: "/store" },
 ];
+
+// EDIT: the press feature linked under the tagline — the first feature in
+// lib/press.ts (the Chicago Reader profile).
+const PRESS_FEATURE = features[0];
 
 /**
  * The hero: the reel full-bleed across the top of the page, under the
@@ -54,6 +59,21 @@ export default function HeroStudio({
             {/* EDIT: the line under the tagline */}
             Music videos, commercials and brand films from Chicago since 2016.
           </p>
+          {/* Press feature (EDIT: PRESS_FEATURE above) */}
+          {PRESS_FEATURE && (
+          <a
+            href={PRESS_FEATURE.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group mt-4 inline-flex max-w-full items-center gap-3 rounded-full bg-foreground/[0.06] py-1.5 pl-1.5 pr-4 text-[14px] transition-colors hover:bg-foreground/[0.12]"
+          >
+            <span className="shrink-0 rounded-full bg-foreground px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-background">
+              {PRESS_FEATURE.outlet}
+            </span>
+            <span className="truncate text-foreground/85 group-hover:text-foreground">{PRESS_FEATURE.series}: {PRESS_FEATURE.title}</span>
+            <span aria-hidden className="shrink-0 text-muted transition-transform group-hover:translate-x-0.5">↗</span>
+          </a>
+          )}
         </div>
         <nav aria-label="Quick links" className="flex flex-wrap gap-x-6 gap-y-2">
           {PILLS.map((p) => (

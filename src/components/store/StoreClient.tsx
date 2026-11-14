@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { products, kinds, money, type Kind, type Product } from "@/lib/store";
+import { products, kinds, money, CAUSE, type Kind, type Product } from "@/lib/store";
 import { site } from "@/lib/site";
 import ProductArt from "./ProductArt";
 
@@ -99,16 +99,31 @@ export default function StoreClient() {
         {shown.map((p) => {
           const size = p.sizes ? (sizes[p.id] ?? p.sizes[0]) : undefined;
           return (
-            <article key={p.id} className="group flex flex-col overflow-hidden rounded-2xl border border-hairline">
-              <div
-                className="relative aspect-[4/3] w-full"
-                style={{ background: `radial-gradient(circle at 30% 25%, hsl(${p.hue} 70% 62%), hsl(${(p.hue + 30) % 360} 60% 40%) 55%, hsl(${(p.hue + 60) % 360} 55% 18%))` }}
-              >
-                <ProductArt shape={p.shape} className="absolute left-1/2 top-1/2 h-[58%] w-auto -translate-x-1/2 -translate-y-1/2 text-white opacity-90 transition-transform duration-500 ease-out group-hover:scale-105" />
-                {p.badge && (
-                  <span className="absolute left-4 top-4 rounded-full bg-black/45 px-2.5 py-1 text-[11px] font-medium text-white backdrop-blur-sm">{p.badge}</span>
+            <article key={p.id} className="group flex flex-col overflow-hidden rounded-[20px] bg-surface">
+              <div className="relative aspect-square w-full overflow-hidden bg-[#dcd7d5]">
+                {p.image ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={p.image}
+                    alt={p.name}
+                    loading="lazy"
+                    decoding="async"
+                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+                  />
+                ) : (
+                  <div
+                    className="absolute inset-0"
+                    style={{ background: `radial-gradient(circle at 30% 25%, hsl(${p.hue} 70% 62%), hsl(${(p.hue + 30) % 360} 60% 40%) 55%, hsl(${(p.hue + 60) % 360} 55% 18%))` }}
+                  >
+                    <ProductArt shape={p.shape} className="absolute left-1/2 top-1/2 h-[52%] w-auto -translate-x-1/2 -translate-y-1/2 text-white opacity-90 transition-transform duration-500 ease-out group-hover:scale-105" />
+                  </div>
                 )}
-                <span className="absolute right-4 top-4 font-mono text-[11px] uppercase tracking-[0.15em] text-white/80">{p.kind}</span>
+                {p.badge && (
+                  <span className="absolute left-4 top-4 rounded-full bg-black px-2.5 py-1 text-[11px] font-medium text-white">{p.badge}</span>
+                )}
+                <span className="absolute bottom-4 left-4 rounded-full bg-white/90 px-2.5 py-1 text-[11px] font-medium text-black">
+                  {Math.round(CAUSE.share * 100)}% to film
+                </span>
               </div>
               <div className="flex flex-1 flex-col p-5">
                 <div className="flex items-baseline justify-between gap-4">
@@ -169,8 +184,13 @@ export default function StoreClient() {
           {lines.length === 0 && <li className="py-10 text-center text-sm text-muted">Nothing in the bag yet.</li>}
           {lines.map((l, i) => (
             <li key={`${l.id}-${l.size}`} className="flex gap-4 py-4">
-              <div className="h-16 w-16 shrink-0 overflow-hidden rounded-lg" style={{ background: `radial-gradient(circle at 30% 25%, hsl(${l.product.hue} 70% 62%), hsl(${(l.product.hue + 60) % 360} 55% 18%))` }}>
-                <ProductArt shape={l.product.shape} className="h-full w-full p-3 text-white" />
+              <div className="h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-[#dcd7d5]" style={l.product.image ? undefined : { background: `radial-gradient(circle at 30% 25%, hsl(${l.product.hue} 70% 62%), hsl(${(l.product.hue + 60) % 360} 55% 18%))` }}>
+                {l.product.image ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={l.product.image} alt="" className="h-full w-full object-cover" />
+                ) : (
+                  <ProductArt shape={l.product.shape} className="h-full w-full p-3 text-white" />
+                )}
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex items-baseline justify-between gap-3">
@@ -193,6 +213,11 @@ export default function StoreClient() {
             <span className="text-lg font-medium tabular-nums">{money(subtotal)}</span>
           </div>
           <p className="mt-1 text-[12px] text-muted">Shipping and tax at checkout.</p>
+          {subtotal > 0 && (
+            <p className="mt-3 rounded-xl bg-accent/10 px-3 py-2 text-[13px] text-foreground">
+              <span className="font-medium text-accent">{money(Math.round(subtotal * CAUSE.share))}</span> of this order goes to {CAUSE.partner || "young filmmakers in Chicago"}.
+            </p>
+          )}
           <button
             type="button"
             onClick={checkout}
