@@ -19,6 +19,8 @@ export default function StoreClient() {
   const [sizes, setSizes] = useState<Record<string, string>>({});
   const [bag, setBag] = useState<Line[]>([]);
   const [open, setOpen] = useState(false);
+  // products with a back photo: which side each card shows
+  const [back, setBack] = useState<Record<string, boolean>>({});
   const [loaded, setLoaded] = useState(false);
 
   // Hydrate the bag after mount (server HTML is the empty state) — on the
@@ -106,14 +108,44 @@ export default function StoreClient() {
             <article key={p.id} className="group flex flex-col overflow-hidden rounded-[20px] bg-surface">
               <div className="relative aspect-square w-full overflow-hidden bg-[#dcd7d5]">
                 {p.image ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={p.image}
-                    alt={p.name}
-                    loading="lazy"
-                    decoding="async"
-                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
-                  />
+                  <>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={p.image}
+                      alt={p.name}
+                      loading="lazy"
+                      decoding="async"
+                      className={`absolute inset-0 h-full w-full object-cover transition duration-700 ease-out group-hover:scale-[1.04] ${p.imageBack && back[p.id] ? "opacity-0" : ""}`}
+                    />
+                    {p.imageBack && (
+                      <>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={p.imageBack}
+                          alt={`${p.name}, back`}
+                          loading="lazy"
+                          decoding="async"
+                          className={`absolute inset-0 h-full w-full object-cover transition duration-700 ease-out group-hover:scale-[1.04] ${back[p.id] ? "" : "opacity-0"}`}
+                        />
+                        <div className="absolute right-4 top-4 flex rounded-full bg-white/90 p-0.5 text-[11px] font-medium text-black">
+                          {(["Front", "Back"] as const).map((side) => {
+                            const on = (side === "Back") === !!back[p.id];
+                            return (
+                              <button
+                                key={side}
+                                type="button"
+                                aria-pressed={on}
+                                onClick={() => setBack((b) => ({ ...b, [p.id]: side === "Back" }))}
+                                className={`rounded-full px-2.5 py-1 transition-colors ${on ? "bg-black text-white" : "text-black/60 hover:text-black"}`}
+                              >
+                                {side}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </>
+                    )}
+                  </>
                 ) : (
                   <div
                     className="absolute inset-0"
