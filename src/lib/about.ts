@@ -109,20 +109,65 @@ export function aboutGradient(index: number): string {
 
 /**
  * "10 years in business" scroll timeline on the home page, 2016 → 2026.
- * Only the first and last entries are stated elsewhere on the site
- * (Est. 2016 in Chicago; 500+ projects) — EDIT every middle year with the
- * real milestones; the copy there is placeholder.
+ * Built from the record: YouTube upload dates and view counts of the
+ * studio's videos (as of November 2026 — the counts keep climbing), the
+ * Chicago Reader's "Chicagoans of Note" profile, and press coverage.
+ * EDIT any line; view counts are rounded down so they stay true.
  */
 export const decade: { year: string; title: string; body: string }[] = [
-  { year: "2016", title: "Triptych is founded", body: "A small crew in Chicago with one camera and a lot of ideas." }, // EDIT
-  { year: "2017", title: "First music videos", body: "Early shoots for local artists sharpen the look and the workflow." }, // EDIT: placeholder
-  { year: "2018", title: "Building the crew", body: "Directors, DPs, and editors join — the studio takes shape." }, // EDIT: placeholder
-  { year: "2019", title: "Bigger stages", body: "Productions scale up: larger sets, longer days, sharper craft." }, // EDIT: placeholder
-  { year: "2020", title: "Adapting the process", body: "New ways of producing — leaner teams, smarter pipelines." }, // EDIT: placeholder
-  { year: "2021", title: "Commercial & brand film", body: "The work expands beyond music into brands and campaigns." }, // EDIT: placeholder
-  { year: "2022", title: "Label partnerships", body: "Work alongside the major labels becomes part of the roster." }, // EDIT: placeholder
-  { year: "2023", title: "A signature look", body: "Color, movement, and rhythm cohere into the Triptych aesthetic." }, // EDIT: placeholder
-  { year: "2024", title: "In the press", body: "The studio's story gets told — and the audience grows." }, // EDIT: placeholder
-  { year: "2025", title: "Pushing the format", body: "New tools, new formats, the same obsession with the frame." }, // EDIT: placeholder
-  { year: "2026", title: "Ten years, 500+ projects", body: "A decade of imagination in motion — and we're just getting started." }, // EDIT
+  {
+    year: "2016",
+    title: "Triptych is founded",
+    body: "Law Mahone starts the studio in Chicago straight out of Homewood-Flossmoor High School, the same year he enrolls at Tribeca Flashpoint. By December, Orlando Brown's “Picasso's Nightmare” passes 200K views.",
+  }, // EDIT
+  {
+    year: "2017",
+    title: "The breakout year",
+    body: "Nineteen music videos in twelve months. Queen Key's “My Way” goes on to 16M+ views, and Trippie Redd's “Overweight” ft. Chris King, edited by Triptych, passes 4M.",
+  }, // EDIT
+  {
+    year: "2018",
+    title: "Known for the cut",
+    body: "Law makes his name in the edit, and national outlets pick up the work: Hypebeast covers Trippie Redd's “Overweight.” Sumo's “Mo' Swag” keeps the run going.",
+  }, // EDIT
+  {
+    year: "2019",
+    title: "Fifty million views",
+    body: "A degree in post-production, and the biggest year yet: Polo G's “Effortless” passes 50M views, Lil Durk's “Weirdo Hoes” 25M. Calboy's “Jazz” and Queen Key's “Dimple” remix follow.",
+  }, // EDIT
+  {
+    year: "2020",
+    title: "G Herbo and Lil Peep",
+    body: "G Herbo's “Ridin Wit It” climbs past 48M views and Lil Peep's “hellboy” past 31M — together nearly 80M for the year's releases.",
+  }, // EDIT
+  {
+    year: "2021",
+    title: "Behind the scenes",
+    body: "Complex runs Lil Zay Osama's “Shooters” ft. Doe Boy, and the studio starts sharing its sets — from Queen Key's “Too Hot” to Lil Zay Osama's “SBA.”",
+  }, // EDIT
+  {
+    year: "2022",
+    title: "Cinema cameras",
+    body: "G Herbo's “Locked In” passes 8.5M views. Law directs Jssan's “City of Mine,” and the studio moves up to the Sony FX6 and RED Komodo.",
+  }, // EDIT
+  {
+    year: "2023",
+    title: "Building the studio",
+    body: "A new reel and a look inside the rigs — the camera setups and process behind every frame, shared with a growing audience.",
+  }, // EDIT
+  {
+    year: "2024",
+    title: "Gold Haze, in four parts",
+    body: "A four-video run for Gold Haze — “This Forever,” “For Certain,” “Tears Fly” and “Realest Truth” — plus Jay Wood's “Practice” ft. theMIND.",
+  }, // EDIT
+  {
+    year: "2025",
+    title: "Chicagoans of Note",
+    body: "The Chicago Reader profiles Law in its “Chicagoans of Note” series, and “Feel the Love” arrives.",
+  }, // EDIT
+  {
+    year: "2026",
+    title: "Ten years, 190M+ views",
+    body: "Wale's “Overthink” ft. Elmiene passes 2.5M views in its first months. A decade in: 500+ projects, and 190M+ views across the videos.",
+  }, // EDIT
 ];

@@ -85,6 +85,7 @@ const AUTHORED: Authored[] = [
   { title: "Shooters", artist: "Lil Zay Osama ft. Doe Boy", year: "2021", youtube: "n0IiWdpcn5U" },
   { title: "Too Hot", artist: "Queen Key", year: "2021" }, // EDIT: youtube id
   { title: "Blackout", artist: "MVP Tino", year: "2019", youtube: "FiT7-3-EWEU" }, // ~
+  { title: "Weirdo Hoes", artist: "Lil Durk", year: "2019", youtube: "VbONF4saaIU" },
   { title: "Nightmares", artist: "Solly Bandz", year: "2019", youtube: "FmhTALb6JTc" }, // ~
   { title: "Dimple (Next Song Remix)", artist: "Queen Key", year: "2019", youtube: "n8f3ygPPIEY" }, // ~
   { title: "Timing", artist: "Khaliyah X", year: "2018" }, // EDIT: youtube id
