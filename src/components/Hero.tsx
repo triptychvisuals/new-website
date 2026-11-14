@@ -95,7 +95,7 @@ export default function Hero({ title }: { title?: string }) {
           {/* EDIT: swap for the reel you want here */}
           <video
             className="h-full w-full object-cover"
-            src="/hero/hero.mp4"
+            src="/hero/hero-m.mp4" // the lighter copy is plenty at this size
             autoPlay
             muted
             loop

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { Reel } from "@/lib/reels";
+import { phoneCopy, PHONE_MAX } from "@/lib/video";
 
 /**
  * One reel, in the clean short-form style: a 9:16 video with rounded
@@ -49,7 +50,6 @@ export default function ReelCard({ reel }: { reel: Reel }) {
     >
       <video
         ref={video}
-        src={reel.src}
         muted
         loop
         playsInline
@@ -59,7 +59,10 @@ export default function ReelCard({ reel }: { reel: Reel }) {
         onPause={() => setPlaying(false)}
         className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
         style={reel.focus ? { objectPosition: reel.focus } : undefined}
-      />
+      >
+        {phoneCopy(reel.src) && <source src={phoneCopy(reel.src)} type="video/mp4" media={`(max-width: ${PHONE_MAX}px)`} />}
+        <source src={reel.src} type="video/mp4" />
+      </video>
       <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-black/70 via-black/25 to-transparent" />
 
       {/* the caption, a word at a time */}

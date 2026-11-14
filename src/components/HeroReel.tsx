@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { phoneCopy, PHONE_MAX } from "@/lib/video";
 
 // EDIT: hero background clips. Drop your real files in /public/hero and list
 // them here — they cycle horizontally every AUTO_MS. These are placeholders
@@ -70,7 +71,6 @@ export default function HeroReel() {
             <video
               key={`${src}-${i}`}
               className="h-full w-full shrink-0 object-cover"
-              src={src}
               // First clip autoplays for an instant start; the effect above
               // takes over from there.
               autoPlay={i === 0}
@@ -81,7 +81,11 @@ export default function HeroReel() {
               // readies the next one as each plays (keeps phone data + CPU down)
               preload={i === 0 ? "auto" : "metadata"}
               aria-hidden
-            />
+            >
+              {/* phones get the lighter copy where there is one (lib/video.ts) */}
+              {phoneCopy(src) && <source src={phoneCopy(src)} type="video/mp4" media={`(max-width: ${PHONE_MAX}px)`} />}
+              <source src={src} type="video/mp4" />
+            </video>
           ))}
         </div>
       </div>
