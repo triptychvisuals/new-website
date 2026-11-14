@@ -13,7 +13,7 @@ import { getSiteContent } from "@/lib/siteContent";
 
 export const metadata: Metadata = {
   title: "In the news", // EDIT
-  description: "Features and coverage of Triptych Studios, the Chicago video production studio.", // EDIT
+  description: "Features and coverage of Triptych Studios, the creative production company.", // EDIT
   alternates: { canonical: "/press" },
 };
 

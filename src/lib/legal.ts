@@ -34,7 +34,7 @@ export const legalDocs: LegalDoc[] = [
         id: "who-we-are",
         heading: "Who we are",
         body: [
-          `${owner}, a video production studio based in Chicago, Illinois. This policy covers ${domain}, the project portal we share with clients, and any payment you make to us.`,
+          `${owner}, a creative production company based in Chicago, Illinois. This policy covers ${domain}, the project portal we share with clients, and any payment you make to us.`,
           `Questions about anything here can go to ${site.email}.`,
         ],
       },

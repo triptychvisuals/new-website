@@ -39,12 +39,12 @@ export const mentions: { outlet: string; what: string; url?: string }[] = [
 
 /** Press-kit copy — copy-to-clipboard on the page. EDIT */
 export const bios = {
-  short: `${site.name} ${site.suffix} is a Chicago video production studio founded in 2016 by director Lawrence “Law” Mahone. Ten years, 500+ projects — music videos, commercials and brand films for artists and labels including G Herbo, Wale, Lil Zay Osama, Trippie Redd and Queen Key.`,
-  long: `${site.name} ${site.suffix} is a video production studio based in Chicago, founded in 2016 by director Lawrence “Law” Mahone while he was still a teenager. What began as one camera and a run-and-gun approach to local artists’ videos has grown into a studio with 500+ projects behind it: music videos, commercials and brand films for artists and labels including G Herbo, Wale, Lil Zay Osama, Trippie Redd, Lil Pump, Queen Key and Khaliyah X, with work premiered by Lyrical Lemonade and covered by Complex, Hypebeast and the Chicago Reader. The studio’s signature is cinematic, colour-driven storytelling with an obsession for the frame — strategy, film and post handled in-house.`,
+  short: `${site.name} ${site.suffix} is a creative production company founded in 2016 by director Lawrence “Law” Mahone. Ten years, 500+ projects — music videos, commercials and brand films for artists and labels including G Herbo, Wale, Lil Zay Osama, Trippie Redd and Queen Key.`,
+  long: `${site.name} ${site.suffix} is a creative production company based in Chicago, founded in 2016 by director Lawrence “Law” Mahone while he was still a teenager. What began as one camera and a run-and-gun approach to local artists’ videos has grown into a studio with 500+ projects behind it: music videos, commercials and brand films for artists and labels including G Herbo, Wale, Lil Zay Osama, Trippie Redd, Lil Pump, Queen Key and Khaliyah X, with work premiered by Lyrical Lemonade and covered by Complex, Hypebeast and the Chicago Reader. The studio’s signature is cinematic, colour-driven storytelling with an obsession for the frame — strategy, film and post handled in-house.`,
 };
 
 /** One line for programmes, captions and bylines. EDIT */
-export const boilerplate = `${site.name} ${site.suffix} is a Chicago video production studio making cinematic music videos, commercials and brand films since 2016.`;
+export const boilerplate = `${site.name} ${site.suffix} is a creative production company making cinematic music videos, commercials and brand films since 2016.`;
 
 /** A quote from the founder, cleared for press. EDIT — placeholder wording. */
 export const founderQuote = {

@@ -8,10 +8,10 @@ const NAME = "Triptych Studios";
 const MARK = site.registered ? "®" : "™";
 // EDIT: the default search-result title + description.
 const DESCRIPTION =
-  "Triptych Studios is a Chicago video production studio making music videos, commercials and brand films since 2016. Imagination in motion.";
+  "Triptych Studios is a creative production company making music videos, commercials and brand films since 2016. Imagination in motion.";
 
 export const metadata: Metadata = {
-  title: { default: `${NAME}${MARK} — Chicago Video Production`, template: `%s — ${NAME}` },
+  title: { default: `${NAME}${MARK} — Creative Production Company`, template: `%s — ${NAME}` },
   description: DESCRIPTION,
   applicationName: NAME,
   metadataBase: new URL(site.url),

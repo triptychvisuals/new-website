@@ -12,7 +12,7 @@ import { getSiteContent } from "@/lib/siteContent";
 
 export const metadata: Metadata = {
   title: "Who we are",
-  description: "Triptych Studios is a Chicago video production company founded in 2016 by director Lawrence “Law” Mahone. 500+ music videos, commercials and brand films.",
+  description: "Triptych Studios is a creative production company founded in 2016 by director Lawrence “Law” Mahone. 500+ music videos, commercials and brand films.",
   alternates: { canonical: "/who-we-are" },
 };
 
