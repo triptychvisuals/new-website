@@ -5,12 +5,13 @@ import { site } from "@/lib/site";
 import { socials } from "@/lib/about";
 
 const NAME = "Triptych Studios";
+const MARK = site.registered ? "®" : "™";
 // EDIT: the default search-result title + description.
 const DESCRIPTION =
   "Triptych Studios is a Chicago video production studio making music videos, commercials and brand films since 2016. Imagination in motion.";
 
 export const metadata: Metadata = {
-  title: { default: `${NAME}® — Chicago Video Production`, template: `%s — ${NAME}` },
+  title: { default: `${NAME}${MARK} — Chicago Video Production`, template: `%s — ${NAME}` },
   description: DESCRIPTION,
   applicationName: NAME,
   metadataBase: new URL(site.url),
@@ -18,7 +19,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     siteName: NAME,
-    title: `${NAME}® — Imagination in Motion`,
+    title: `${NAME}${MARK} — Imagination in Motion`,
     description: DESCRIPTION,
     url: site.url,
     locale: "en_US",

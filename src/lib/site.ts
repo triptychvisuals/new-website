@@ -6,7 +6,7 @@
 export const site = {
   name: "Triptych", // EDIT: first word of the hero + wordmark
   suffix: "Studios", // EDIT: second word of the hero headline
-  registered: true, // EDIT: show the ® mark next to the wordmark
+  registered: false, // EDIT: true only once "Triptych Studios" is a federally registered trademark (shows ®); false shows ™
   /** EDIT: canonical production URL — Pinterest pin links resolve against it. */
   url: "https://triptychstudios.co",
   /**
@@ -23,7 +23,16 @@ export const site = {
    * the socials and under every project's finished frames. "" hides it.
    */
   pinterest: "",
-  email: "hello@triptychvisuals.com", // EDIT: contact email (also confirm law@…)
+  /** EDIT: the legal entity behind the studio, exactly as registered with
+   *  the Indiana Secretary of State (Business ID 202305041688505). Named in the legal pages so customers (and Stripe)
+   *  can match the site to the business that charges them. */
+  legalName: "Triptych Studios LLC",
+  /** EDIT: how charges read on a customer's card statement. Keep this in
+   *  step with the statement descriptor in Stripe (Settings > Business). */
+  statementDescriptor: "TRIPTYCH STUDIOS",
+  /** EDIT: the state whose law governs the terms, and where disputes go. */
+  lawState: "Indiana",
+  email: "law@triptychstudios.co", // EDIT: contact email (clients, refunds, billing questions)
   /** EDIT: press enquiries. */
   pressEmail: "law@triptychstudios.co",
   /** EDIT: search + business listing. Paste the Google Search Console HTML-tag
@@ -46,7 +55,7 @@ export const site = {
   lng: -87.6345,
   /** EDIT: the studio phone, as you'd like it shown, e.g. "(312) 555-0123".
    *  Leave "" and the Contact page leaves the phone out. */
-  phone: "",
+  phone: "(219) 231-7048",
   /** EDIT: where every Contact button goes — the portal's project intake. */
   contactUrl: "https://portal.triptychstudios.co/start",
   sectionNumber: "001", // EDIT: hero index label
