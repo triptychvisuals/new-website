@@ -31,7 +31,9 @@ export const LIVE_VIEWS = {
   includePostProduction: true,
   // EDIT: YouTube ids of videos you made that aren't projects on the site
   // (the part after "watch?v="), so they count too.
-  extraIds: [] as string[],
+  extraIds: [
+    "VbONF4saaIU", // Lil Durk — EDIT: give it a project entry in lib/projects.ts once titled
+  ] as string[],
   // EDIT: views from places the API can't see (Instagram, TikTok, TV…),
   // added on top of the YouTube total.
   offset: 0,

@@ -86,6 +86,7 @@ const AUTHORED: Authored[] = [
   { title: "Too Hot", artist: "Queen Key", year: "2021" }, // EDIT: youtube id
   { title: "Blackout", artist: "MVP Tino", year: "2019", youtube: "FiT7-3-EWEU" }, // ~
   { title: "Nightmares", artist: "Solly Bandz", year: "2019", youtube: "FmhTALb6JTc" }, // ~
+  { title: "Dimple (Next Song Remix)", artist: "Queen Key", year: "2019", youtube: "n8f3ygPPIEY" }, // ~
   { title: "Timing", artist: "Khaliyah X", year: "2018" }, // EDIT: youtube id
   { title: "Impulses", artist: "Khaliyah X", year: "2018", youtube: "4yVaIs9jXj0" }, // ~
   { title: "Overweight", artist: "Trippie Redd ft. Chris King", year: "2017", youtube: "OvMwvYklW0I" },
@@ -98,7 +99,6 @@ const AUTHORED: Authored[] = [
   { title: "Petro", artist: "Jay Wood", year: "2018", youtube: "r6RXpiIrVZ4" }, // ~
   { title: "Ain't Sh*t", artist: "Captain Jaybe", year: "2017", youtube: "APCsiZ0lIfE" }, // ~
   { title: "2DB", artist: "Chulo ft. Rodie", year: "2017", youtube: "SC_VS1pLwKo" }, // ~
-  { title: "Coupe", artist: "Bali Baby", year: "2017", youtube: "zwa5UybNXpk" }, // ~
   { title: "Food for Thought", artist: "Jay Wood", year: "2016", youtube: "d48ptwLKnng" },
 ];
 
@@ -125,6 +125,7 @@ const POST_CREDITS: Authored[] = [
   // EDIT: roles — add what you did on each, e.g. roles: ["Edit", "Color"]
   { title: "Effortless", artist: "Polo G", year: "2019", director: "Laka Films", youtube: "kQZJbGifttw" },
   { title: "hellboy", artist: "Lil Peep", year: "2020", director: "Paul John", youtube: "s9t1ZfMZfH4" },
+  { title: "Coupe", artist: "Bali Baby", year: "2017", roles: ["Edit"], director: "Spiffy Global", youtube: "zwa5UybNXpk" }, // ~
 ];
 
 // EDIT: placeholder years for portal works that don't carry one
