@@ -22,7 +22,7 @@ export default function SelectedWorks() {
           </div>
           <Link
             href="/projects"
-            className="inline-flex h-11 shrink-0 items-center gap-1.5 self-start rounded-full bg-foreground/[0.09] px-5 text-[15px] font-medium transition-colors hover:bg-foreground/[0.16] lg:self-auto"
+            className="inline-flex h-11 shrink-0 items-center gap-1.5 self-start rounded-full bg-foreground/[0.09] px-5 text-[15px] font-medium transition-colors hover:bg-foreground/[0.16] lg:hidden"
           >
             See all projects <span aria-hidden>→</span>
           </Link>
@@ -30,15 +30,23 @@ export default function SelectedWorks() {
       </div>
 
       {/* The reels: swipe on phones (snapping card to card), a 3 × 2 grid on
-          desktop. EDIT: max-w on the wrapper sets how big each reel gets. */}
-      <div className="mx-auto mt-10 max-w-[1280px] sm:mt-12 lg:px-10">
+          desktop whose last row fades out under a "See all projects" pill.
+          EDIT: max-w on the wrapper sets how big each reel gets. */}
+      <div className="relative mx-auto mt-10 max-w-[1280px] sm:mt-12 lg:px-10">
         <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto px-5 pb-2 [scrollbar-width:none] sm:gap-4 lg:grid lg:snap-none lg:grid-cols-3 lg:gap-6 lg:overflow-visible lg:px-0">
           {reels.map((r, i) => (
             <div key={r.src + i} className="w-[72vw] max-w-[320px] shrink-0 snap-center sm:w-[42vw] lg:w-auto lg:max-w-none">
-              <ReelCard reel={r} index={i} />
+              <ReelCard reel={r} />
             </div>
           ))}
         </div>
+        <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 hidden h-[24%] bg-gradient-to-t from-background via-background/75 to-transparent lg:block" />
+        <Link
+          href="/projects"
+          className="absolute bottom-10 left-1/2 hidden h-12 -translate-x-1/2 items-center gap-2 rounded-full bg-foreground px-7 text-[16px] font-medium text-background shadow-[0_8px_30px_rgba(0,0,0,.35)] transition-colors hover:bg-foreground/85 lg:inline-flex"
+        >
+          See all projects <span aria-hidden>↗</span>
+        </Link>
       </div>
     </section>
   );

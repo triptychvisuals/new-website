@@ -21,17 +21,21 @@ export type Reel = {
   audio?: string;
   /** Crop focus for a horizontal clip, as CSS object-position (e.g. "35% 50%"). */
   focus?: string;
-  /** Optional real numbers to show on the rail, e.g. "12.4K". Left out = icons only. */
+  /** EDIT: real numbers for the card's bottom-left, e.g. "198.8K" — left
+   *  out, the card shows the title and artist there instead. */
+  views?: string;
   likes?: string;
   comments?: string;
+  /** The words that pop up one at a time in the middle (defaults to the caption). */
+  words?: string;
+  /** A small frame from the video, bottom-right (/public/reels/insets/). */
+  inset?: string;
 };
-
-// EDIT: the handle shown on every reel.
-export const REEL_HANDLE = "triptychstudios";
 
 export const reels: Reel[] = [
   {
     src: "/hero/hero.mp4",
+    inset: "/reels/insets/showreel.jpg",
     href: "/projects",
     title: "Showreel",
     artist: "Triptych Studios",
@@ -39,6 +43,7 @@ export const reels: Reel[] = [
   },
   {
     src: "/reels/reel-b.mp4",
+    inset: "/reels/insets/hands-up.jpg",
     href: "/work/hands-up",
     title: "Hands Up!!!",
     artist: "Jay Wood",
@@ -48,18 +53,21 @@ export const reels: Reel[] = [
   },
   {
     src: "/reels/reel-a.mp4",
+    inset: "/reels/insets/timmy-story.jpg",
     href: "/work/timmy-story",
     title: "Timmy Story",
     caption: "One room, one light.", // EDIT
   },
   {
     src: "/reels/feel-the-love.mp4",
+    inset: "/reels/insets/feel-the-love.jpg",
     href: "/work/feel-the-love",
     title: "Feel the Love",
     caption: "Music video, 2024.", // EDIT
   },
   {
     src: "/reels/reel-c.mp4",
+    inset: "/reels/insets/good-morning-america.jpg",
     href: "/work/good-morning-america",
     title: "Good Morning America",
     caption: "Music video, 2025.", // EDIT
@@ -68,7 +76,8 @@ export const reels: Reel[] = [
   {
     // EDIT: placeholder — a later moment of the showreel (#t= start, in
     // seconds) with a different crop, until a sixth vertical clip arrives.
-    src: "/hero/hero.mp4#t=24",
+    src: "/hero/hero.mp4#t=8",
+    inset: "/reels/insets/behind-the-lens.jpg",
     href: "/projects",
     title: "Behind the lens",
     artist: "Triptych Studios",
