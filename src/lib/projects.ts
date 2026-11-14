@@ -30,7 +30,14 @@ export type Project = {
    * the video on the home page's 500+ grid.
    */
   youtube?: string;
+  /** Post-production credits: what Triptych did on it, e.g. ["Edit", "Color"]. */
+  roles?: string[];
+  /** Post-production credits: who directed / produced it. */
+  director?: string;
 };
+
+// EDIT: the category name post-production credits file under.
+export const POST_PRODUCTION = "Post Production";
 
 // EDIT: brands / labels Triptych works with (used on the About page + hero marquee)
 export const clients = [
@@ -95,6 +102,28 @@ const AUTHORED: Authored[] = [
   { title: "Food for Thought", artist: "Jay Wood", year: "2016", youtube: "d48ptwLKnng" },
 ];
 
+// -------------------------------------------------------------------------
+// EDIT: post-production credits — work Triptych edited, coloured, finished
+// or did VFX / sound on, for other directors and production companies.
+// One line each, newest first. They get the "Post Production" filter on
+// /projects, a page of their own like any project, and the roles show on
+// the card. Fields:
+//   title     the video's name
+//   artist    the artist (or brand)
+//   year      e.g. "2025"
+//   roles     what you did — any of "Edit", "Color", "VFX", "Sound",
+//             "Finishing", "Motion graphics", … (as many as apply)
+//   director  who directed / produced it (optional)
+//   youtube   the id after "watch?v=" in its YouTube link (thumbnail +
+//             player, and its views count toward the live counter)
+//   video     or a local clip in /public/reels instead
+// Example:
+//   { title: "Song Name", artist: "Artist", year: "2025", roles: ["Edit", "Color"], director: "Jane Doe", youtube: "dQw4w9WgXcQ" },
+// -------------------------------------------------------------------------
+const POST_CREDITS: Authored[] = [
+  // ← add credits here
+];
+
 // EDIT: placeholder years for portal works that don't carry one
 const YEARS = ["2026", "2025", "2024", "2023", "2022", "2021"];
 
@@ -114,12 +143,27 @@ export function slugify(s: string): string {
     .replace(/^-+|-+$/g, "");
 }
 
-export const projects: Project[] = AUTHORED.map((a, i) => ({
+const own: Project[] = AUTHORED.map((a, i) => ({
   ...a,
   slug: slugify(a.title),
   category: a.category ?? "Music Video", // EDIT: default category
   logo: a.logo ?? PLACEHOLDER_LOGOS[i % PLACEHOLDER_LOGOS.length],
 }));
+
+const taken = new Set(own.map((p) => p.slug));
+const post: Project[] = POST_CREDITS.map((a, i) => {
+  // a credit sharing a title with a studio project gets the artist on its address
+  let slug = slugify(a.title);
+  if (taken.has(slug)) slug = slugify(`${a.title} ${a.artist ?? "post"}`);
+  taken.add(slug);
+  return { ...a, slug, category: POST_PRODUCTION, logo: a.logo ?? PLACEHOLDER_LOGOS[i % PLACEHOLDER_LOGOS.length] };
+});
+
+/** Every project — the studio's own productions, then the post credits. */
+export const projects: Project[] = [...own, ...post];
+
+/** Just the post-production credits. */
+export const postCredits: Project[] = post;
 
 /** Look up a project (and its index) by slug — for the detail route. */
 export function projectBySlug(

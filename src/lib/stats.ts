@@ -27,6 +27,8 @@ export const LIVE_VIEWS = {
   // meets the real total at the end of the month — a steady trickle that
   // never overshoots. On the 1st it steps back down and starts again.
   leeway: 0.03,
+  // EDIT: count the views of post-production credits too (true/false).
+  includePostProduction: true,
   // EDIT: YouTube ids of videos you made that aren't projects on the site
   // (the part after "watch?v="), so they count too.
   extraIds: [] as string[],

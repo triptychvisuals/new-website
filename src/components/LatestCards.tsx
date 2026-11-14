@@ -1,9 +1,9 @@
 import Link from "next/link";
-import { projects } from "@/lib/projects";
+import { projects, POST_PRODUCTION } from "@/lib/projects";
 import { youtubeThumbs } from "@/lib/youtube";
 
 // EDIT: which projects lead the page — the newest ones with a YouTube video.
-const LEAD = projects.filter((p) => p.youtube).slice(0, 2);
+const LEAD = projects.filter((p) => p.youtube && p.category !== POST_PRODUCTION).slice(0, 2);
 
 /**
  * Straight under the hero: the newest release as a big card with its name

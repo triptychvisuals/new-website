@@ -5,7 +5,7 @@
 // an hour, so the YouTube quota is never a concern (one call per 50 videos).
 // Needs YOUTUBE_API_KEY (a YouTube Data API v3 key) in the environment;
 // without one it answers { live: false } and the counter falls back.
-import { projects } from "@/lib/projects";
+import { projects, POST_PRODUCTION } from "@/lib/projects";
 import { LIVE_VIEWS } from "@/lib/stats";
 
 export const dynamic = "force-static";
@@ -17,7 +17,8 @@ export async function GET() {
   const key = process.env.YOUTUBE_API_KEY;
   if (!key) return Response.json({ live: false });
 
-  const ids = [...new Set([...projects.map((p) => p.youtube), ...LIVE_VIEWS.extraIds].filter((x): x is string => !!x))];
+  const counted = projects.filter((p) => LIVE_VIEWS.includePostProduction || p.category !== POST_PRODUCTION);
+  const ids = [...new Set([...counted.map((p) => p.youtube), ...LIVE_VIEWS.extraIds].filter((x): x is string => !!x))];
   const now = Date.now();
   let total = 0;
   let perDay = 0;

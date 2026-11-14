@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { gsap } from "@/lib/gsap";
-import { placeholderGradient } from "@/lib/projects";
+import { placeholderGradient, POST_PRODUCTION, type Project } from "@/lib/projects";
 import { mergeCards, type CardData } from "@/lib/cards";
 import type { PortalWork } from "@/lib/siteContent";
 import VideoGearIcon from "./VideoGearIcon";
@@ -20,9 +20,10 @@ export default function ProjectsGrid({ works = [] }: { works?: PortalWork[] }) {
   const root = useRef<HTMLDivElement>(null);
   const all = useMemo(() => mergeCards(works), [works]);
 
-  // EDIT: filter pills — derived from the categories in use, "All" first.
+  // EDIT: filter pills — the categories in use, "All" first, and Post
+  // Production always offered (credits live in lib/projects.ts).
   const categories = useMemo(
-    () => ["All", ...Array.from(new Set(all.map((c) => c.project.category)))],
+    () => ["All", ...Array.from(new Set([...all.map((c) => c.project.category), POST_PRODUCTION]))],
     [all]
   );
   const [filter, setFilter] = useState("All");
@@ -30,7 +31,7 @@ export default function ProjectsGrid({ works = [] }: { works?: PortalWork[] }) {
 
   const filtered = filter === "All" ? all : all.filter((c) => c.project.category === filter);
   // The newest project with a picture leads the unfiltered grid.
-  const lead = filter === "All" && view === "grid" ? filtered.find((c) => c.media) : undefined;
+  const lead = filter === "All" && view === "grid" ? filtered.find((c) => c.media && c.project.category !== POST_PRODUCTION) : undefined;
   const rest = lead ? filtered.filter((c) => c !== lead) : filtered;
 
   useEffect(() => {
@@ -122,10 +123,19 @@ export default function ProjectsGrid({ works = [] }: { works?: PortalWork[] }) {
         </ol>
       )}
 
-      {filtered.length === 0 && <p className="py-20 text-center text-muted">Nothing here yet.</p>}
+      {filtered.length === 0 && (
+        <p className="py-20 text-center text-muted">
+          {/* EDIT: what an empty filter says */}
+          {filter === POST_PRODUCTION ? "Post-production credits are on their way." : "Nothing here yet."}
+        </p>
+      )}
     </div>
   );
 }
+
+/** What a card says it is: the category, or for a post credit, the roles. */
+const kind = (p: Project) =>
+  p.category === POST_PRODUCTION && p.roles?.length ? `Post · ${p.roles.join(", ")}` : p.category;
 
 const hrefOf = (c: CardData) => c.href || `/work/${c.project.slug}`;
 const isVideo = (src?: string) => !!src && /\.(mp4|webm)(\?.*)?$/i.test(src);
@@ -200,7 +210,7 @@ function GridCard({ card }: { card: CardData }) {
         {project.title}
       </h3>
       <p className="mt-1 text-[14px] text-muted">
-        {[project.artist, project.category, project.year].filter(Boolean).join(" · ")}
+        {[project.artist, kind(project), project.year].filter(Boolean).join(" · ")}
       </p>
     </Link>
   );
@@ -224,7 +234,7 @@ function ListRow({ card }: { card: CardData }) {
           </p>
         </div>
         <p className="hidden truncate text-[15px] text-muted sm:block">{project.artist ?? "—"}</p>
-        <p className="hidden truncate text-[15px] text-muted sm:block">{project.category}</p>
+        <p className="hidden truncate text-[15px] text-muted sm:block">{kind(project)}</p>
         <p className="hidden text-[15px] tabular-nums text-muted sm:block">{project.year}</p>
         <span aria-hidden className="text-muted transition-transform group-hover:translate-x-1 group-hover:text-foreground">
           →

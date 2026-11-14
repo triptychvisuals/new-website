@@ -1,6 +1,7 @@
 import { youtubePoster } from "@/lib/youtube";
 import {
   projects,
+  postCredits,
   projectFromWork,
   projectMedia,
   type Project,
@@ -24,7 +25,7 @@ export type CardData = {
  */
 export function mergeCards(works: PortalWork[] = []): CardData[] {
   if (works.length > 0) {
-    return works.map((w, i) => {
+    const fromFeed: CardData[] = works.map((w, i) => {
       const project = projectFromWork(w, i);
       return {
         project,
@@ -35,6 +36,17 @@ export function mergeCards(works: PortalWork[] = []): CardData[] {
         href: undefined,
       };
     });
+    // Post-production credits are authored here, so they join the feed's list.
+    const have = new Set(fromFeed.map((c) => c.project.slug));
+    const extra = postCredits
+      .filter((p) => !have.has(p.slug))
+      .map((project, k) => ({
+        project,
+        index: fromFeed.length + k,
+        media: project.youtube ? youtubePoster(project.youtube) : undefined,
+        href: undefined,
+      }));
+    return [...fromFeed, ...extra];
   }
   // Projects without a video yet get no media: the card shows its colour
   // poster with a gear drawing (the animated SVG reels are kept for the

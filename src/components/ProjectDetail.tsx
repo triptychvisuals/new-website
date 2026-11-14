@@ -131,6 +131,8 @@ export default function ProjectDetail({
     [
       ["Client", work?.clientCompany],
       ["Artist", project.artist],
+      ["Our role", project.roles?.join(", ")],
+      ["Director", project.director],
       ["Category", project.category],
       ["Year", project.year],
       ["Runtime", work?.runtime],
