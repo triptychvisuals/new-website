@@ -9,7 +9,7 @@ import { getSiteContent } from "@/lib/siteContent";
 
 export const metadata: Metadata = {
   title: "Store", // EDIT
-  description: "Triptych windbreakers, heavyweight hoodies, keychains and gadgets — half of every sale funds young filmmakers.", // EDIT
+  description: "The Triptych windbreaker, heavyweight hoodie and varsity — half of every sale funds young filmmakers.", // EDIT
 };
 
 export default async function StorePage() {
@@ -31,7 +31,7 @@ export default async function StorePage() {
                 Fund the next one.
               </h1>
               <p className="mt-6 max-w-[560px] text-[17px] leading-relaxed text-muted sm:text-[19px]">
-                Windbreakers, heavyweight hoodies, keychains and gadgets for the set — made in small runs, shipped from Chicago.
+                A windbreaker, a heavyweight hoodie and a varsity — made in small runs, shipped from Chicago.
               </p>
             </div>
             {/* The cause (EDIT: lib/store.ts → CAUSE) */}

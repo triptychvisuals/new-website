@@ -80,10 +80,14 @@ export default function StoreClient() {
     <section className="px-5 pb-24 sm:px-8">
       {/* Filter + bag button */}
       <div className="mb-6 flex flex-wrap items-center gap-2 sm:mb-8">
-        <button type="button" onClick={() => setKind("All")} aria-pressed={kind === "All"} className={chip(kind === "All")}>All</button>
-        {kinds.map((k) => (
-          <button key={k} type="button" onClick={() => setKind(k)} aria-pressed={kind === k} className={chip(kind === k)}>{k}</button>
-        ))}
+        {kinds.length > 1 && (
+          <>
+            <button type="button" onClick={() => setKind("All")} aria-pressed={kind === "All"} className={chip(kind === "All")}>All</button>
+            {kinds.map((k) => (
+              <button key={k} type="button" onClick={() => setKind(k)} aria-pressed={kind === k} className={chip(kind === k)}>{k}</button>
+            ))}
+          </>
+        )}
         <button
           type="button"
           onClick={() => setOpen(true)}
@@ -95,7 +99,7 @@ export default function StoreClient() {
       </div>
 
       {/* Products */}
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3" aria-live="polite">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3" aria-live="polite">
         {shown.map((p) => {
           const size = p.sizes ? (sizes[p.id] ?? p.sizes[0]) : undefined;
           return (
