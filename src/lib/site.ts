@@ -32,7 +32,7 @@ export const site = {
   statementDescriptor: "TRIPTYCH VISUALS",
   /** EDIT: the state whose law governs the terms, and where disputes go. */
   lawState: "Indiana",
-  email: "hello@triptychvisuals.com", // EDIT: contact email (also confirm law@…)
+  email: "law@triptychstudios.co", // EDIT: contact email (clients, refunds, billing questions)
   /** EDIT: press enquiries. */
   pressEmail: "law@triptychstudios.co",
   /** EDIT: search + business listing. Paste the Google Search Console HTML-tag
