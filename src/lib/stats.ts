@@ -34,6 +34,12 @@ export const LIVE_VIEWS = {
   extraIds: [
     "VbONF4saaIU", // Lil Durk — EDIT: give it a project entry in lib/projects.ts once titled
   ] as string[],
+  // EDIT: the studio's own YouTube channel (its @handle). Every upload on it
+  // counts too, except copies of videos already counted above — the same
+  // video, or the same song and artist in the title. "" turns this off.
+  channel: "@law.mahone",
+  // EDIT: channel uploads to leave out anyway (ids), e.g. trailers or BTS.
+  skipChannelIds: [] as string[],
   // EDIT: views from places the API can't see (Instagram, TikTok, TV…),
   // added on top of the YouTube total.
   offset: 0,
