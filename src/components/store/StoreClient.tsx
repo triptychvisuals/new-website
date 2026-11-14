@@ -101,7 +101,7 @@ export default function StoreClient() {
       </div>
 
       {/* Products */}
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3" aria-live="polite">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4" aria-live="polite">
         {shown.map((p) => {
           const size = p.sizes ? (sizes[p.id] ?? p.sizes[0]) : undefined;
           return (

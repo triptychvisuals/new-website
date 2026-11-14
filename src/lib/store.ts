@@ -41,6 +41,7 @@ const APPAREL = ["S", "M", "L", "XL", "2XL"];
 export const products: Product[] = [
   { id: "windbreaker-black", name: "Crew Windbreaker", kind: "Apparel", shape: "hoodie", price: 12000, image: "/store/windbreaker-black.jpg", blurb: "Water-resistant black nylon shell, full zip, packable hood. Mark printed on the chest.", hue: 220, sizes: APPAREL },
   { id: "hoodie-black", name: "Heavyweight Hoodie", kind: "Apparel", shape: "hoodie", price: 11000, image: "/store/hoodie-black.jpg", blurb: "500gsm brushed fleece, properly thick. Boxy fit, double-layer hood, embroidered mark.", hue: 262, sizes: APPAREL },
+  { id: "puffer", name: "Layered Puffer", kind: "Apparel", shape: "hoodie", price: 32000, image: "/store/puffer.jpg", blurb: "Thick high-gloss black down shell over a black quilted down liner that zips out and wears on its own. Hood, snap cuffs, a small white leather mark.", hue: 225, sizes: APPAREL, badge: "New" },
   { id: "varsity", name: "Studio Varsity", kind: "Apparel", shape: "hoodie", price: 22000, image: "/store/varsity.jpg", imageBack: "/store/varsity-back.jpg", blurb: "All black: heavy wool body, leather sleeves, tonal striped trims, a small chenille mark on the chest and Triptych Studios in chenille script across the back.", hue: 30, sizes: APPAREL, badge: "New" },
 ];
 
