@@ -1,5 +1,6 @@
 // Services & partners — what we make, how, and who we make it with. Index 011.
 import type { Metadata } from "next";
+import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Reveal from "@/components/Reveal";
@@ -28,6 +29,12 @@ export default async function Page() {
         <section className="mx-auto w-full max-w-[1760px] px-5 pt-16 sm:px-8 lg:pt-24">
           <Reveal><p className="mb-6 text-[15px] text-muted">What we make</p></Reveal>
           <ServiceAccordion items={servicesList} />
+          {/* EDIT: the smaller offers and how payment works, so every charge a
+              client sees matches something listed here (Stripe's website checklist). */}
+          <p className="mt-6 max-w-[70ch] text-[15px] leading-relaxed text-muted">
+            We also run monthly content programs and single vertical videos for artists and brands; ask us for current rates. All prices are in US dollars. Projects are booked with a deposit and paid securely through Stripe. See our{" "}
+            <Link href="/refunds" className="underline underline-offset-4 hover:text-foreground">Refund &amp; Cancellation Policy</Link>.
+          </p>
         </section>
 
         {/* Process */}
