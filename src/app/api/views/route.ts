@@ -110,6 +110,7 @@ export async function GET() {
 
   const ids = [...siteIds, ...channelIds];
   const returned = new Set<string>();
+  const list: { title: string; date: string; views: number }[] = [];
   const now = Date.now();
   let total = 0;
   let perDay = 0;
@@ -125,6 +126,7 @@ export async function GET() {
         total += views;
         perDay += views / days;
         if (it.id) returned.add(it.id);
+        list.push({ title: it.snippet?.title ?? it.id ?? "", date: (it.snippet?.publishedAt ?? "").slice(0, 10), views });
       }
     }
   } catch {
@@ -151,6 +153,8 @@ export async function GET() {
       channelCounted,
       channelSkipped,
       missing,
+      // every counted video, oldest first: its upload date and views
+      videos: list.sort((a, b) => a.date.localeCompare(b.date)),
       ...(channelError ? { channelError } : {}),
     },
   });
