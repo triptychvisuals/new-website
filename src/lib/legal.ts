@@ -6,6 +6,7 @@
 // keep them in step with the production agreement and with Stripe.
 // -------------------------------------------------------------------------
 import { site } from "./site";
+import { servicesList } from "./pages";
 
 export type LegalSection = { id: string; heading: string; body: string[] };
 export type LegalDoc = {
@@ -144,6 +145,8 @@ export const legalDocs: LegalDoc[] = [
         body: [
           "We produce music videos, commercials, brand films and short-form social content. We sell three kinds of work: custom productions quoted per project, fixed-price packages (such as a single premium vertical video), and monthly content programs. The store also sells apparel, prints and digital goods.",
           "What is included in each project or package, the price, and the delivery date are set out in your quote, invoice or production agreement before you pay anything.",
+          `Starting prices, in US dollars: ${servicesList.map((x) => `${x.name.toLowerCase()} ${x.from.replace(/^From /, "from ").replace(/ USD$/, "")}`).join("; ")}. Every project is quoted on its brief.`,
+          "We also run monthly content programs and single vertical videos for artists and brands; ask us for current rates. All prices are in US dollars. Projects are booked with a deposit and paid securely through Stripe. See our Refund & Cancellation Policy.",
         ],
       },
       {

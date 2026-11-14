@@ -8,6 +8,8 @@ import PageHead from "@/components/pages/PageHead";
 import ServiceAccordion from "@/components/pages/ServiceAccordion";
 import { servicesList, process } from "@/lib/pages";
 import { clients, projects } from "@/lib/projects";
+import PreviewLoop from "@/components/PreviewLoop";
+import { previewFor, SLUG_ALIASES } from "@/lib/previews";
 import { site } from "@/lib/site";
 import { getSiteContent } from "@/lib/siteContent";
 
@@ -17,9 +19,16 @@ export const metadata: Metadata = {
   alternates: { canonical: "/services" },
 };
 
+// EDIT: the recent work beside the labels — project slugs (lib/projects),
+// each shown with its looping preview (lib/previews).
+const RECENT = ["overthink", "symptom", "obsessive-compulsive-imagination", "hands-up"];
+
 export default async function Page() {
   const content = await getSiteContent();
   const artists = Array.from(new Set(projects.map((p) => p.artist?.split(" ft.")[0]).filter((a): a is string => !!a)));
+  const recent = RECENT.map((slug) => projects.find((p) => p.slug === slug))
+    .filter((p): p is (typeof projects)[number] => !!p)
+    .map((p) => ({ p, preview: previewFor(p.slug) }));
   return (
     <>
       <main className="relative min-h-screen">
@@ -28,13 +37,8 @@ export default async function Page() {
 
         <section className="mx-auto w-full max-w-[1760px] px-5 pt-16 sm:px-8 lg:pt-24">
           <Reveal><p className="mb-6 text-[15px] text-muted">What we make</p></Reveal>
-          <ServiceAccordion items={servicesList} />
-          {/* EDIT: the smaller offers and how payment works, so every charge a
-              client sees matches something listed here (Stripe's website checklist). */}
-          <p className="mt-6 max-w-[70ch] text-[15px] leading-relaxed text-muted">
-            We also run monthly content programs and single vertical videos for artists and brands; ask us for current rates. All prices are in US dollars. Projects are booked with a deposit and paid securely through Stripe. See our{" "}
-            <Link href="/refunds" className="underline underline-offset-4 hover:text-foreground">Refund &amp; Cancellation Policy</Link>.
-          </p>
+          {/* EDIT: prices stay off this page (they are listed in the Terms). To show them again: pass servicesList as it is and set SHOW_PRICES in ServiceAccordion */}
+          <ServiceAccordion items={servicesList.map((s) => ({ ...s, from: "" }))} />
         </section>
 
         {/* Process */}
@@ -65,10 +69,26 @@ export default async function Page() {
               </ul>
             </Reveal>
             <Reveal delay={0.05}>
-              <p className="text-[15px] text-muted">Artists we&apos;ve worked with</p>
-              <ul className="mt-6 flex flex-wrap gap-2">
-                {artists.map((a) => (
-                  <li key={a} className="rounded-full border border-hairline px-4 py-2 text-[15px] text-foreground/80">{a}</li>
+              <p className="text-[15px] text-muted">Recent work</p>
+              <ul className="mt-6 grid grid-cols-2 gap-x-3 gap-y-6">
+                {recent.map(({ p, preview }) => (
+                  <li key={p.slug}>
+                    <Link href={`/work/${SLUG_ALIASES[p.slug] ?? p.slug}`} className="group block">
+                      <div className="relative aspect-video overflow-hidden rounded-[14px] bg-surface">
+                        {preview && (
+                          <PreviewLoop
+                            src={preview.src}
+                            poster={preview.poster}
+                            className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                          />
+                        )}
+                      </div>
+                      <p className="mt-3 text-[16px] font-medium leading-snug tracking-[-0.01em]">
+                        {p.title} <span aria-hidden className="text-foreground/40 transition-colors group-hover:text-foreground">↗</span>
+                      </p>
+                      {p.artist && <p className="text-[14px] text-muted">{p.artist}</p>}
+                    </Link>
+                  </li>
                 ))}
               </ul>
               <a href={site.contactUrl} className="mt-10 inline-flex items-center gap-2 rounded-full bg-foreground px-5 py-2.5 text-[14px] font-medium text-background hover:opacity-85">

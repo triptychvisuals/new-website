@@ -3,6 +3,9 @@
 import { useState } from "react";
 import type { Service } from "@/lib/pages";
 
+// EDIT: true shows each service's starting price on its row.
+const SHOW_PRICES = false;
+
 /** Services as an accordion: one open at a time, what's included inside. */
 export default function ServiceAccordion({ items }: { items: Service[] }) {
   const [open, setOpen] = useState(0);
@@ -20,7 +23,8 @@ export default function ServiceAccordion({ items }: { items: Service[] }) {
             >
               <span className="w-8 shrink-0 text-[14px] tabular-nums text-accent">{String(i + 1).padStart(2, "0")}</span>
               <span className="flex-1 text-[clamp(1.6rem,3.6vw,3rem)] font-normal leading-none tracking-tight">{s.name}</span>
-              <span className="hidden text-[14px] text-muted sm:inline">{s.from}</span>
+              {/* EDIT: starting prices are kept off this page (they're listed in the Terms); set SHOW_PRICES to show them here again */}
+              {SHOW_PRICES && <span className="hidden text-[14px] text-muted sm:inline">{s.from}</span>}
               <span aria-hidden className={`text-2xl leading-none transition-transform duration-300 ${on ? "rotate-45" : ""}`}>+</span>
             </button>
             <div className={`grid transition-[grid-template-rows] duration-300 ease-out ${on ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}>
