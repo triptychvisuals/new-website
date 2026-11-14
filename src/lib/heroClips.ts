@@ -1,7 +1,7 @@
 // -------------------------------------------------------------------------
 // The hero reel: approved shots from the studio's work, cut from the masters
 // in Google Drive (Overthink, Hands Up!!!, Good Morning America, Englewood
-// Tommy, Obsessive Compulsive Imagination, Symptom). They play in a random
+// Tommy, Obsessive Compulsive Imagination, Symptom, Feel the Love). They play in a random
 // order on every visit (components/HeroReel.tsx); the first one listed
 // opens the reel. EDIT: delete a line to drop a shot; files live in
 // /public/hero/reel (NAME.mp4 1080p, NAME-m.mp4 720p for phones).
@@ -12,6 +12,16 @@ const shot = (name: string): HeroClip => ({ src: `/hero/reel/${name}.mp4`, phone
 
 export const HERO_CLIPS: HeroClip[] = [
   shot("r04"),
+  shot("ftl01"),
+  shot("ftl02"),
+  shot("ftl03"),
+  shot("ftl04"),
+  shot("ftl05"),
+  shot("ftl06"),
+  shot("ftl07"),
+  shot("ftl08"),
+  shot("ftl09"),
+  shot("ftl10"),
   shot("r01"),
   shot("r02"),
   shot("r05"),
