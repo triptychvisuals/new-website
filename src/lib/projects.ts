@@ -82,14 +82,15 @@ const AUTHORED: Authored[] = [
   { title: "Hands Up!!!", artist: "Jay Wood", year: "2025", video: "/reels/reel-b.mp4" }, // EDIT: youtube id
   {
     title: "Good Morning America",
+    artist: "Ausar",
     year: "2025",
     video: "/reels/reel-c.mp4",
     // 4:3 source in a 16:9 cell — bias the crop down so the seated subject's
     // face + hands stay in frame instead of empty text headroom up top.
     objectPosition: "50% 60%",
-  }, // EDIT: artist + youtube id
+  }, // EDIT: youtube id
   { title: "Poetic Street Talk", artist: "Englewood Tommy", year: "2024", video: "/previews/poetic-street-talk.mp4", standalone: true },
-  { title: "Feel the Love", year: "2024", video: "/reels/feel-the-love.mp4", youtube: "4LQP9E6W-3w" }, // EDIT: artist
+  { title: "Feel the Love", artist: "Jay Wood", year: "2024", video: "/reels/feel-the-love.mp4", youtube: "4LQP9E6W-3w" },
   { title: "Locked In", artist: "G Herbo", year: "2022", youtube: "n3JAY-3H8Ao" },
   { title: "Ridin Wit It", artist: "G Herbo", year: "2020", youtube: "k5coDLFQrj0" }, // Triptych's most-watched video
   { title: "OK Cool", year: "2023" }, // EDIT: artist + youtube id
