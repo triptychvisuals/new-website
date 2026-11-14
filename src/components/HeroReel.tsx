@@ -1,7 +1,10 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 import { HERO_CLIPS, HERO_FEATURED, HERO_OPENING, type HeroClip } from "@/lib/heroClips";
+import { projects } from "@/lib/projects";
+import { SLUG_ALIASES } from "@/lib/previews";
 import { PHONE_MAX } from "@/lib/video";
 
 // EDIT: how long the crossfade between shots takes (ms).
@@ -15,8 +18,13 @@ const FADE_MS = 700;
  * the next shot, then they crossfade — so only two shots are ever in
  * memory, however long the list. Phones get lighter 720p copies. Nothing
  * plays while the hero is off screen.
+ *
+ * Bottom-left, a label names the video the shot on screen is from (and
+ * links to it); it changes as the reel moves on to another video.
  */
 export default function HeroReel() {
+  const first = HERO_OPENING[0] ?? HERO_CLIPS[0];
+  const [playing, setPlaying] = useState<string | undefined>(first?.project);
   const box = useRef<HTMLDivElement>(null);
   const one = useRef<HTMLVideoElement>(null);
   const two = useRef<HTMLVideoElement>(null);
@@ -68,6 +76,7 @@ export default function HeroReel() {
       cur.style.opacity = "0";
       front = 1 - front;
       pos += 1;
+      setPlaying(order[pos % order.length].project);
       // once it has faded out, the old one loads the shot after next
       timers.push(window.setTimeout(() => {
         cur.pause();
@@ -110,10 +119,11 @@ export default function HeroReel() {
     };
   }, []);
 
-  const first = HERO_OPENING[0] ?? HERO_CLIPS[0];
+  const now = playing ? projects.find((p) => p.slug === playing) : undefined;
   const layer = "absolute inset-0 h-full w-full object-cover transition-opacity ease-out motion-reduce:transition-none";
 
   return (
+    <>
     <div ref={box} className="pointer-events-none absolute inset-0 -z-10 overflow-hidden bg-black">
       <video
         ref={one}
@@ -138,5 +148,24 @@ export default function HeroReel() {
         aria-hidden
       />
     </div>
+
+    {/* What's playing — sits on the fade at the bottom, so it takes the
+        page's text colour. EDIT: position and sizes. */}
+    <div aria-live="polite" className="pointer-events-none absolute bottom-6 left-5 z-10 lg:bottom-10 lg:left-10">
+      {now && (
+        <Link
+          key={now.slug}
+          href={`/work/${SLUG_ALIASES[now.slug] ?? now.slug}`}
+          className="hero-label group pointer-events-auto flex flex-col text-foreground"
+        >
+          <span className="font-mono text-[11px] text-foreground/55">Now playing</span>
+          <span className="mt-1 text-[18px] font-medium leading-tight tracking-[-0.01em] sm:text-[22px]">
+            {now.title} <span aria-hidden className="inline-block text-foreground/50 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5">↗</span>
+          </span>
+          {now.artist && <span className="text-[14px] text-foreground/70 sm:text-[15px]">{now.artist}</span>}
+        </Link>
+      )}
+    </div>
+    </>
   );
 }

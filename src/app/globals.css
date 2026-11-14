@@ -314,3 +314,13 @@ html.lenis body {
 @media (prefers-reduced-motion: reduce) {
   .reel-word { animation: none; }
 }
+
+/* The hero's "Now playing" label: rises in when the video changes. */
+@keyframes hero-label-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+.hero-label { animation: hero-label-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) both; }
+@media (prefers-reduced-motion: reduce) {
+  .hero-label { animation: none; }
+}

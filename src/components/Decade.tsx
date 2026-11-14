@@ -15,8 +15,9 @@ const hueFor = (i: number) => Math.round((i * 137.508) % 360);
  * The 2016 → 2026 timeline. Desktop: the current year huge in a sticky
  * column on the left, with a segmented progress bar and the chapter's
  * title under it; the years' stories run down the right, the one at the
- * middle of the screen lit and the rest dimmed. Phones: each story with its
- * year above it, lighting up as it reaches the middle. Every new year taps
+ * middle of the screen lit and the rest dimmed. Phones: the same idea —
+ * the year, the progress bar and the chapter title stay pinned under the
+ * header while the stories scroll up beneath them. Every new year taps
  * on phones that allow it (lib/haptics). No 3D, no pinning — the page
  * scrolls normally and only opacity changes.
  */
@@ -93,6 +94,31 @@ export default function Decade() {
             </div>
           </div>
 
+          <div>
+          {/* Phones: the year stays pinned under the header (EDIT: top = header height) */}
+          <div aria-hidden className="sticky top-14 z-10 -mx-5 bg-background/95 px-5 pb-5 pt-4 backdrop-blur-md lg:hidden">
+            <div className="flex items-end justify-between gap-4">
+              <p key={d.year} className="tl-year text-[clamp(4.5rem,22vw,7rem)] font-medium leading-[0.85] tracking-[-0.05em] tabular-nums">
+                {d.year}
+              </p>
+              <p className="pb-1 text-right text-[13px] text-muted tabular-nums">
+                {String(active + 1).padStart(2, "0")} / {decade.length}
+              </p>
+            </div>
+            <div className="mt-4 flex gap-1">
+              {decade.map((y, i) => (
+                <span
+                  key={y.year}
+                  className="h-1 flex-1 rounded-full transition-colors duration-500"
+                  style={{ background: i <= active ? `hsl(${hueFor(i)} 80% 58%)` : "var(--hairline)" }}
+                />
+              ))}
+            </div>
+            <p key={`m-${d.year}`} className="tl-year mt-3 truncate text-[17px] font-medium tracking-[-0.01em]">
+              {d.title}
+            </p>
+          </div>
+
           {/* The stories */}
           <ol className="border-b border-hairline">
             {decade.map((y, i) => {
@@ -112,8 +138,8 @@ export default function Decade() {
                       className="h-2.5 w-2.5 rounded-full transition-transform duration-500"
                       style={{ background: `hsl(${hueFor(i)} 80% 58%)`, transform: on ? "scale(1)" : "scale(0.6)" }}
                     />
-                    {/* the year: large on phones (no sticky column), small on desktop */}
-                    <span className="text-[44px] font-medium leading-none tracking-[-0.03em] tabular-nums lg:text-[15px] lg:font-normal lg:tracking-normal lg:text-muted">
+                    {/* the year, small (the pinned year above is the big one) */}
+                    <span className="text-[15px] tabular-nums text-muted">
                       {y.year}
                     </span>
                   </div>
@@ -123,6 +149,7 @@ export default function Decade() {
               );
             })}
           </ol>
+          </div>
         </div>
       </div>
     </section>

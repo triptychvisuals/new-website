@@ -6,9 +6,33 @@
 // EDIT: delete a line to drop a shot; files live in /public/hero/reel
 // (NAME.mp4 1080p, NAME-m.mp4 720p for phones).
 // -------------------------------------------------------------------------
-export type HeroClip = { src: string; phone: string };
+/** One shot: its files, and the project (slug in lib/projects) it's from. */
+export type HeroClip = { src: string; phone: string; project?: string };
 
-const shot = (name: string): HeroClip => ({ src: `/hero/reel/${name}.mp4`, phone: `/hero/reel/${name}-m.mp4` });
+// EDIT: which project each shot is from — the label on the hero names it.
+// The r-numbered shots were cut in this order, so a range of numbers is
+// one video; the others go by their name.
+const SOURCES: { from: number; to: number; project: string }[] = [
+  { from: 1, to: 32, project: "overthink" },
+  { from: 33, to: 47, project: "hands-up" },
+  { from: 48, to: 64, project: "good-morning-america" },
+  { from: 65, to: 84, project: "poetic-street-talk" },
+  { from: 85, to: 113, project: "obsessive-compulsive-imagination" },
+  { from: 114, to: 999, project: "symptom" },
+];
+function sourceOf(name: string): string | undefined {
+  if (name.startsWith("ftl")) return "feel-the-love";
+  if (name.startsWith("sym")) return "symptom";
+  if (name.startsWith("hu-")) return "hands-up";
+  const n = Number(name.replace(/^r/, ""));
+  return SOURCES.find((s) => n >= s.from && n <= s.to)?.project;
+}
+
+const shot = (name: string): HeroClip => ({
+  src: `/hero/reel/${name}.mp4`,
+  phone: `/hero/reel/${name}-m.mp4`,
+  project: sourceOf(name),
+});
 
 // EDIT: the opening, always first and in this order: Wale, Overthink.
 export const HERO_OPENING: HeroClip[] = [shot("r04"), shot("r20"), shot("r11"), shot("r28")];
