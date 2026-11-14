@@ -92,7 +92,9 @@ export async function GET() {
   if (LIVE_VIEWS.channel) {
     try {
       for (const v of await channelUploads(LIVE_VIEWS.channel, key)) {
-        const dupe = known.has(v.id) ? "same video" : counted.find((p) => sameSong(v.title, p))?.title;
+        // Only projects that already count a YouTube video can make a copy a
+        // duplicate — one with no video on the site isn't counted yet.
+        const dupe = known.has(v.id) ? "same video" : counted.find((p) => p.youtube && sameSong(v.title, p))?.title;
         if (dupe || LIVE_VIEWS.skipChannelIds.includes(v.id)) {
           channelSkipped.push(`${v.title} — ${dupe ? `already counted (${dupe})` : "skipped in lib/stats.ts"}`);
           continue;
