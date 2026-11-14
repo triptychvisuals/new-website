@@ -122,6 +122,9 @@ const AUTHORED: Authored[] = [
 // -------------------------------------------------------------------------
 const POST_CREDITS: Authored[] = [
   // ← add credits here
+  // EDIT: roles — add what you did on each, e.g. roles: ["Edit", "Color"]
+  { title: "Effortless", artist: "Polo G", year: "2019", director: "Laka Films", youtube: "kQZJbGifttw" },
+  { title: "hellboy", artist: "Lil Peep", year: "2020", director: "Paul John", youtube: "s9t1ZfMZfH4" },
 ];
 
 // EDIT: placeholder years for portal works that don't carry one
