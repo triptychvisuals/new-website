@@ -89,7 +89,6 @@ const AUTHORED: Authored[] = [
   { title: "Dimple (Next Song Remix)", artist: "Queen Key", year: "2019", youtube: "n8f3ygPPIEY" }, // ~
   { title: "Timing", artist: "Khaliyah X", year: "2018" }, // EDIT: youtube id
   { title: "Impulses", artist: "Khaliyah X", year: "2018", youtube: "4yVaIs9jXj0" }, // ~
-  { title: "Overweight", artist: "Trippie Redd ft. Chris King", year: "2017", youtube: "OvMwvYklW0I" },
   { title: "Who Dat", artist: "Lil Pump", year: "2017" }, // EDIT: youtube id
   { title: "My Way", artist: "Queen Key", year: "2017", youtube: "_3WOkRKuB9c" },
   { title: "Hip Hopper (Remix)", artist: "Sumo", year: "2017", youtube: "bYbFS0aDm4I" }, // ~
@@ -125,6 +124,7 @@ const POST_CREDITS: Authored[] = [
   // EDIT: roles — add what you did on each, e.g. roles: ["Edit", "Color"]
   { title: "Effortless", artist: "Polo G", year: "2019", director: "Laka Films", youtube: "kQZJbGifttw" },
   { title: "hellboy", artist: "Lil Peep", year: "2020", director: "Paul John", youtube: "s9t1ZfMZfH4" },
+  { title: "Overweight", artist: "Trippie Redd ft. Chris King", year: "2017", roles: ["Edit"], director: "Laka Films", youtube: "OvMwvYklW0I" },
   { title: "Coupe", artist: "Bali Baby", year: "2017", roles: ["Edit"], director: "Spiffy Global", youtube: "zwa5UybNXpk" }, // ~
 ];
 
