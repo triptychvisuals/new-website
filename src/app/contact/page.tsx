@@ -10,8 +10,19 @@ import StudioMap from "@/components/contact/StudioMapLazy";
 import StudioView from "@/components/contact/StudioView";
 
 // EDIT: the hero — "render" (the Higgsfield aerial, at the real time of day
-// in Chicago) or "3d" (the live 3D model of the block).
-const HERO: "render" | "3d" = "render";
+// in Chicago) or "3d" (the live 3D model of the block: a white clay model
+// with the traffic, boats and trains moving — see StudioMap's CLAY).
+const HERO: "render" | "3d" = "3d";
+// On the white model the type goes black; on the render it stays white.
+const LIGHT = HERO === "3d";
+const INK = {
+  section: LIGHT ? "bg-[#f2f2f0] text-black" : "bg-[#050505] text-white",
+  mark: LIGHT ? "border-black/40" : "border-white/60",
+  dim: LIGHT ? "text-black/55" : "text-white/60",
+  body: LIGHT ? "text-black/75" : "text-white/80",
+  faint: LIGHT ? "text-black/45" : "text-white/50",
+  rule: LIGHT ? "bg-black/45" : "bg-white/50",
+};
 import { site } from "@/lib/site";
 import { socials } from "@/lib/about";
 import { getSiteContent } from "@/lib/siteContent";
@@ -53,31 +64,31 @@ export default async function ContactPage() {
         <Header logo={content.logo} />
 
         {/* The map — raw: a plan of the Loop in 3D, with the address marked */}
-        <section aria-label="Where we are" className="relative border-b border-hairline bg-[#050505] text-white">
+        <section aria-label="Where we are" className={`relative border-b border-hairline ${INK.section}`}>
           {HERO === "3d" ? <StudioMap className="h-[72svh] min-h-[460px] w-full" /> : <StudioView className="h-[72svh] min-h-[460px] w-full" />}
           {/* Overlay: corner marks, the title, the address and coordinates */}
           <div aria-hidden className="pointer-events-none absolute inset-4 z-30 sm:inset-6">
-            <span className="absolute left-0 top-0 h-4 w-4 border-l border-t border-white/60" />
-            <span className="absolute right-0 top-0 h-4 w-4 border-r border-t border-white/60" />
-            <span className="absolute bottom-0 left-0 h-4 w-4 border-b border-l border-white/60" />
-            <span className="absolute bottom-0 right-0 h-4 w-4 border-b border-r border-white/60" />
+            <span className={`absolute left-0 top-0 h-4 w-4 border-l border-t ${INK.mark}`} />
+            <span className={`absolute right-0 top-0 h-4 w-4 border-r border-t ${INK.mark}`} />
+            <span className={`absolute bottom-0 left-0 h-4 w-4 border-b border-l ${INK.mark}`} />
+            <span className={`absolute bottom-0 right-0 h-4 w-4 border-b border-r ${INK.mark}`} />
           </div>
           <div className="pointer-events-none absolute left-6 top-6 z-30 sm:left-10 sm:top-10">
-            <p className="font-mono text-[11px] text-white/60">009 / Contact</p>
+            <p className={`font-mono text-[11px] ${INK.dim}`}>009 / Contact</p>
             <h1 className="mt-2 text-[clamp(3rem,9vw,8rem)] font-medium leading-[0.9] tracking-[-0.04em]">Contact</h1>
           </div>
-          <div className="pointer-events-none absolute bottom-6 left-6 z-30 font-mono text-[11px] leading-relaxed text-white/80 sm:bottom-10 sm:left-10 sm:text-[12px]">
+          <div className={`pointer-events-none absolute bottom-6 left-6 z-30 font-mono text-[11px] leading-relaxed sm:bottom-10 sm:left-10 sm:text-[12px] ${INK.body}`}>
             {ADDRESS_LINES.map((l) => (
               <p key={l}>{l}</p>
             ))}
-            <p className="mt-2 text-white/50">
+            <p className={`mt-2 ${INK.faint}`}>
               {coord(site.lat, "N", "S")} &nbsp; {coord(site.lng, "E", "W")}
             </p>
           </div>
-          <div className="pointer-events-none absolute bottom-6 right-6 z-30 hidden text-right font-mono text-[11px] leading-relaxed text-white/50 sm:bottom-10 sm:right-10 sm:block">
+          <div className={`pointer-events-none absolute bottom-6 right-6 z-30 hidden text-right font-mono text-[11px] leading-relaxed sm:bottom-10 sm:right-10 sm:block ${INK.faint}`}>
             <p>Fig. 01 — W. Wacker Drive, Chicago</p>
             <p className="mt-2 flex items-center justify-end gap-2">
-              <span className="inline-block h-px w-16 bg-white/50" /> 200 m
+              <span className={`inline-block h-px w-16 ${INK.rule}`} /> 200 m
             </p>
           </div>
         </section>

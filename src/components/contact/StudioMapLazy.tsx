@@ -6,7 +6,8 @@ import dynamic from "next/dynamic";
 // of every other page's bundle, and the page's text paints first.
 const StudioMap = dynamic(() => import("./StudioMap"), {
   ssr: false,
-  loading: () => <div className="h-full w-full bg-[#050505]" />,
+  // EDIT: the colour shown while it loads (match StudioMap's background)
+  loading: () => <div className="h-full w-full bg-[#f2f2f0]" />,
 });
 
 export default StudioMap;

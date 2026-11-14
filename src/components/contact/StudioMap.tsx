@@ -32,9 +32,20 @@ import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import * as THREE from "three";
 import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 
+// ── look ─────────────────────────────────────────────────────────────────
+// EDIT: true = a white clay architectural model (the Blender look): every
+// surface white in soft tones, windows as faint shading, soft sun shadows,
+// the camera holding still while the traffic, boats and trains move.
+// false = the full-colour night-and-day map below, slowly circling.
+export const CLAY = true;
+// EDIT: the clay tones
+const CLAY_BG = "#f2f2f0"; // the sky / fog behind the model
+const CLAY_WATER = "#d5dde0"; // the river
+const CLAY_CARS = ["#f6f6f4", "#ecebe8", "#e0dfdc"];
+
 // ── palette ──────────────────────────────────────────────────────────────
 // EDIT: colours of the model
-const BG = "#050505"; // page behind the map; the fog fades into it
+const BG = CLAY ? CLAY_BG : "#050505"; // page behind the map; the fog fades into it
 const ASPHALT = "#2b2c2f";
 const CONCRETE = "#8c8a84"; // sidewalks / block pads
 const WALK = "#a59f93"; // riverwalk
@@ -957,7 +968,7 @@ function Traffic() {
     if (!m) return;
     const r = seeded(9);
     // EDIT: car colours
-    const palette = ["#e9e9e6", "#e9e9e6", "#1c1d20", "#1c1d20", "#5c6066", "#8d9196", "#7d1f1f", "#1f3a66", "#b9b2a4"].map((c) => new THREE.Color(c));
+    const palette = (CLAY ? CLAY_CARS : ["#e9e9e6", "#e9e9e6", "#1c1d20", "#1c1d20", "#5c6066", "#8d9196", "#7d1f1f", "#1f3a66", "#b9b2a4"]).map((c) => new THREE.Color(c));
     cars.forEach((_, i) => m.setColorAt(i, pick(palette, r)));
     if (m.instanceColor) m.instanceColor.needsUpdate = true;
   }, [cars]);
@@ -1119,7 +1130,7 @@ function Target() {
         <meshBasicMaterial color={ACCENT} transparent opacity={0.75} side={THREE.DoubleSide} depthWrite={false} />
       </mesh>
       <Html position={[TX, h + 124, TZ]} center zIndexRange={[20, 0]}>
-        <div className="pointer-events-none flex items-center gap-1.5 whitespace-nowrap rounded-full bg-white py-1 pl-2 pr-2.5 text-[11px] font-medium leading-none text-black shadow-[0_2px_10px_rgba(0,0,0,.5)]">
+        <div className={`pointer-events-none flex items-center gap-1.5 whitespace-nowrap rounded-full py-1 pl-2 pr-2.5 text-[11px] font-medium leading-none ${CLAY ? "bg-black text-white shadow-[0_2px_10px_rgba(0,0,0,.2)]" : "bg-white text-black shadow-[0_2px_10px_rgba(0,0,0,.5)]"}`}>
           <span className="h-2 w-2 rounded-full bg-[#e5361f]" />
           211 W. Wacker Dr.
         </div>
@@ -1133,12 +1144,12 @@ function Labels() {
   const tag = (text: string, pos: [number, number, number], kind: "street" | "place" | "water" = "place"): ReactNode => (
     <Html key={text} position={pos} center zIndexRange={[10, 0]}>
       <span
-        className={`pointer-events-none whitespace-nowrap [text-shadow:0_1px_3px_rgba(0,0,0,.9)] ${
+        className={`pointer-events-none whitespace-nowrap ${CLAY ? "" : "[text-shadow:0_1px_3px_rgba(0,0,0,.9)]"} ${
           kind === "street"
-            ? "text-[9px] font-semibold uppercase tracking-[0.14em] text-white/70"
+            ? `text-[9px] font-semibold uppercase tracking-[0.14em] ${CLAY ? "text-black/45" : "text-white/70"}`
             : kind === "water"
-              ? "text-[10px] italic tracking-[0.06em] text-[#9cc3cf]"
-              : "text-[11px] font-medium text-white/90"
+              ? `text-[10px] italic tracking-[0.06em] ${CLAY ? "text-[#6f858c]" : "text-[#9cc3cf]"}`
+              : `text-[11px] font-medium ${CLAY ? "text-black/75" : "text-white/90"}`
         }`}
       >
         {text}
@@ -1173,22 +1184,89 @@ function Rig({ pointer }: { pointer: React.RefObject<{ x: number; y: number }> }
   // back so the same stretch of the city fits across.
   const aspect = size.width / Math.max(1, size.height);
   const pull = Math.pow(Math.max(1, 1.6 / aspect), 0.75);
+  // EDIT: in clay the camera holds one view — how far round to the east it
+  // sits (radians) and how much higher than the circling camera
+  const CLAY_TURN = 1.1;
+  const CLAY_LIFT = 1.15;
   const R = 600 * pull;
-  const H = 500 * pull;
+  const H = 500 * pull * (CLAY ? CLAY_LIFT : 1);
   const reduced = useMemo(() => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches, []);
-  const SPEED = reduced ? 0 : 0.035;
+  const SPEED = reduced || CLAY ? 0 : 0.035;
   // Start north-east of the address, looking south-west across the river.
-  const START = -Math.PI / 2 + 0.35;
+  const START = -Math.PI / 2 + 0.35 + (CLAY ? CLAY_TURN : 0);
   useFrame(({ clock }) => {
     const p = pointer.current ?? { x: 0, y: 0 };
-    const a = START + clock.getElapsedTime() * SPEED + p.x * 0.2;
-    camera.position.set(look.x + Math.cos(a) * R, H + p.y * 40, look.z + Math.sin(a) * R);
+    // the pointer leans the view a little (less when the model holds still)
+    const lean = CLAY ? 0.07 : 0.2;
+    const a = START + clock.getElapsedTime() * SPEED + p.x * lean;
+    camera.position.set(look.x + Math.cos(a) * R, H + p.y * (CLAY ? 18 : 40), look.z + Math.sin(a) * R);
     camera.lookAt(look);
   });
   // EDIT: fog — the city fades to black from just past the address out to
   // about twice the camera's distance.
   const d = Math.hypot(R, H);
   return <fog attach="fog" args={[BG, d * 1.05, d * 2.1]} />;
+}
+
+/**
+ * The clay pass: once everything is built, turns every surface into white
+ * clay. Light originals become the brightest whites and dark ones (asphalt,
+ * steel) a soft grey, so streets, walks and buildings still read apart; the
+ * facade drawings stay on as faint shading (the windows); the river keeps a
+ * pale blue-grey and the address pin its red.
+ */
+function ClayPass() {
+  const { scene } = useThree();
+  const done = useRef(false);
+  useFrame(() => {
+    if (done.current) return;
+    done.current = true;
+    const seen = new WeakSet<THREE.Material>();
+    const water = new THREE.Color(WATER).getHexString();
+    const convert = (m: THREE.Material) => {
+      if (seen.has(m)) return;
+      seen.add(m);
+      if (m instanceof THREE.LineBasicMaterial) {
+        m.color.set("#a9a8a4");
+        return;
+      }
+      if (!(m instanceof THREE.MeshStandardMaterial)) return; // the pin keeps its red
+      if (m.color.getHexString() === water) {
+        m.color.set(CLAY_WATER);
+        m.metalness = 0;
+        m.roughness = 0.4;
+        m.needsUpdate = true;
+        return;
+      }
+      const walls = !!m.map && !(m.alphaTest > 0);
+      const glassy = m.metalness > 0.2;
+      // EDIT: how bright each kind of surface goes (0–1)
+      const v = walls ? 0.965 : 0.86 + 0.13 * Math.sqrt(m.map ? 1 : m.color.r * 0.3 + m.color.g * 0.59 + m.color.b * 0.11);
+      if (glassy) m.color.setRGB(v * 0.975, v * 0.99, v);
+      else m.color.setRGB(v, v * 0.997, v * 0.99);
+      if (walls) {
+        m.aoMap = m.map;
+        m.aoMapIntensity = 0.35; // EDIT: how strongly the windows show
+        m.map = null;
+      }
+      m.metalness = 0;
+      m.roughness = 0.92;
+      m.emissive.set(0x000000);
+      m.bumpMap = null;
+      m.needsUpdate = true;
+    };
+    const cars = CLAY_CARS.map((c) => new THREE.Color(c));
+    scene.traverse((o) => {
+      const mesh = o as THREE.Mesh;
+      if (mesh.material) (Array.isArray(mesh.material) ? mesh.material : [mesh.material]).forEach(convert);
+      const inst = o as THREE.InstancedMesh;
+      if (inst.isInstancedMesh && inst.instanceColor) {
+        for (let i = 0; i < inst.count; i++) inst.setColorAt(i, cars[i % cars.length]);
+        inst.instanceColor.needsUpdate = true;
+      }
+    });
+  });
+  return null;
 }
 
 /** The sun: from the south-west, casting the city's shadows on desktop. */
@@ -1211,8 +1289,8 @@ function Sun({ shadows }: { shadows: boolean }) {
       ref={light}
       // EDIT: sun position (relative to the address) and strength
       position={[TX - 560, 760, TZ + 260]}
-      intensity={2.4}
-      color="#fff4e6"
+      intensity={CLAY ? 1.9 : 2.4}
+      color={CLAY ? "#ffffff" : "#fff4e6"}
       castShadow={shadows}
       shadow-mapSize={[2048, 2048]}
       shadow-bias={-0.0004}
@@ -1252,16 +1330,24 @@ export default function StudioMap({ className = "" }: { className?: string }) {
       <Canvas
         frameloop={visible ? "always" : "never"}
         dpr={[1, hq ? 1.75 : 1.5]}
-        shadows={hq ? "percentage" : false}
+        shadows={CLAY ? "soft" : hq ? "percentage" : false}
         camera={{ fov: 30, near: 5, far: 4000, position: [0, 500, -600] }}
         gl={{ antialias: true, powerPreference: "high-performance" }}
+        onCreated={({ gl }) => {
+          // neutral tone mapping keeps the clay's whites white
+          if (CLAY) {
+            gl.toneMapping = THREE.NeutralToneMapping;
+            gl.toneMappingExposure = 1.12; // EDIT: overall brightness of the clay
+          }
+        }}
         aria-label="3D map: 211 W. Wacker Drive, Chicago, on the river between Wells and Franklin"
       >
         <color attach="background" args={[BG]} />
-        <hemisphereLight args={["#dfe9f2", "#3a3836", 1.5]} />
-        <Sun shadows={hq} />
-        <Ground shadows={hq} />
-        <City shadows={hq} />
+        {/* EDIT: sky light — white from above, warm grey bounce from below in clay */}
+        <hemisphereLight args={CLAY ? ["#ffffff", "#d9d6d0", 2.3] : ["#dfe9f2", "#3a3836", 1.5]} />
+        <Sun shadows={hq || CLAY} />
+        <Ground shadows={hq || CLAY} />
+        <City shadows={hq || CLAY} />
         <Markings />
         <Traffic />
         <Boats />
@@ -1269,6 +1355,7 @@ export default function StudioMap({ className = "" }: { className?: string }) {
         <Target />
         <Labels />
         <Rig pointer={pointer} />
+        {CLAY && <ClayPass />}
       </Canvas>
     </div>
   );
