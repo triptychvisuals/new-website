@@ -42,3 +42,6 @@ next-env.d.ts
 
 # video analysis output
 .video-analysis/
+
+# in-progress video encodes
+*.tmp.mp4
