@@ -25,9 +25,9 @@ export const metadata: Metadata = {
     locale: "en_US",
     images: [{ url: "/press/triptych-banner.jpg", width: 2000, height: 1050 }],
     // The link card's video (iMessage, Discord and others play it; the
-    // rest show the image above): a 6 × 6 grid of shots from the hero reel, dimmed, with the mark centred on it,
+    // rest show the image above): a 6 × 6 grid of shots from across the projects, dimmed, with the logo centred on it,
     // a seamless 10-second loop, 1200×630, silent. EDIT: swap the file to change it.
-    videos: [{ url: `${site.url}/og/site-grid-logo.mp4`, secureUrl: `${site.url}/og/site-grid-logo.mp4`, type: "video/mp4", width: 1200, height: 630 }],
+    videos: [{ url: `${site.url}/og/site-grid-mix.mp4`, secureUrl: `${site.url}/og/site-grid-mix.mp4`, type: "video/mp4", width: 1200, height: 630 }],
   },
   twitter: { card: "summary_large_image", title: NAME, description: DESCRIPTION, images: ["/press/triptych-banner.jpg"] },
   robots: { index: true, follow: true },
